@@ -133,6 +133,11 @@
 					<a id="overlayTrigger1" href="#myOverlay1" data-overlay-trigger>OPEN OVERLAY 1</a><br/>
 					<a id="overlayTrigger2" href="#myOverlay2" data-overlay-trigger>OPEN OVERLAY 2</a><br/>
 					<a id="overlayTrigger3" href="#myOverlay3" data-overlay-trigger>OPEN OVERLAY 3</a><br/>
+					<button class="btn btn-sm btn-success" id="AddNotif">Add Notification</button>
+					<button class="btn btn-sm btn-success" id="AddMultipleNotif">Add Multiple Notification</button>
+					<button class="btn btn-sm btn-primary" id="ClearNotif">Clear Notification</button>
+					<button class="btn btn-sm btn-danger" id="RemoveNotif">Remove Notification</button>
+					<button class="btn btn-sm btn-info" id="GetNotif">Get Notification</button>
 				</div>
 				
 				<div style="display:none;">
@@ -177,34 +182,6 @@
 				<a class="btn btn-sm"><i class="fa fa-circle-o status" style="margin-right: 5px !important;"></i> Notification</a>
 			</div>
 			<div class="content-notif">
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
-				<div class="media">
-					<i class="pull-left glyphicon glyphicon-info-sign" style="color:#D1F026; font-size:25px;"></i>
-					<div class="media-body">Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba Coba </div>
-				</div>
 			</div>
 			<!-- <div class="footer-notif media">
 				<i class="chat-list-toggle pull-left fa fa-bars"></i>
@@ -257,6 +234,37 @@
 			]}
 		]}
 	]);
+
+	// Add Notification
+	$('#AddNotif').click(function() {
+		$('.content-notif').eaciitNotif('add',{id:'1',text:'asd1'});
+		$('.content-notif').eaciitNotif('add',{id:'2',text:'asd2'});
+		$('.content-notif').eaciitNotif('add',{id:'3',text:'asd3'});
+		$('.content-notif').eaciitNotif('add',{id:'4',text:'asd4'});
+		$('.content-notif').eaciitNotif('add',{id:'5',text:'asd5'});
+		$('.content-notif').eaciitNotif('add',{id:'6',text:'asd6'});
+	});
+
+	// Clear Notification
+	$('#ClearNotif').click(function(){
+		$('.content-notif').eaciitNotif('clear');
+	});
+
+	// Remove Notification
+	$('#RemoveNotif').click(function(){
+		$('.content-notif').eaciitNotif('remove',{key:'id', value: '2'});
+	});
+
+	// Get Data Notification
+	$('#GetNotif').click(function(){
+		var datanotif = $('.content-notif').eaciitNotif('get');
+		console.log(datanotif);
+	});
+
+	// Add multiple value Notification
+	$('#AddMultipleNotif').click(function(){
+		$('.content-notif').eaciitNotif('addMultiple',[{id:'11',text:'asd11'},{id:'12',text:'asd12'},{id:'13',text:'asd13'}]);
+	});
 </script>
 
 <script src="/res/asset/js/load.js"></script>

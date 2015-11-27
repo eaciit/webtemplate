@@ -213,7 +213,79 @@ $.fn.eaciitMenu = function (method) {
     methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
 
+var methodsNotif = {
+    data_notiv: [],
+    add: function(item){
+        var $o = this, $divmedia, $iconnotiv, $divtext;
+        $divmedia = jQuery('<div />');
+        $divmedia.addClass('media');
+        $divmedia.attr('idnotiv',item.id);
+        $divmedia.appendTo($o);
+
+        $iconnotiv = jQuery('<i />');
+        $iconnotiv.addClass('pull-left glyphicon glyphicon-info-sign');
+        $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+        $iconnotiv.appendTo($divmedia);
+
+        $divtext = jQuery('<div />');
+        $divtext.addClass('media-body');
+        $divtext.html(item.text);
+        $divtext.appendTo($divmedia);
+
+        methodsNotif.data_notiv.push(item);
+    },
+    addMultiple: function(item){
+        var $o = this, $divmedia, $iconnotiv, $divtext;
+        for(var key in item){
+            $divmedia = jQuery('<div />');
+            $divmedia.addClass('media');
+            $divmedia.attr('idnotiv',item[key].id);
+            $divmedia.appendTo($o);
+
+            $iconnotiv = jQuery('<i />');
+            $iconnotiv.addClass('pull-left glyphicon glyphicon-info-sign');
+            $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+            $iconnotiv.appendTo($divmedia);
+
+            $divtext = jQuery('<div />');
+            $divtext.addClass('media-body');
+            $divtext.html(item[key].text);
+            $divtext.appendTo($divmedia);
+
+            methodsNotif.data_notiv.push(item[key]);
+        }
+    },
+    remove: function(item){
+        var $o = this;
+        if(item.key == 'id'){
+            var data = $.grep(methodsNotif.data_notiv, function(e){ 
+                return e.id != item.value;
+            });
+            methodsNotif.data_notiv = data;
+            $o.find('div.media[idnotiv='+ item.value +']').remove('');
+        } else {
+            var data = $.grep(methodsNotif.data_notiv, function(e){ 
+                return e.text != item.value;
+            });
+            methodsNotif.data_notiv = data;
+            $o.find('div.media').remove(":contains('"+ item.value +"')");
+        }
+    },
+    clear: function(item){
+        var $o = this;
+        $o.empty();
+        methodsNotif.data_notiv = [];
+    },
+    get: function(){
+        return methodsNotif.data_notiv;
+    }
+}
+
 $.fn.eaciitNotif = function (method) {
+    if (method == 'get')
+        return methodsNotif[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    else
+        methodsNotif[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
 
 $.fn.eaciitPopup = function (method) {
