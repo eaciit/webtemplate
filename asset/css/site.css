@@ -361,6 +361,9 @@ ul.topnav li a {
     height: 30px;
     overflow: hidden;
 }
+.ijo {
+	color: rgb(3, 204, 3);
+}
 	.notif .btn {
 	    width: 100%;
 	    text-align: left;
@@ -371,7 +374,7 @@ ul.topnav li a {
 	.notif .status {
 	    font-size: 14px;
 	    margin-top: 3px;
-	    color: rgb(3, 204, 3);
+	    /*color: rgb(3, 204, 3);*/
 	}
 	.notif .content-notif {
 	    background: rgb(136, 124, 90);

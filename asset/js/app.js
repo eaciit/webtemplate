@@ -1,12 +1,14 @@
 $(function() {
     $('body').on('click touchstart', '.notif-list-toggle', function(){
         $(this).closest('.notif').find('.notif-list').toggleClass('toggled');
+        $('.notif .status').removeClass('ijo');
     });
 
     $('body').on('click touchstart', '.notif .header-notif .btn', function(e){
         e.preventDefault();
         // $('.notif .notif-list').removeClass('toggled');
         $(this).closest('.notif').toggleClass('toggled');
+        $('.notif .status').removeClass('ijo');
     });
 
     $(document).on('mouseup touchstart', function (e) {
@@ -233,13 +235,15 @@ var methodsNotif = {
         $divtext.appendTo($divmedia);
 
         methodsNotif.data_notiv.push(item);
+        if (item.notif)
+            $('.notif .status').addClass('ijo');
     },
     addMultiple: function(item){
         var $o = this, $divmedia, $iconnotiv, $divtext;
-        for(var key in item){
+        for(var key in item.data){
             $divmedia = jQuery('<div />');
             $divmedia.addClass('media');
-            $divmedia.attr('idnotiv',item[key].id);
+            $divmedia.attr('idnotiv',item.data[key].id);
             $divmedia.appendTo($o);
 
             $iconnotiv = jQuery('<i />');
@@ -249,11 +253,13 @@ var methodsNotif = {
 
             $divtext = jQuery('<div />');
             $divtext.addClass('media-body');
-            $divtext.html(item[key].text);
+            $divtext.html(item.data[key].text);
             $divtext.appendTo($divmedia);
 
-            methodsNotif.data_notiv.push(item[key]);
+            methodsNotif.data_notiv.push(item.data[key]);
         }
+        if (item.notif)
+            $('.notif .status').addClass('ijo');
     },
     remove: function(item){
         var $o = this;

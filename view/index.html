@@ -237,12 +237,12 @@
 
 	// Add Notification
 	$('#AddNotif').click(function() {
-		$('.content-notif').eaciitNotif('add',{id:'1',text:'asd1'});
-		$('.content-notif').eaciitNotif('add',{id:'2',text:'asd2'});
-		$('.content-notif').eaciitNotif('add',{id:'3',text:'asd3'});
-		$('.content-notif').eaciitNotif('add',{id:'4',text:'asd4'});
-		$('.content-notif').eaciitNotif('add',{id:'5',text:'asd5'});
-		$('.content-notif').eaciitNotif('add',{id:'6',text:'asd6'});
+		$('.content-notif').eaciitNotif('add',{id:'1',text:'asd1', notif:true});
+		$('.content-notif').eaciitNotif('add',{id:'2',text:'asd2', notif:true});
+		$('.content-notif').eaciitNotif('add',{id:'3',text:'asd3', notif:true});
+		$('.content-notif').eaciitNotif('add',{id:'4',text:'asd4', notif:true});
+		$('.content-notif').eaciitNotif('add',{id:'5',text:'asd5', notif:true});
+		$('.content-notif').eaciitNotif('add',{id:'6',text:'asd6', notif:true});
 	});
 
 	// Clear Notification
@@ -263,7 +263,7 @@
 
 	// Add multiple value Notification
 	$('#AddMultipleNotif').click(function(){
-		$('.content-notif').eaciitNotif('addMultiple',[{id:'11',text:'asd11'},{id:'12',text:'asd12'},{id:'13',text:'asd13'}]);
+		$('.content-notif').eaciitNotif('addMultiple',{notif:false,data:[{id:'11',text:'asd11'},{id:'12',text:'asd12'},{id:'13',text:'asd13'}]});
 	});
 </script>
 
