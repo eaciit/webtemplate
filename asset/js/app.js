@@ -294,5 +294,10 @@ $.fn.eaciitNotif = function (method) {
         methodsNotif[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
 
-$.fn.eaciitPopup = function (method) {
-}
+// function Call (item) {
+    
+// }
+
+// function eaciitModal (callback) {
+//     callback (arguments[1]);
+// }

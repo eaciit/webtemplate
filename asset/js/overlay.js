@@ -20,6 +20,13 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
+function eaciitModalCall (item) {
+	$('#eaciitOverlayPopup').attr({'data-overlay-container-class':item.animation, 'data-type':item.type});
+	$('#myOverlay2Heading').html(item.text);
+    Overlay.show('eaciitOverlayPopup');
+}
+
 var Overlay = (function(){
 	var _instance;
 	
@@ -70,6 +77,20 @@ var Overlay = (function(){
 	
 	var _methods = {
 		initialize:function(){
+			var $o = $('body'), $divhide, $divmodal, $contentmodal;
+			$divhide = jQuery('<div />');
+			$divhide.css('display','none');
+			$divhide.appendTo($o);
+
+			$divmodal = jQuery('<div />');
+			$divmodal.attr({'id':'eaciitOverlayPopup','aria-labelledby':'myOverlay2Heading', 'data-overlay-container-class':'slide-up', 'role':'region', 'data-type':'default'});
+			$divmodal.appendTo($divhide);
+
+			$contentmodal = jQuery('<h4 />');
+			$contentmodal.attr('id','myOverlay2Heading');
+			// $contentmodal.html();
+			$contentmodal.appendTo($divmodal);
+
 			var container = document.createElement("div");
 			container.setAttribute("id", _consts.ID_CONTAINER);
 			_vars._container = container;

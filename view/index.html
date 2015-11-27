@@ -128,33 +128,24 @@
 			<div class="content-breadcrumb">
 				<!-- Content breadcrumb setting in EaciitGeneral -->
 			</div>
-			<div class="content-body">
-				<div id="container" data-overlay-page-wrap>
-					<a id="overlayTrigger1" href="#myOverlay1" data-overlay-trigger>OPEN OVERLAY 1</a><br/>
-					<a id="overlayTrigger2" href="#myOverlay2" data-overlay-trigger>OPEN OVERLAY 2</a><br/>
-					<a id="overlayTrigger3" href="#myOverlay3" data-overlay-trigger>OPEN OVERLAY 3</a><br/>
-					<button class="btn btn-sm btn-success" id="AddNotif">Add Notification</button>
-					<button class="btn btn-sm btn-success" id="AddMultipleNotif">Add Multiple Notification</button>
-					<button class="btn btn-sm btn-primary" id="ClearNotif">Clear Notification</button>
-					<button class="btn btn-sm btn-danger" id="RemoveNotif">Remove Notification</button>
-					<button class="btn btn-sm btn-info" id="GetNotif">Get Notification</button>
-				</div>
-				
-				<div style="display:none;">
-					<div id="myOverlay1" aria-labelledby="myOverlay1Heading" data-overlay-container-class="slide-up" role="region" data-type="warning">
-						<h1 id="myOverlay1Heading">TEST CONTENT 1</h1>
-					</div>
-					<div id="myOverlay2" aria-labelledby="myOverlay2Heading" data-overlay-container-class="slide-down" role="region" data-type="ok">
-						<h1 id="myOverlay2Heading">TEST CONTENT 2</h1>
-					</div>
-					<div id="myOverlay3" aria-labelledby="myOverlay3Heading" data-overlay-container-class="slide-right" role="region" data-type="error">
-						<span id="myOverlay3Heading">TEST CONTENT 3</span>
-					</div>
-				</div>
+
+			<!-- Content Body -->
+			<div class="content-body" data-overlay-page-wrap>
+				<button class="btn btn-sm btn-success" id="AddNotif">Add Notification</button>
+				<button class="btn btn-sm btn-info" id="AddMultipleNotif">Add Multiple Notification</button>
+				<button class="btn btn-sm btn-primary" id="ClearNotif">Clear Notification</button>
+				<button class="btn btn-sm btn-danger" id="RemoveNotif">Remove Notification</button>
+				<button class="btn btn-sm btn-warning" id="GetNotif">Get Notification</button> 
+				<br /><br />
+				<button class="btn btn-sm btn-default" id="defaultModal">Modal Default</button>
+				<button class="btn btn-sm btn-success" id="okModal">Modal Ok</button>
+				<button class="btn btn-sm btn-warning" id="warningModal">Modal Warning</button>
+				<button class="btn btn-sm btn-danger" id="errorModal">Modal Error</button>
 			</div>
+			<!-- End Content Body -->
+
 		</div>
 	</div>
-	<!-- End Content -->
 
 	<!-- Content Menu Right -->
 	<div class="content-menu-right" id="menu-right" style="right:-250px;">
@@ -264,6 +255,20 @@
 	// Add multiple value Notification
 	$('#AddMultipleNotif').click(function(){
 		$('.content-notif').eaciitNotif('addMultiple',{notif:false,data:[{id:'11',text:'asd11'},{id:'12',text:'asd12'},{id:'13',text:'asd13'}]});
+	});
+
+	// Ok Modal animation slide-up, slide-down, slide-right || type default, ok, warning, error
+	$('#okModal').click(function(){
+		eaciitGeneral(eaciitModalCall,{animation:'slide-down', type:'ok', text:'Test Content <br /> OK Bro !!!'});
+	});
+	$('#defaultModal').click(function(){
+		eaciitGeneral(eaciitModalCall,{animation:'slide-down', type:'default', text:'Test Content <br /> Default Bro !!!'});
+	});
+	$('#warningModal').click(function(){
+		eaciitGeneral(eaciitModalCall,{animation:'slide-up', type:'warning', text:'Test Content <br /> Warning Bro !!!'});
+	});
+	$('#errorModal').click(function(){
+		eaciitGeneral(eaciitModalCall,{animation:'slide-right', type:'error', text:'Test Content <br /> Error Bro !!!'});
 	});
 </script>
 
