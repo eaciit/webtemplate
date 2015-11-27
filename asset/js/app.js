@@ -17,6 +17,9 @@ $(function() {
             container.removeClass('toggled');
         }
     });
+
+    $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
+    $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
 });
 
 function generalfunc (item) {
@@ -293,11 +296,3 @@ $.fn.eaciitNotif = function (method) {
     else
         methodsNotif[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
-
-// function Call (item) {
-    
-// }
-
-// function eaciitModal (callback) {
-//     callback (arguments[1]);
-// }

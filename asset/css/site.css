@@ -8,9 +8,8 @@ body {
 	margin:0px;
 	padding:0px;
 }
-header#page-header {
+/*header#page-header {
     background: url(/res/asset/img/backgroudheader.jpg);
-	/*background: #F8E299;*/
     background-size:contain;
     height: 75px;
     padding-top:9px;
@@ -19,10 +18,9 @@ header#page-header #logo {
     background: url(/res/asset/img/logoeaciittrans.png) no-repeat;
     width: 70px;
     height: 50px;
-    /*background-color: white;*/
     margin-left: 20px;
     padding-top: 10px;
-}
+}*/
 
 /* Navbar */
 .navbar { background: #AD975A; min-height: 30px; border-radius: 0; border: none; margin-bottom: 0px; }
@@ -52,12 +50,11 @@ header#page-header #logo {
 	/*top: 20px;*/
 	width: 250px;
 	z-index: 999;
-	/*background: #67572A;*/
 	background: rgba(103, 87, 42, 0.75);
 }
 	#menu-left .list-group{
 		padding:0px;
-		height: 670px;
+		min-height: 600px;
 		width: 100%;
 	}
 	#menu-left .toogle-left{
