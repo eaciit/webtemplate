@@ -1,13 +1,13 @@
 /*Change header*/
 header#page-header {
-    background: url(/res/asset/img/backgroudheader.jpg);
+    background: url(/webtemplate/static/asset/img/backgroudheader.jpg);
 	/*background: #F8E299;*/
     background-size:contain;
     height: 75px;
     padding-top:9px;
 }
 header#page-header #logo {
-    background: url(/res/asset/img/logoeaciittrans.png) no-repeat;
+    background: url(/webtemplate/static/asset/img/logoeaciittrans.png) no-repeat;
     width: 70px;
     height: 50px;
     /*background-color: white;*/
