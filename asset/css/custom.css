@@ -1,0 +1,66 @@
+/*Change header*/
+header#page-header {
+    background: url(/res/asset/img/backgroudheader.jpg);
+	/*background: #F8E299;*/
+    background-size:contain;
+    height: 75px;
+    padding-top:9px;
+}
+header#page-header #logo {
+    background: url(/res/asset/img/logoeaciittrans.png) no-repeat;
+    width: 70px;
+    height: 50px;
+    /*background-color: white;*/
+    margin-left: 20px;
+    padding-top: 10px;
+}
+
+/*Change Color Top Menu*/
+.navbar {
+    background: #AD975A;
+}
+/*Change Color Seleted Top Menu*/
+.navbar .navbar-nav li.selected a { 
+    color: #ffffff; 
+    background: #9C8851; 
+}
+/*Change Color hover top menu*/
+.navbar .navbar-nav li a:hover, .navbar .navbar-nav li.active a:hover { 
+    color: #ffffff; 
+    background: #E35A33;
+    /*90C3D4*/
+}
+.navbar .open, .navbar .open > a, .navbar .open > a:focus, .navbar .open > a:hover { 
+    color: #ffffff; 
+    background: #E35A33; 
+}
+
+/*Change color dropdown menu top*/
+.navbar .dropdown .dropdown-menu { 
+    background: #B8B8B8; 
+    border-top: 3px solid #E35A33; 
+}
+.navbar .dropdown .dropdown-menu li { 
+    background: #B8B8B8;
+}
+.navbar .dropdown .dropdown-menu li a { 
+    color: #ffffff 
+}
+.navbar .dropdown .dropdown-menu li a:hover { 
+    background: #E35A33; 
+}
+
+/*Change color left menu*/
+#menu-left {
+    background: rgba(103, 87, 42, 0.75);
+}
+/*Change color button menu*/
+#menu-left .toogle-left span {
+    background: #7F7456;
+}
+
+/*Change color body notification*/
+.notif .content-notif {
+    background: rgb(136, 124, 90);
+    /*border: 1px solid #242424;*/
+}
