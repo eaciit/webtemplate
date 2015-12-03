@@ -27,7 +27,7 @@ func main() {
 	// app.LayoutTemplate = "index.html"
 	// knot.RegisterApp(app)
 
-	knot.DefaultOutputType = knot.OutputHtml
+	knot.DefaultOutputType = knot.OutputTemplate
 	ks := new(knot.Server)
 	ks.Address = "localhost:7878"
 	ks.Register(new(TemplateController), "")
@@ -54,6 +54,11 @@ func prepareConnection(pathJson string) (dbox.IConnection, error) {
 	}
 
 	return c, nil
+}
+
+func (t *TemplateController) Index(r *knot.WebContext) interface{} {
+	r.Config.ViewName = "view/index.html"
+	return ""
 }
 
 func (w *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {

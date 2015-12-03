@@ -1,7 +1,7 @@
-head.js("asset/js/skin-select/jquery.cookie.js");
-head.js("asset/js/skin-select/skin-select.js");
+head.js("/static/asset/js/skin-select/jquery.cookie.js");
+head.js("/static/asset/js/skin-select/skin-select.js");
 
-head.js("asset/js/tip/jquery.tooltipster.js", function() {
+head.js("/static/asset/js/tip/jquery.tooltipster.js", function() {
 
     $('.tooltip-tip-x').tooltipster({
         position: 'right'
@@ -51,7 +51,7 @@ head.js("asset/js/tip/jquery.tooltipster.js", function() {
 
 });
 
-head.js("asset/js/custom/scriptbreaker-multiple-accordion-1.js", function() {
+head.js("/static/asset/js/custom/scriptbreaker-multiple-accordion-1.js", function() {
     $(".topnav").accordionze({
         accordionze: true,
         speed: 500,
