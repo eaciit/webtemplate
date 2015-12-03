@@ -1,0 +1,52 @@
+[
+	{
+		"titlegroup":"PAGE MENU", 
+		"leftmenu":[
+			{
+				"title":"Page", 
+				"icon":"glyphicon glyphicon-file", 
+				"href":"#", 
+				"submenu": [
+					{
+						"title":"Blank Page", 
+						"icon":"glyphicon glyphicon-list-alt" , 
+						"href":"#"
+					},
+					{
+						"title":"Login Page", 
+						"icon":"glyphicon glyphicon-repeat", 
+						"href":"#"
+					}
+				]
+			},
+			{
+				"title":"Page Bonus", 
+				"icon":"glyphicon glyphicon-file", 
+				"href":"#", 
+				"submenu":[]
+			}
+		]
+	},
+	{
+		"titlegroup":"PAGE MENU", 
+		"leftmenu":[
+			{
+				"title":"Page",
+				"icon":"glyphicon glyphicon-file", 
+				"href":"#", 
+				"submenu": [
+					{
+						"title":"Blank Page", 
+						"icon":"glyphicon glyphicon-list-alt" , 
+						"href":"#"
+					},
+					{
+						"title":"Login Page", 
+						"icon":"glyphicon glyphicon-repeat", 
+						"href":"#"
+					}
+				]
+			}
+		]
+	}
+]
