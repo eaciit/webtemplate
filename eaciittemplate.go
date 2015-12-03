@@ -1,4 +1,4 @@
-package eaciittemplate
+package main
 
 import (
 	"fmt"
@@ -16,23 +16,23 @@ var (
 	appViewsPath = func() string {
 		d, _ := os.Getwd()
 		return d
-	}() + "/../webtemplate/view/"
+	}() + "/"
 )
 
-func init() {
-	app := knot.NewApp("Webtemplate")
-	app.ViewsPath = appViewsPath
-	app.Register(&TemplateController{})
-	app.Static("static", "/Users/arfianbagus/Documents/go/src/github.com/eaciit/webtemplate/")
-	app.LayoutTemplate = "index.html"
-	knot.RegisterApp(app)
+func main() {
+	// app := knot.NewApp("Webtemplate")
+	// app.ViewsPath = appViewsPath
+	// app.Register(&TemplateController{})
+	// app.Static("static", "/Users/arfianbagus/Documents/go/src/github.com/eaciit/webtemplate/")
+	// app.LayoutTemplate = "index.html"
+	// knot.RegisterApp(app)
 
-	// ks := new(knot.Server)
-	// ks.Address = "localhost:7878"
-	// DefaultOutputType = OutputHtml
-	// ks.Register(new(TemplateController), "")
-	// ks.RouteStatic("static", "/Users/arfianbagus/Documents/go/src/github.com/eaciit/webtemplate/")
-	// ks.Listen()
+	knot.DefaultOutputType = knot.OutputHtml
+	ks := new(knot.Server)
+	ks.Address = "localhost:7878"
+	ks.Register(new(TemplateController), "")
+	ks.RouteStatic("static", appViewsPath)
+	ks.Listen()
 }
 
 type TemplateController struct {
