@@ -1,0 +1,22 @@
+[{
+	"title":"Dashboard",
+	"href":"/webtemplate/static/view/",
+	"submenu":[],
+	"selected":true
+},
+{
+	"title":"Page",
+	"href":"#",
+	"submenu":[{
+		"title":"Blank",
+		"href":"#",
+		"submenu":[]
+	}],
+	"selected":false
+},
+{
+	"title":"Example",
+	"href":"#",
+	"submenu":[],
+	"selected":false
+}]

@@ -202,30 +202,30 @@
 	});
 
 	// generate menu top
-	$('#navbar').eaciitMenu('top',[
-		{title:'Dashboard',href:'/',submenu:[],selected:true},
-		{title:'Page',href:'#',submenu:[
-			{title:'Blank',href:"#",submenu:[]}
-		],selected:false},
-		{title:'Example',href:'#',submenu:[],selected:false}
-	]);
+	// $('#navbar').eaciitMenu('top',[
+	// 	{title:'Dashboard',href:'/',submenu:[],selected:true},
+	// 	{title:'Page',href:'#',submenu:[
+	// 		{title:'Blank',href:"#",submenu:[]}
+	// 	],selected:false},
+	// 	{title:'Example',href:'#',submenu:[],selected:false}
+	// ]);
 
 	// generate menu left
-	$('#listmenuleft').eaciitMenu('left',[
-		{titlegroup:'PAGE MENU', leftmenu:[
-			{title:'Page', icon:'glyphicon glyphicon-file', href:'#', submenu: [
-				{title:'Blank Page', icon:'glyphicon glyphicon-list-alt' , href:'#'},
-				{title:'Login Page', icon:'glyphicon glyphicon-repeat', href:'#'}
-			]},
-			{title:'Page Bonus', icon:'glyphicon glyphicon-file', href:'#', submenu:[]}
-		]},
-		{titlegroup:'PAGE MENU', leftmenu:[
-			{title:'Page', icon:'glyphicon glyphicon-file', href:'#', submenu: [
-				{title:'Blank Page', icon:'glyphicon glyphicon-list-alt' , href:'#'},
-				{title:'Login Page', icon:'glyphicon glyphicon-repeat', href:'#'}
-			]}
-		]}
-	]);
+	// $('#listmenuleft').eaciitMenu('left',[
+	// 	{titlegroup:'PAGE MENU', leftmenu:[
+	// 		{title:'Page', icon:'glyphicon glyphicon-file', href:'#', submenu: [
+	// 			{title:'Blank Page', icon:'glyphicon glyphicon-list-alt' , href:'#'},
+	// 			{title:'Login Page', icon:'glyphicon glyphicon-repeat', href:'#'}
+	// 		]},
+	// 		{title:'Page Bonus', icon:'glyphicon glyphicon-file', href:'#', submenu:[]}
+	// 	]},
+	// 	{titlegroup:'PAGE MENU', leftmenu:[
+	// 		{title:'Page', icon:'glyphicon glyphicon-file', href:'#', submenu: [
+	// 			{title:'Blank Page', icon:'glyphicon glyphicon-list-alt' , href:'#'},
+	// 			{title:'Login Page', icon:'glyphicon glyphicon-repeat', href:'#'}
+	// 		]}
+	// 	]}
+	// ]);
 
 	// Add Notification
 	$('#AddNotif').click(function() {
@@ -271,6 +271,37 @@
 	$('#errorModal').click(function(){
 		eaciitGeneral(eaciitModalCall,{animation:'slide-right', type:'error', text:'Test Content <br /> Error Bro !!!'});
 	});
+
+	function getTopMenu(){
+		var url = "/webtemplate/template/getmenutop";
+	    $.ajax({
+			url: url,
+			type: 'post',
+			dataType: 'json',
+			data : {},
+			success : function(res) {
+				// Generate top menu with knot v.1 and dbox eaciit
+				$('#navbar').eaciitMenu('top',res);
+			},
+	    });
+	}
+
+	function getMenuLeft(){
+		var url = "/webtemplate/template/getmenuleft";
+		$.ajax({
+			url: url,
+			type: 'post',
+			dataType: 'json',
+			data : {},
+			success : function(res) {
+				// Generate left menu with knot v.1 and dbox eaciit
+				$('#listmenuleft').eaciitMenu('left',res);
+			},
+	    });
+	}
+
+	getTopMenu();
+	getMenuLeft();
 </script>
 
 <script src="/webtemplate/static/asset/js/load.js"></script>
