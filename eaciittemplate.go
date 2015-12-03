@@ -58,7 +58,7 @@ func prepareConnection(pathJson string) (dbox.IConnection, error) {
 
 func (w *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
-	c, e := prepareConnection("/Users/arfianbagus/Documents/go/src/github.com/eaciit/webtemplate/config/topmenu.json")
+	c, e := prepareConnection(appViewsPath + "/config/topmenu.json")
 	if e != nil {
 		fmt.Printf("Unable to connect %s \n", e.Error())
 	}
@@ -88,7 +88,7 @@ func (w *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
 
 func (w *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
-	c, e := prepareConnection("/Users/arfianbagus/Documents/go/src/github.com/eaciit/webtemplate/config/leftmenu.json")
+	c, e := prepareConnection(appViewsPath + "/config/leftmenu.json")
 	if e != nil {
 		fmt.Printf("Unable to connect %s \n", e.Error())
 	}
