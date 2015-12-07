@@ -20,37 +20,88 @@ $(function() {
 
     $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
     $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
+
+    // $('.collapse-link').click(function () {
+    //     var x_panel = $(this).closest('div.panel-container');
+    //     var button = $(this).find('i');
+    //     var content = x_panel.find('div.panel-content');
+    //     content.slideToggle(200);
+    //     (x_panel.hasClass('fixed_height_390') ? x_panel.toggleClass('').toggleClass('fixed_height_390') : '');
+    //     (x_panel.hasClass('fixed_height_320') ? x_panel.toggleClass('').toggleClass('fixed_height_320') : '');
+    //     button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+    //     if(button.hasClass('fa-chevron-up'))
+    //         $(x_panel).animate({height:200},200);
+    //     else
+    //         $(x_panel).animate({height:55},200);
+    //     x_panel.toggle
+    //     setTimeout(function () {
+    //         x_panel.resize();
+    //     }, 50);
+    // });
+
 });
 
 function generalfunc (item) {
-    var $o = $('.content-breadcrumb'), $ulbreadcrumb, $libreadcrumb, $linkbreadcrumb, totalItem = item.breadcrumb.menu.length - 1;
-    $('.title-header').html(item.title);
+    $.each( item, function( key, value ) {
+        if (key === 'title')
+            $('.title-header').html(value);
+        if (key === 'breadcrumb'){
+            var $o = $('.content-breadcrumb'), $ulbreadcrumb, $libreadcrumb, $linkbreadcrumb, totalItem = item.breadcrumb.menu.length - 1;
+            $ulbreadcrumb = jQuery('<ul />');
+            $ulbreadcrumb.addClass('breadcrumb');
+            $ulbreadcrumb.appendTo($o);
 
-    $ulbreadcrumb = jQuery('<ul />');
-    $ulbreadcrumb.addClass('breadcrumb');
-    $ulbreadcrumb.appendTo($o);
-
-    $libreadcrumb = jQuery('<li />');
-    $libreadcrumb.appendTo($ulbreadcrumb);
-
-    $linkbreadcrumb = jQuery('<a />');
-    $linkbreadcrumb.attr('href',item.breadcrumb.urlhome);
-    $linkbreadcrumb.html('<i class="fa fa-home"></i>  Home');
-    $linkbreadcrumb.appendTo($libreadcrumb);
-    for(var key in item.breadcrumb.menu){
-        $libreadcrumb = jQuery('<li />');
-        if(totalItem == key){
-            $libreadcrumb.addClass('active');
-            $libreadcrumb.html(item.breadcrumb.menu[key].title);
+            $libreadcrumb = jQuery('<li />');
             $libreadcrumb.appendTo($ulbreadcrumb);
-        }else{
-            $libreadcrumb.appendTo($ulbreadcrumb);
+
             $linkbreadcrumb = jQuery('<a />');
-            $linkbreadcrumb.attr('href',item.breadcrumb.menu[key].href);
-            $linkbreadcrumb.html(item.breadcrumb.menu[key].title);
+            $linkbreadcrumb.attr('href',item.breadcrumb.urlhome);
+            $linkbreadcrumb.html('<i class="fa fa-home"></i>  Home');
             $linkbreadcrumb.appendTo($libreadcrumb);
+            for(var key in item.breadcrumb.menu){
+                $libreadcrumb = jQuery('<li />');
+                if(totalItem == key){
+                    $libreadcrumb.addClass('active');
+                    $libreadcrumb.html(item.breadcrumb.menu[key].title);
+                    $libreadcrumb.appendTo($ulbreadcrumb);
+                }else{
+                    $libreadcrumb.appendTo($ulbreadcrumb);
+                    $linkbreadcrumb = jQuery('<a />');
+                    $linkbreadcrumb.attr('href',item.breadcrumb.menu[key].href);
+                    $linkbreadcrumb.html(item.breadcrumb.menu[key].title);
+                    $linkbreadcrumb.appendTo($libreadcrumb);
+                }
+            }
         }
-    }
+        if (key === 'panel'){
+            console.log(item.panel);
+            var $o = $(item.panel.areaPanel), $divColumn;
+            $divColumn = jQuery('<div />');
+            $divColumn.addClass('column-eaciit');
+            $divColumn.appendTo($o);
+
+            // Coba Drag
+            $(".column-eaciit").sortable({
+                cursor: 'move',
+                connectWith: ".column-eaciit",
+                placeholder: 'placeholder',
+                start: function(e,ui){
+                    ui.placeholder.height(ui.item.height());
+                    ui.placeholder.width(ui.item.width());
+                }
+                // placeholder: "highlight",
+                //  start: function (event, ui) {
+                //  ui.item.toggleClass("highlight");
+                // },
+                // stop: function (event, ui) {
+                //  ui.item.toggleClass("highlight");
+                // }
+            });
+            $(".column-eaciit").disableSelection();
+            $(".column-eaciit").addClass("ui-helper-clearfix");
+            // $(".column-eaciit").addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" );
+        }
+    });
 }
 
 function eaciitGeneral (callback) {
@@ -295,4 +346,82 @@ $.fn.eaciitNotif = function (method) {
         return methodsNotif[method].apply(this, Array.prototype.slice.call(arguments, 1));
     else
         methodsNotif[method].apply(this, Array.prototype.slice.call(arguments, 1));
+}
+
+function clickHideShowPanel() {
+    var x_panel = $(this).closest('div.panel-container');
+    var button = $(this).find('i');
+    var content = x_panel.find('div.panel-content');
+    content.slideToggle(200);
+    (x_panel.hasClass('fixed_height_390') ? x_panel.toggleClass('').toggleClass('fixed_height_390') : '');
+    (x_panel.hasClass('fixed_height_320') ? x_panel.toggleClass('').toggleClass('fixed_height_320') : '');
+    button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+    if(button.hasClass('fa-chevron-up'))
+        $(x_panel).animate({height:parseInt($(x_panel).attr('heightContent'))},200);
+    else
+        $(x_panel).animate({height:55},200);
+    x_panel.toggle
+    setTimeout(function () {
+        x_panel.resize();
+    }, 50);
+}
+
+var methodsPanel = {
+    add: function (item){
+        var $o = this, $column = this.find('.column-eaciit'), $divpanel, $divcontainer, $panelheader, $headertitle, $ulnavbar, $linavbar, $hideshow, $divClear, $panelContent;
+        // console.log($column);
+        $divpanel = jQuery('<div />');
+        $divpanel.addClass('panel-eaciit ' + item.width);
+        $divpanel.attr('id',item.idpanel);
+        $divpanel.appendTo($column);
+
+        $divcontainer = jQuery('<div />');
+        $divcontainer.addClass('panel-container');
+        if(item.height != "0px" && item.height != "0")
+            $divcontainer.css('height',item.height);
+        $divcontainer.appendTo($divpanel);
+
+        $panelheader = jQuery('<div />');
+        $panelheader.addClass('panel-header');
+        $panelheader.appendTo($divcontainer);
+
+        $headertitle = jQuery('<span />');
+        $headertitle.addClass('panel-title');
+        $headertitle.html(item.title);
+        $headertitle.appendTo($panelheader);
+
+        $ulnavbar = jQuery('<ul />');
+        $ulnavbar.addClass('nav navbar-right panel-toolbox');
+        $ulnavbar.appendTo($panelheader);
+
+        $linavbar = jQuery('<li />');
+        // $linavbar.html('<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>');
+        $linavbar.appendTo($ulnavbar);
+
+        $hideshow = jQuery('<a />');
+        $hideshow.addClass('collapse-link"');
+        $hideshow.html('<i class="fa fa-chevron-up"></i>');
+        $hideshow.click(clickHideShowPanel);
+        $hideshow.appendTo($linavbar);
+
+        $linavbar = jQuery('<li />');
+        $linavbar.html('<a class="close-link"><i class="fa fa-close"></i></a>');
+        $linavbar.appendTo($ulnavbar);
+
+        $divClear = jQuery('<div />');
+        $divClear.css('clear', 'both');
+        $divClear.appendTo($panelheader);
+
+        $panelContent = jQuery('<div />');
+        $panelContent.addClass('panel-content');
+        $panelContent.html(item.content);
+        $panelContent.appendTo($divcontainer);
+
+        $($divpanel).find('div.panel-container').attr('heightContent', $($divpanel).find('div.panel-container').height() + 22);
+        // console.log($($divpanel).find('div.panel-container').height() + 22);
+    }
+}
+
+$.fn.eaciitPanel = function (method) {
+    methodsPanel[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
