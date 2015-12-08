@@ -67,7 +67,14 @@
 			<!-- Content Body -->
 			<div class="content-body" data-overlay-page-wrap>
 				<div class="row">
-					<button class="btn btn-sm btn-primary" id="addpanel">Add Panel</button>
+					<button class="btn btn-sm btn-primary" id="addpanel">Add Panel 1</button>
+					<button class="btn btn-sm btn-primary" id="addpanel2">Add Panel 2</button>
+					<button class="btn btn-sm btn-primary" id="addpanel3">Add Panel 3</button>
+					<button class="btn btn-sm btn-primary" id="addpanel4">Add Panel 4</button>
+					<br /><br />
+					<button class="btn btn-sm btn-primary" id="hidepanel2">Hide Panel 2</button>
+					<button class="btn btn-sm btn-primary" id="showpanel2">Show Panel 2</button>
+					<button class="btn btn-sm btn-primary" id="closepanel2">Close Panel 2</button>
 				</div>
 				<div class="row" id="widgetArea" style="padding:10px;">
 					<!-- <div class="column-eaciit">
@@ -194,6 +201,30 @@
 
 	$('#addpanel').click(function(){
 		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', width: 'col-md-6', height:'0px', title:'Yoi Yoi', type: 'inline', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+	});
+
+	$('#addpanel2').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel15', width: 'col-md-2', height:'300px', title:'Yoi Yoi', type: 'inline', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+	});
+
+	$('#addpanel3').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel16', width: 'col-md-10', height:'500px', title:'Yoi Yoi', type: 'inline', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+	});
+
+	$('#addpanel4').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-md-3', height:'200px', title:'Yoi Yoi', type: 'inline', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+	});
+
+	$('#hidepanel2').click(function(){
+		$('#widgetArea').eaciitPanel('hide',{id:'panel15'});
+	});
+
+	$('#showpanel2').click(function(){
+		$('#widgetArea').eaciitPanel('show',{id:'panel15'});
+	});
+
+	$('#closepanel2').click(function(){
+		$('#widgetArea').eaciitPanel('close',{id:'panel15'});
 	});
 </script>
 

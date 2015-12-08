@@ -474,6 +474,7 @@ ul.topnav li a {
 		color: #908888;
 		border-bottom: 3px solid #BCBCBC;
 		margin-bottom: 10px;
+		cursor: move;
 		/*display: inline-block;*/
 	}
 
