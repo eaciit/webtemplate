@@ -120,3 +120,7 @@ func (w *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	}
 	return ds.Data
 }
+
+func (w *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
+
+}
