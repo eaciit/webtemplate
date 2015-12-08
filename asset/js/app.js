@@ -74,7 +74,7 @@ function generalfunc (item) {
             }
         }
         if (key === 'panel'){
-            console.log(item.panel);
+            // console.log(item.panel);
             var $o = $(item.panel.areaPanel), $divColumn;
             $divColumn = jQuery('<div />');
             $divColumn.addClass('column-eaciit');
@@ -381,81 +381,87 @@ function removePanel(){
     $(this).closest('.panel-eaciit').remove();
 }
 
+function addPanelNew(item, elem, content){
+    var $o = elem, $column = elem.find('.column-eaciit'), $divpanel, $divcontainer, $panelheader, $headertitle, $ulnavbar, $linavbar, $hideshow, $removepanel, $divClear, $panelContent;
+    $divpanel = jQuery('<div />');
+    $divpanel.addClass('panel-eaciit ' + item.width);
+    $divpanel.attr('id',item.idpanel);
+    $divpanel.appendTo($column);
+
+    $divcontainer = jQuery('<div />');
+    $divcontainer.addClass('panel-container');
+    if(item.height != "0px" && item.height != "0")
+        $divcontainer.css('height',item.height);
+    $divcontainer.appendTo($divpanel);
+
+    $panelheader = jQuery('<div />');
+    $panelheader.addClass('panel-header');
+    $panelheader.appendTo($divcontainer);
+
+    $headertitle = jQuery('<span />');
+    $headertitle.addClass('panel-title');
+    $headertitle.html(item.title);
+    $headertitle.appendTo($panelheader);
+
+    $ulnavbar = jQuery('<ul />');
+    $ulnavbar.addClass('nav navbar-right panel-toolbox');
+    $ulnavbar.appendTo($panelheader);
+
+    $linavbar = jQuery('<li />');
+    // $linavbar.html('<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>');
+    $linavbar.appendTo($ulnavbar);
+
+    $hideshow = jQuery('<a />');
+    $hideshow.addClass('collapse-link"');
+    // $hideshow.attr(id, 'collapse-link');
+    $hideshow.html('<i class="fa fa-chevron-up"></i>');
+    $hideshow.click(clickHideShowPanel);
+    $hideshow.appendTo($linavbar);
+
+    $linavbar = jQuery('<li />');
+    // $linavbar.html('<a class="close-link"><i class="fa fa-close"></i></a>');
+    $linavbar.appendTo($ulnavbar);
+
+    $removepanel = jQuery('<a />');
+    $removepanel.addClass('close-link"');
+    $removepanel.html('<i class="fa fa-close"></i>');
+    $removepanel.click(removePanel);
+    $removepanel.appendTo($linavbar);
+
+    $divClear = jQuery('<div />');
+    $divClear.css('clear', 'both');
+    $divClear.appendTo($panelheader);
+
+    $panelContent = jQuery('<div />');
+    $panelContent.addClass('panel-content');
+    $panelContent.html(content);
+    $panelContent.appendTo($divcontainer);
+
+    $($divpanel).find('div.panel-container').attr('heightContent', $($divpanel).find('div.panel-container').height() + 22);
+    $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
+    $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
+}
+
 var methodsPanel = {
     add: function (item){
+        var $elem = this;
         if (item.type === 'inline'){
-            
+            addPanelNew(item, $elem, item.content);
         } else {
-            var url = item.reference;
+            var url = item.url;
             $.ajax({
                 url: url,
                 type: 'post',
-                dataType: 'json',
-                data : {},
+                dataType: 'html',
+                // contentType: "application/json",
+                // data : JSON.stringify({path: item.reference}),
+                data : {path: item.reference},
                 success : function(res) {
-                    console.log(res);
+                    addPanelNew(item, $elem, res);
                 },
             });
         }
-        var $o = this, $column = this.find('.column-eaciit'), $divpanel, $divcontainer, $panelheader, $headertitle, $ulnavbar, $linavbar, $hideshow, $removepanel, $divClear, $panelContent;
-        // console.log($column);
-        $divpanel = jQuery('<div />');
-        $divpanel.addClass('panel-eaciit ' + item.width);
-        $divpanel.attr('id',item.idpanel);
-        $divpanel.appendTo($column);
 
-        $divcontainer = jQuery('<div />');
-        $divcontainer.addClass('panel-container');
-        if(item.height != "0px" && item.height != "0")
-            $divcontainer.css('height',item.height);
-        $divcontainer.appendTo($divpanel);
-
-        $panelheader = jQuery('<div />');
-        $panelheader.addClass('panel-header');
-        $panelheader.appendTo($divcontainer);
-
-        $headertitle = jQuery('<span />');
-        $headertitle.addClass('panel-title');
-        $headertitle.html(item.title);
-        $headertitle.appendTo($panelheader);
-
-        $ulnavbar = jQuery('<ul />');
-        $ulnavbar.addClass('nav navbar-right panel-toolbox');
-        $ulnavbar.appendTo($panelheader);
-
-        $linavbar = jQuery('<li />');
-        // $linavbar.html('<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>');
-        $linavbar.appendTo($ulnavbar);
-
-        $hideshow = jQuery('<a />');
-        $hideshow.addClass('collapse-link"');
-        // $hideshow.attr(id, 'collapse-link');
-        $hideshow.html('<i class="fa fa-chevron-up"></i>');
-        $hideshow.click(clickHideShowPanel);
-        $hideshow.appendTo($linavbar);
-
-        $linavbar = jQuery('<li />');
-        // $linavbar.html('<a class="close-link"><i class="fa fa-close"></i></a>');
-        $linavbar.appendTo($ulnavbar);
-
-        $removepanel = jQuery('<a />');
-        $removepanel.addClass('close-link"');
-        $removepanel.html('<i class="fa fa-close"></i>');
-        $removepanel.click(removePanel);
-        $removepanel.appendTo($linavbar);
-
-        $divClear = jQuery('<div />');
-        $divClear.css('clear', 'both');
-        $divClear.appendTo($panelheader);
-
-        $panelContent = jQuery('<div />');
-        $panelContent.addClass('panel-content');
-        $panelContent.html(item.content);
-        $panelContent.appendTo($divcontainer);
-
-        $($divpanel).find('div.panel-container').attr('heightContent', $($divpanel).find('div.panel-container').height() + 22);
-        $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
-        $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
         // console.log($($divpanel).find('div.panel-container').height() + 22);
     },
     hide: function(item){
