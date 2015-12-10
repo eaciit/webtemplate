@@ -379,8 +379,11 @@ function clickHideShowPanel() {
 function removePanel(){
     // console.log($(this).closest('.panel-eaciit').attr('id'));
     var idpanel = $(this).closest('.panel-eaciit').attr('id');
-    if(window[idpanel+'_dispose'])
-        window[idpanel+'_dispose']();
+    // if(window[idpanel+'_dispose'])
+    //     window[idpanel+'_dispose']();
+    if (window[idpanel]['dispose'])
+        window[idpanel]['dispose']();
+    delete window[idpanel];
     $(this).closest('.panel-eaciit').remove();
 }
 
@@ -444,8 +447,19 @@ function addPanelNew(item, elem, content){
     $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
     $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
 
-    if(window[item.idpanel+'_init'])
-        window[item.idpanel+'_init']();
+    if(window['init']){
+    //     window[item.idpanel+'_init']();
+        window[item.idpanel] = {};
+        window[item.idpanel]['init'] = window['init'],
+        window['init'] = undefined;
+        window[item.idpanel]['init']();
+    }
+
+    if (window['dispose']){
+        window[item.idpanel]['dispose'] = window['dispose'];
+        window['dispose'] = undefined;
+    }
+
 }
 
 function addMethods(fn, method){
@@ -527,8 +541,10 @@ var methodsPanel = {
         }, 50);
     },
     close: function(item){
-        if(window[item.id+'_dispose'])
-            window[item.id+'_dispose']();
+        if (window[item.id]['dispose'])
+            window[item.id]['dispose']();
+        delete window[item.id];
+
         $('#'+item.id).remove();
     }
 }
