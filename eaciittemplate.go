@@ -63,6 +63,11 @@ func (t *TemplateController) Index(r *knot.WebContext) interface{} {
 	return ""
 }
 
+func (t *TemplateController) Widget(r *knot.WebContext) interface{} {
+	r.Config.ViewName = "view/widget.html"
+	return ""
+}
+
 func (t *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 	c, e := prepareConnection(appViewsPath + "/config/topmenu.json")
@@ -125,16 +130,16 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 
 func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputByte
-	// type Widget struct {
-	// 	Path string
-	// }
-	// datawidget := Widget{}
-	// r.GetPayload(&datawidget)
+	type Widget struct {
+		Path string
+	}
+	datawidget := Widget{}
+	r.GetPayload(&datawidget)
 
-	// fmt.Println(datawidget)
-	// fmt.Println(r.Query("path"))
-	// fmt.Println(r.Request.FormValue("path"))
-	// // fmt.Println(r.Request.Body)
+	fmt.Println(datawidget)
+	fmt.Println(r.Query("path"))
+	fmt.Println(r.Request.FormValue("path"))
+	// fmt.Println(r.Request.Body)
 
 	widgetFile, err := ioutil.ReadFile(appViewsPath + "/config/addwidget.html")
 	if err != nil {
