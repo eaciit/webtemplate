@@ -442,6 +442,12 @@ function addPanelNew(item, elem, content){
     $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
 }
 
+function addMethods(fn, method){
+    panel[fn] = method.panel;
+}
+
+var panel = {}
+
 var methodsPanel = {
     add: function (item){
         var $elem = this;
@@ -461,7 +467,10 @@ var methodsPanel = {
                 },
             });
         }
-
+        var idpanel = item.idpanel;
+        addMethods(idpanel + '_hide', {'panel': function(){methodsPanel['hide']({id:idpanel})} });
+        addMethods(idpanel + '_show', {'panel': function(){methodsPanel['show']({id:idpanel})} });
+        addMethods(idpanel + '_close', {'panel': function(){methodsPanel['close']({id:idpanel})} });
         // console.log($($divpanel).find('div.panel-container').height() + 22);
     },
     hide: function(item){
@@ -517,5 +526,6 @@ var methodsPanel = {
 }
 
 $.fn.eaciitPanel = function (method) {
+    // console.log(method);
     methodsPanel[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
