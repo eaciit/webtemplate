@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>EACIIT Web Template</title>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="//static/asset/img/logo.png" type="image/x-icon" />
+    <link rel="icon" href="//static/asset/img/logo.png" type="image/x-icon" />
+
+    <script src="/static/asset/js/jquery-2.1.0.min.js"></script>
+    <script src="/static/asset/js/jquery-ui.min.js"></script>
+    <script src="/static/asset/js/bootstrap.min.js"></script>
+
+    <link href="/static/asset/css/bootstrap.css" type="text/css" rel="stylesheet" />
+    <link href="/static/asset/css/site.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
+    <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/asset/css/custom.css" type="text/css" rel="stylesheet" />
+	<script src="/static/asset/js/app.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
+</head>
+<body>
+	<!-- Navbar Header -->
+	<div class="container-fluid">
+		<header id="page-header">
+			<section id="logo">
+                <div id="titlelogo"></div>
+            </section>
+		</header>
+		<nav class="navbar">
+			<div class="container-fluid">
+				<div id="navbar" class="collapse navbar-collapse">
+				</div>
+			</div>
+		</nav>
+	</div>
+	<!-- End Header Nabar -->
+
+	<!-- Content Menu Left -->
+	<div class="content-menu-left" id="menu-left" style="left:0px;">
+		<div class="toogle-left">
+			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
+		</div>
+		<div class="list-group" id="listmenuleft">
+		</div>
+	</div>
+	<!-- End Content Menu Left -->
+
+	<!-- Content -->
+	<div class="wrap-fluid content-all" style="width: auto; margin-left: 250px;">
+		<div class="container-fluid content-main">
+			<div class="content-header">
+				<div class="row">
+					<div class="col-md-12 title-content">
+						<span class="title-header" id="title-app">
+							<!-- Title App Setting di EaciitGeneral -->
+						</span>
+						<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
+					</div>
+				</div>
+			</div>
+			<div class="content-breadcrumb">
+				<!-- Content breadcrumb setting in EaciitGeneral -->
+			</div>
+
+			<!-- Content Body -->
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="row">
+					<button class="btn btn-sm btn-primary" id="addpanel">Add Panel 14</button>
+					<button class="btn btn-sm btn-primary" id="addpanel2">Add Panel 15</button>
+					<button class="btn btn-sm btn-primary" id="addpanel3">Add Panel 16</button>
+					<button class="btn btn-sm btn-primary" id="addpanel4">Add Panel 17 Referance</button>
+					<br /><br />
+					<button class="btn btn-sm btn-primary" id="hidepanel2">Hide Panel 15</button>
+					<button class="btn btn-sm btn-primary" id="showpanel2">Show Panel 15</button>
+					<button class="btn btn-sm btn-primary" id="closepanel2">Close Panel 15</button>
+				</div>
+				<div class="row" id="widgetArea" style="padding:10px;">
+					<!-- <div class="column-eaciit">
+						<div id="panel11" class="col-md-6 panel-eaciit">
+							<div class="panel-container" style="height:200px;">
+								<div class="panel-header">
+									<span class="panel-title">Jossss</span>
+									<ul class="nav navbar-right panel-toolbox">
+										<li>
+											<a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+		                                </li>
+		                                <li>
+		                                	<a class="close-link"><i class="fa fa-close"></i></a>
+		                                </li>
+									</ul>
+									<div style="clear:both;"></div>
+								</div>
+								<div class="panel-content">
+									asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+									sdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad asdasdasad
+								</div>
+							</div>
+						</div>
+					</div> -->
+				</div>
+			</div>
+			<!-- End Content Body -->
+
+		</div>
+	</div>
+
+	<!-- Content Menu Right -->
+	<div class="content-menu-right" id="menu-right" style="right:-250px;">
+		<div class="list-menu-right">
+			<div class="menu-right-nest">
+				<div class="menu-title">Server Statistic</div>
+				<div class="content-menu-right"></div>
+			</div>
+			<div class="menu-right-nest">
+				<div class="menu-title">Database Request</div>
+				<div class="content-menu-right"></div>
+			</div>
+			<div class="menu-right-nest">
+				<div class="menu-title">Server Response</div>
+				<div class="content-menu-right"></div>
+			</div>
+		</div>
+	</div>
+	<!-- End Content Menu Right -->
+
+	<!-- Content Chat -->
+	<div class="notif">
+		<div class="media-body">
+			<div class="header-notif">
+				<a class="btn btn-sm"><i class="fa fa-circle-o status" style="margin-right: 5px !important;"></i> Notification</a>
+			</div>
+			<div class="content-notif">
+			</div>
+		</div>
+	</div>
+	<!-- End Content Chat -->
+</body>
+</html>
+
+<script type="text/javascript">
+	// Generate Eaciit
+	eaciitGeneral(generalfunc, {
+		title:"Widget", 
+		breadcrumb: {urlhome:"index.html", menu:[{
+			title:"Widget",
+			href:"#"
+		}]},
+		panel: { areaPanel:'#widgetArea' }
+	});
+
+	// generate menu top
+	$('#navbar').eaciitMenu('top',[
+		{title:'Dashboard',href:'/static/view/',submenu:[],selected:false},
+		{title:'Widget',href:'/static/view/widget.html',submenu:[],selected:true},
+		{title:'Page',href:'#',submenu:[
+			{title:'Blank',href:"#",submenu:[]}
+		],selected:false},
+		{title:'Example',href:'#',submenu:[],selected:false}
+	]);
+
+	// function getTopMenu(){
+	// 	var url = "/template/getmenutop";
+	//     $.ajax({
+	// 		url: url,
+	// 		type: 'post',
+	// 		dataType: 'json',
+	// 		data : {},
+	// 		success : function(res) {
+	// 			// Generate top menu with knot v.1 and dbox eaciit
+	// 			$('#navbar').eaciitMenu('top',res);
+	// 		},
+	//     });
+	// }
+
+	function getMenuLeft(){
+		var url = "/template/getmenuleft";
+		$.ajax({
+			url: url,
+			type: 'post',
+			dataType: 'json',
+			data : {},
+			success : function(res) {
+				// Generate left menu with knot v.1 and dbox eaciit
+				$('#listmenuleft').eaciitMenu('left',res);
+			},
+	    });
+	}
+
+	// getTopMenu();
+	getMenuLeft();
+
+	$('#addpanel').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', widget:'box', width: 'col-md-6', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function panel14_init(){alert("Hallo dari panel 14");} function panel14_dispose(){alert("close panel 14");} <\/script>'});
+	});
+
+	$('#addpanel2').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel15', width: 'col-md-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		var Excel = new ActiveXObject("Excel.Application");
+        Excel.Visible = true;
+        Excel.Workbooks.Open("D:/aa/teste.xlsx");
+	});
+
+	$('#addpanel3').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel16', width: 'col-md-10', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+	});
+
+	$('#addpanel4').click(function(){
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-md-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
+	});
+
+	$('#hidepanel2').click(function(){
+		$('#widgetArea').eaciitPanel('hide',{id:'panel15'});
+		// Or can use function panel.panel15_hide()
+	});
+
+	$('#showpanel2').click(function(){
+		$('#widgetArea').eaciitPanel('show',{id:'panel15'});
+		// Or can use function panel.panel15_show()
+	});
+
+	$('#closepanel2').click(function(){
+		$('#widgetArea').eaciitPanel('close',{id:'panel15'});
+		// Or can use function panel.panel15_close()
+	});
+</script>
+
+<script src="/static/asset/js/load.js"></script>
+<script src="/static/asset/js/main.js"></script>
+<script src="/static/asset/js/overlay.js"></script>

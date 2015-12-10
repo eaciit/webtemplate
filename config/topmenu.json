@@ -1,8 +1,14 @@
 [{
 	"title":"Dashboard",
-	"href":"/webtemplate/static/view/",
+	"href":"/static/view/",
 	"submenu":[],
 	"selected":true
+},
+{
+	"title":"Widget",
+	"href":"/static/view/widget.html",
+	"submenu":[],
+	"selected":false
 },
 {
 	"title":"Page",
