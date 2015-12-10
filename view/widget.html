@@ -200,11 +200,14 @@
 	getMenuLeft();
 
 	$('#addpanel').click(function(){
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', width: 'col-md-6', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', widget:'box', width: 'col-md-6', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function panel14_init(){alert("Hallo dari panel 14");} function panel14_dispose(){alert("close panel 14");} <\/script>'});
 	});
 
 	$('#addpanel2').click(function(){
 		$('#widgetArea').eaciitPanel('add', {idpanel:'panel15', width: 'col-md-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		var Excel = new ActiveXObject("Excel.Application");
+        Excel.Visible = true;
+        Excel.Workbooks.Open("D:/aa/teste.xlsx");
 	});
 
 	$('#addpanel3').click(function(){
@@ -212,7 +215,7 @@
 	});
 
 	$('#addpanel4').click(function(){
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-md-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-md-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
 	});
 
 	$('#hidepanel2').click(function(){

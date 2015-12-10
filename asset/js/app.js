@@ -377,7 +377,10 @@ function clickHideShowPanel() {
 }
 
 function removePanel(){
-    // console.log($(this).closest('.panel-eaciit'));
+    // console.log($(this).closest('.panel-eaciit').attr('id'));
+    var idpanel = $(this).closest('.panel-eaciit').attr('id');
+    if(window[idpanel+'_dispose'])
+        window[idpanel+'_dispose']();
     $(this).closest('.panel-eaciit').remove();
 }
 
@@ -440,6 +443,9 @@ function addPanelNew(item, elem, content){
     $($divpanel).find('div.panel-container').attr('heightContent', $($divpanel).find('div.panel-container').height() + 22);
     $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
     $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
+
+    if(window[item.idpanel+'_init'])
+        window[item.idpanel+'_init']();
 }
 
 function addMethods(fn, method){
@@ -521,6 +527,8 @@ var methodsPanel = {
         }, 50);
     },
     close: function(item){
+        if(window[item.id+'_dispose'])
+            window[item.id+'_dispose']();
         $('#'+item.id).remove();
     }
 }
