@@ -18,6 +18,9 @@
     <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
     <link href="/static/asset/css/custom.css" type="text/css" rel="stylesheet" />
 	<script src="/static/asset/js/app.js"></script>
+
+	<script src="/static/asset/js/jquery.touch-punch.min.js"></script>
+	<script src="/static/asset/js/jquery.shapeshift.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
 </head>
 <body>
@@ -204,20 +207,20 @@
 	// function dispose will run when close panel and you can run again idpanel.dispose() example panel14.dispose()
 	$('#addpanel').click(function(){
 		// Add Panel Type Inline
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', widget:'box', width: 'col-md-6', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function init(){alert("Hallo dari panel 14");} function dispose(){alert("close panel 14");} <\/script>'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', widget:'box', width: 'col-8', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function init(){alert("Hallo dari panel 14");} function dispose(){alert("close panel 14");} <\/script>'});
 	});
 
 	$('#addpanel2').click(function(){
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel15', width: 'col-md-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel15', width: 'col-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
 	});
 
 	$('#addpanel3').click(function(){
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel16', width: 'col-md-10', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel16', width: 'col-6', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
 	});
 
 	$('#addpanel4').click(function(){
 		// Add Panel Type Referance
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-md-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
 	});
 
 	$('#hidepanel2').click(function(){
