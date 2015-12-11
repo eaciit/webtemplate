@@ -22,6 +22,8 @@ $(document).ready(function() {
 			$('.tooltip-tip').removeClass('tooltipster-disable');
 			$('.list-group').css({"visibility":"visible"});
 		}
+		if ($('.column-eaciit > .panel-eaciit').length > 0)
+			$(".column-eaciit").shapeshift();
 		return false;
 	});
 	
@@ -42,6 +44,8 @@ $(document).ready(function() {
 			$(this).removeClass('glyphicon-align-left');
 			$(this).addClass('glyphicon-align-right');
 		}
+		if ($('.column-eaciit > .panel-eaciit').length > 0)
+			$(".column-eaciit").shapeshift();
 		return false;
 	});
 
