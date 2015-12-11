@@ -139,7 +139,7 @@ func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
 	fmt.Println(datawidget)
 	fmt.Println(r.Query("path"))
 	fmt.Println(r.Request.FormValue("path"))
-	// fmt.Println(r.Request.Body)
+	fmt.Println(r.Request.Body)
 
 	widgetFile, err := ioutil.ReadFile(appViewsPath + "/config/addwidget.html")
 	if err != nil {
