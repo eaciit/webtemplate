@@ -12,6 +12,10 @@
     <script src="/static/asset/js/jquery-ui.min.js"></script>
     <script src="/static/asset/js/bootstrap.min.js"></script>
 
+    <script src="/static/asset/js/knockout/knockout-3.1.0.js"></script>
+    <script src="/static/asset/js/knockout/knockout.mapping-latest.js"></script>
+    <script src="/static/asset/js/knockout/knockout.validation.js"></script>
+
     <link href="/static/asset/css/bootstrap.css" type="text/css" rel="stylesheet" />
     <link href="/static/asset/css/site.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
@@ -70,14 +74,15 @@
 			<!-- Content Body -->
 			<div class="content-body" data-overlay-page-wrap>
 				<div class="row">
-					<button class="btn btn-sm btn-primary" id="addpanel">Add Panel 14</button>
-					<button class="btn btn-sm btn-primary" id="addpanel2">Add Panel 15</button>
-					<button class="btn btn-sm btn-primary" id="addpanel3">Add Panel 16</button>
-					<button class="btn btn-sm btn-primary" id="addpanel4">Add Panel 17 Referance</button>
+					<button class="btn btn-sm btn-primary" id="addpanel">Add Widget 14</button>
+					<button class="btn btn-sm btn-primary" id="addpanel2">Add Widget 15</button>
+					<button class="btn btn-sm btn-primary" id="addpanel3">Add Widget 16</button>
+					<button class="btn btn-sm btn-primary" id="addpanel4">Add Widget 17 Referance</button>
+					<button class="btn btn-sm btn-primary" id="addpanel5">Add Widget 18 Data Binding</button>
 					<br /><br />
-					<button class="btn btn-sm btn-primary" id="hidepanel2">Hide Panel 15</button>
-					<button class="btn btn-sm btn-primary" id="showpanel2">Show Panel 15</button>
-					<button class="btn btn-sm btn-primary" id="closepanel2">Close Panel 15</button>
+					<button class="btn btn-sm btn-primary" id="hidepanel2">Hide Widget 15</button>
+					<button class="btn btn-sm btn-primary" id="showpanel2">Show Widget 15</button>
+					<button class="btn btn-sm btn-primary" id="closepanel2">Close Widget 15</button>
 				</div>
 				<div class="row" id="widgetArea" style="padding:10px;">
 					<!-- <div class="column-eaciit">
@@ -207,39 +212,46 @@
 	// function dispose will run when close panel and you can run again idpanel.dispose() example panel14.dispose()
 	$('#addpanel').click(function(){
 		// Add Panel Type Inline
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel14', widget:'box', width: 'col-8', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function init(){alert("Hallo dari panel 14");} function dispose(){alert("close panel 14");} <\/script>'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'widget14', width: 'col-8', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function init(){alert("Hallo dari panel 14");} function dispose(){alert("close panel 14");} <\/script>'});
 	});
 
 	$('#addpanel2').click(function(){
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel15', width: 'col-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'widget15', width: 'col-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
 	});
 
 	$('#addpanel3').click(function(){
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel16', width: 'col-6', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'widget16', width: 'col-6', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
 	});
 
 	$('#addpanel4').click(function(){
 		// Add Panel Type Referance
-		$('#widgetArea').eaciitPanel('add', {idpanel:'panel17', width: 'col-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
+		$('#widgetArea').eaciitPanel('add', {idpanel:'widget17', width: 'col-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
+	});
+
+	$('#addpanel5').click(function(){
+		// Add Panel Type Data Binding
+		$('#widgetArea').eaciitPanel('add', {idpanel:'widget18', width: 'col-4', height:'500px', title:'Binding', type: 'reference', url: '/template/gethtmldatabind', reference:'config/addwidget.html'});
 	});
 
 	$('#hidepanel2').click(function(){
 		// Hide Panel
-		$('#widgetArea').eaciitPanel('hide',{id:'panel15'});
+		$('#widgetArea').eaciitPanel('hide',{id:'widget15'});
 		// Or can use function panel.panel15_hide()
 	});
 
 	$('#showpanel2').click(function(){
 		// Show Panel
-		$('#widgetArea').eaciitPanel('show',{id:'panel15'});
-		// Or can use function panel.panel15_show()
+		$('#widgetArea').eaciitPanel('show',{id:'widget15'});
+		// Or can use function panel.widget15_show()
 	});
 
 	$('#closepanel2').click(function(){
 		// Close Panel
-		$('#widgetArea').eaciitPanel('close',{id:'panel15'});
-		// Or can use function panel.panel15_close()
+		$('#widgetArea').eaciitPanel('close',{id:'widget15'});
+		// Or can use function panel.widget15_close()
 	});
+
+    ko.applyBindings(model);
 </script>
 
 <script src="/static/asset/js/load.js"></script>
