@@ -149,3 +149,25 @@ func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
 	return string(widgetFile)
 	// defer widgetFile.Close()
 }
+
+func (t *TemplateController) GetHtmlDataBind(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputByte
+	// type Widget struct {
+	// 	Path string
+	// }
+	// datawidget := Widget{}
+	// r.GetPayload(&datawidget)
+
+	// fmt.Println(datawidget)
+	// fmt.Println(r.Query("path"))
+	// fmt.Println(r.Request.FormValue("path"))
+	// fmt.Println(r.Request.Body)
+
+	widgetFile, err := ioutil.ReadFile(appViewsPath + "/config/widget_databind.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return string(widgetFile)
+	// defer widgetFile.Close()
+}

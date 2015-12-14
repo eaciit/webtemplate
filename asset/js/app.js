@@ -418,7 +418,12 @@ function addPanelNew(item, elem, content){
         widthpanel = '11';
 
     // $divpanel.css('width', item.width);
-    $divpanel.attr({'id':item.idpanel, 'data-ss-colspan':widthpanel});
+    var idpanelwidget = 'Panel'+panel.seqid;
+    console.log('id panel = ' + idpanelwidget);
+
+    addModelObservable(idpanelwidget,item.idpanel);
+    // $divpanel.attr({'id':item.idpanel, 'data-ss-colspan':widthpanel});
+    $divpanel.attr({'id':idpanelwidget, 'idwidget':item.idpanel, 'data-ss-colspan':widthpanel});
     $divpanel.appendTo($column);
 
     $divcontainer = jQuery('<div />');
@@ -472,14 +477,18 @@ function addPanelNew(item, elem, content){
 
     if(window['init']){
     //     window[item.idpanel+'_init']();
-        window[item.idpanel] = {};
-        window[item.idpanel]['init'] = window['init'],
+        // window[item.idpanel] = {};
+        // window[item.idpanel]['init'] = window['init'],
+        // window['init'] = undefined;
+        // window[item.idpanel]['init']();
+        window[idpanelwidget] = {};
+        window[idpanelwidget]['init'] = window['init'],
         window['init'] = undefined;
-        window[item.idpanel]['init']();
+        window[idpanelwidget]['init']();
     }
 
     if (window['dispose']){
-        window[item.idpanel]['dispose'] = window['dispose'];
+        window[idpanelwidget]['dispose'] = window['dispose'];
         window['dispose'] = undefined;
     }
     // $(".column-eaciit").shapeshift({minColumns: 4});
@@ -488,16 +497,29 @@ function addPanelNew(item, elem, content){
     $($divpanel).find('div.panel-container').attr('heightContent', $($divpanel).find('div.panel-container').height() + 22);
     $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
     $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
+
+    ko.applyBindings(model, $divpanel[0]);
+}
+
+var panel = {
+    seqid: 0,
+}, model = {};
+
+function addModelObservable(itemid, widgetid){
+    // console.log('model observalbel '+itemid+'_'+widgetid);
+    // model[itemid+'_'+widgetid] = ko.observable({});
+    console.log('model observalbel '+itemid+'_'+widgetid);
+    model[itemid+'_'+widgetid] = ko.observable({});
 }
 
 function addMethods(fn, method){
     panel[fn] = method.panel;
 }
 
-var panel = {}
-
 var methodsPanel = {
     add: function (item){
+        // if ($('#'+).length == 0){
+        panel.seqid += 1;
         var $elem = this;
         if (item.type === 'inline'){
             addPanelNew(item, $elem, item.content);
@@ -511,7 +533,12 @@ var methodsPanel = {
                 // data : JSON.stringify({path: item.reference}),
                 data : {path: item.reference},
                 success : function(res) {
-                    addPanelNew(item, $elem, res);
+                    var idpanelwidget = 'Panel'+panel.seqid;
+                    // var result = res.replace(/PanelID/i, idpanelwidget);
+                    var resultpanel = res.replace(new RegExp('PanelID', 'g'), idpanelwidget);
+                    var resultwidget = resultpanel.replace(new RegExp('WidgetID', 'g'), item.idpanel);
+                    // console.log(resultwidget);
+                    addPanelNew(item, $elem, resultwidget);
                 },
             });
         }
@@ -519,16 +546,20 @@ var methodsPanel = {
         addMethods(idpanel + '_hide', {'panel': function(){methodsPanel['hide']({id:idpanel})} });
         addMethods(idpanel + '_show', {'panel': function(){methodsPanel['show']({id:idpanel})} });
         addMethods(idpanel + '_close', {'panel': function(){methodsPanel['close']({id:idpanel})} });
+            // ko.applyBindings(model);
+        // } else {
+        //     alert("id panel alredy exist!! ");
+        // }
         // console.log($($divpanel).find('div.panel-container').height() + 22);
     },
     hide: function(item){
-        $('#'+item.id).find('.panel-content').css('display', 'none');
+        $('div[idwidget='+item.id+']').find('.panel-content').css('display', 'none');
         // $('#'+item.id).find('.panel-header').find('i').toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
         var $iconHideShow = $('#'+item.id).find('.panel-header li').eq(0).find('i');
         $iconHideShow.removeClass('fa-chevron-up');
         $iconHideShow.addClass('fa-chevron-down');
 
-        var x_panel = $('#'+item.id).find('div.panel-container');
+        var x_panel = $('div[idwidget='+item.id+']').find('div.panel-container');
         if($iconHideShow.hasClass('fa-chevron-up')){
             $(x_panel).animate({height:parseInt($(x_panel).attr('heightContent'))},200, function() {
                 $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
@@ -549,12 +580,12 @@ var methodsPanel = {
         // $(".column-eaciit").trigger("ss-event-arrange");
     },
     show: function(item){
-        $('#'+item.id).find('.panel-content').css('display', 'block');
-        var $iconHideShow = $('#'+item.id).find('.panel-header li').eq(0).find('i');
+        $('div[idwidget='+item.id+']').find('.panel-content').css('display', 'block');
+        var $iconHideShow = $('div[idwidget='+item.id+']').find('.panel-header li').eq(0).find('i');
         $iconHideShow.removeClass('fa-chevron-down');
         $iconHideShow.addClass('fa-chevron-up');
 
-        var x_panel = $('#'+item.id).find('div.panel-container');
+        var x_panel = $('div[idwidget='+item.id+']').find('div.panel-container');
         if($iconHideShow.hasClass('fa-chevron-up')){
             $(x_panel).animate({height:parseInt($(x_panel).attr('heightContent'))},200, function() {
                 $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
@@ -575,11 +606,16 @@ var methodsPanel = {
         // $(".column-eaciit").trigger("ss-event-arrange");
     },
     close: function(item){
-        if (window[item.id]['dispose'])
-            window[item.id]['dispose']();
-        delete window[item.id];
+        var elem = $('div[idwidget='+item.id+']');
+        for (var i = 0; i < elem.length; i++){
+            var itemid = $('div[idwidget='+item.id+']').eq(i).attr('id');
+            // console.log(itemid);
+            if (window[itemid]['dispose'])
+                window[itemid]['dispose']();
+            delete window[itemid];
+        }
 
-        $('#'+item.id).remove();
+        $('div[idwidget='+item.id+']').remove();
         $(".column-eaciit").trigger("ss-rearrange");
     }
 }
