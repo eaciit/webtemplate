@@ -279,7 +279,8 @@ var methodsNotif = {
 
         $iconnotiv = jQuery('<i />');
         $iconnotiv.addClass('pull-left glyphicon glyphicon-info-sign');
-        $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+        // $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+        $iconnotiv.css({'color':'#26C7F0','font-size':'25px'});
         $iconnotiv.appendTo($divmedia);
 
         $divtext = jQuery('<div />');
@@ -301,7 +302,8 @@ var methodsNotif = {
 
             $iconnotiv = jQuery('<i />');
             $iconnotiv.addClass('pull-left glyphicon glyphicon-info-sign');
-            $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+            // $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+            $iconnotiv.css({'color':'#26C7F0','font-size':'25px'});
             $iconnotiv.appendTo($divmedia);
 
             $divtext = jQuery('<div />');

@@ -28,9 +28,19 @@
 	<!-- Navbar Header -->
 	<div class="container-fluid">
 		<header id="page-header">
-			<section id="logo">
+			<!-- <section id="logo">
                 <div id="titlelogo"></div>
+                <div class="title-app">EACIIT Web Template</div>
             </section>
+            <section id="header-search">
+            	<div class="ico-search glyphicon glyphicon-search"></div>
+            	<div class="header-searchtext">
+            		<input type="text"/>
+            	</div>
+            </section> -->
+            <div class="header-header aside-md">
+            	<a href="#" class="header-brand" data-toggle="fullscreen"><img src="/static/asset/img/logoeaciittrans.png" class="m-r-sm">Web Template</a>
+            </div>
 		</header>
 		<nav class="navbar">
 			<div class="container-fluid">
@@ -123,15 +133,18 @@
 			<div class="content-header">
 				<div class="row">
 					<div class="col-md-12 title-content">
-						<span class="title-header" id="title-app">
+						<span class="title-header col-md-3" id="title-app">
 							<!-- Title App Setting di EaciitGeneral -->
 						</span>
-						<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
+						<div class="col-md-9">
+							<span class="title-breadcrumb content-breadcrumb">
+								<!-- Content breadcrumb setting in EaciitGeneral -->
+							</span>
+							<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
+						</div>
+						<!-- <span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span> -->
 					</div>
 				</div>
-			</div>
-			<div class="content-breadcrumb">
-				<!-- Content breadcrumb setting in EaciitGeneral -->
 			</div>
 
 			<!-- Content Body -->
@@ -196,7 +209,7 @@
 	// Generate Eaciit
 	eaciitGeneral(generalfunc, {
 		title:"Dashboard 2", 
-		breadcrumb: {urlhome:"index.html", menu:[{
+		breadcrumb: {urlhome:"/template/index", menu:[{
 			title:"Dashboard",
 			href:"#"
 		},{
