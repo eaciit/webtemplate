@@ -1,6 +1,6 @@
 [{
 	"title":"Dashboard",
-	"href":"/template/index/",
+	"href":"/template/index",
 	"submenu":[],
 	"selected":true
 },
