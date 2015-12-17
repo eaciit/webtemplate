@@ -181,6 +181,7 @@ $.fn.eaciitMenu = function (method) {
     viewModel.methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
 };
 
+
 $(function () {
     viewModel.fixSideMenuHeight();
 
@@ -190,5 +191,22 @@ $(function () {
 
     viewModel.ajaxPost("/template/getmenuleft", {}, function (res) {
         $('#listmenuleft').eaciitMenu('left', res);
+    });
+
+    viewModel.ajaxPost("/template/getbreadcrumb", viewModel.header, function (res) {
+        var $breadcrumbs = $("ul.breadcrumb");
+        $breadcrumbs.empty();
+
+        res.forEach(function (e, i) {
+            if (i + 1 < res.length) {
+                $('<li><a href="' + e.href + '""><i class="fa fa-home"></i> ' + e.title + '</a></li>').appendTo($breadcrumbs);
+            } else {
+                $('<li class="active">' + (i == 0 ? '<i class="fa fa-home"></i> ' : '') + e.title + '</li>').appendTo($breadcrumbs);
+            }
+        });
+
+        $('.navbar-nav li').removeClass('selected');
+        var $target = $('.navbar-nav a[href="' + res.reverse()[0].href + '"]');
+        $target.parents('li').last().addClass('selected');
     });
 })

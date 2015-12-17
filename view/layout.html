@@ -21,7 +21,10 @@
     <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
     <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
     <link href="/static/asset/css/custom.css" type="text/css" rel="stylesheet" />
-    <script>var viewModel = {}</script>
+    <script>
+    	var viewModel = {};
+    	viewModel.header = { title: '{{.title}}', href: '{{.href}}' };
+    </script>
 	<script src="/static/asset/js/main/app.js"></script>
 	<script src="/static/asset/js/main/widget.js"></script>
 
@@ -110,15 +113,10 @@
 			<div class="content-header">
 				<div class="row">
 					<div class="col-md-12 title-content">
-						<span class="title-header col-md-3" id="title-app">
-							<!-- Title App Setting di EaciitGeneral -->
+						<span class="title-breadcrumb content-breadcrumb">
+							<ul class="breadcrumb"></ul>
 						</span>
-						<div class="col-md-9">
-							<span class="title-breadcrumb content-breadcrumb">
-								<!-- Content breadcrumb setting in EaciitGeneral -->
-							</span>
-							<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
-						</div>
+						<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
 					</div>
 				</div>
 			</div>

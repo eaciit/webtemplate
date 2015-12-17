@@ -80,36 +80,6 @@ $(function() {
 
 function generalfunc (item) {
     $.each( item, function( key, value ) {
-        if (key === 'title')
-            $('.title-header').html(value);
-        if (key === 'breadcrumb'){
-            var $o = $('.content-breadcrumb'), $ulbreadcrumb, $libreadcrumb, $linkbreadcrumb, totalItem = item.breadcrumb.menu.length - 1;
-            $ulbreadcrumb = jQuery('<ul />');
-            $ulbreadcrumb.addClass('breadcrumb');
-            $ulbreadcrumb.appendTo($o);
-
-            $libreadcrumb = jQuery('<li />');
-            $libreadcrumb.appendTo($ulbreadcrumb);
-
-            $linkbreadcrumb = jQuery('<a />');
-            $linkbreadcrumb.attr('href',item.breadcrumb.urlhome);
-            $linkbreadcrumb.html('<i class="fa fa-home"></i>  Home');
-            $linkbreadcrumb.appendTo($libreadcrumb);
-            for(var key in item.breadcrumb.menu){
-                $libreadcrumb = jQuery('<li />');
-                if(totalItem == key){
-                    $libreadcrumb.addClass('active');
-                    $libreadcrumb.html(item.breadcrumb.menu[key].title);
-                    $libreadcrumb.appendTo($ulbreadcrumb);
-                }else{
-                    $libreadcrumb.appendTo($ulbreadcrumb);
-                    $linkbreadcrumb = jQuery('<a />');
-                    $linkbreadcrumb.attr('href',item.breadcrumb.menu[key].href);
-                    $linkbreadcrumb.html(item.breadcrumb.menu[key].title);
-                    $linkbreadcrumb.appendTo($libreadcrumb);
-                }
-            }
-        }
         if (key === 'panel'){
             // console.log(item.panel);
             var $o = $(item.panel.areaPanel), $divColumn;
