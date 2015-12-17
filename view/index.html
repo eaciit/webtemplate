@@ -20,6 +20,7 @@
     <link href="/static/asset/css/site.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
     <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/asset/css/animation.css" type="text/css" rel="stylesheet" />
     <link href="/static/asset/css/custom.css" type="text/css" rel="stylesheet" />
 	<script src="/static/asset/js/app.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
@@ -37,7 +38,49 @@
             		<input type="text" class="search-input"/>
             	</div>
             </div>
-            <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user"></ul>
+            <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user">
+            	<li class="hidden-xs">
+            		<a href="#" class="dropdown-toggle dk" data-toggle="dropdown">
+						<i class="fa fa-bell"></i>
+						<span class="badge badge-sm up bg-danger m-l-n-sm count">2</span>
+					</a>
+            	</li>
+            	<li class="hidden-xs">
+            		<a href="#" class="dropdown-toggle dk" data-toggle="dropdown">
+						<i class="fa fa-gear"></i>
+					</a>
+            	</li>
+            	<li class="dropdown hidden-xs">
+            		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<span class="thumb-sm avatar pull-left">
+							<img src="/static/asset/img/DSC_4844.jpg" />
+						</span>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight">
+						<span class="arrow top"></span>
+						<li>
+							<a href="#">Settings</a>
+						</li>
+						<li>
+							<a href="#">Profile</a>
+						</li>
+						<li>
+							<a href="#">
+								<span class="badge bg-danger pull-right">3</span>
+								Notifications
+							</a>
+						</li>
+						<li>
+							<a href="#">Help</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="#" data-toggle="ajaxModal">Logout</a>
+						</li>
+					</ul>
+            	</li>
+            </ul>
 		</header>
 		<nav class="navbar">
 			<div class="container-fluid">
@@ -139,7 +182,6 @@
 							</span>
 							<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
 						</div>
-						<!-- <span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span> -->
 					</div>
 				</div>
 			</div>
