@@ -1,3 +1,5 @@
+var model = {}
+
 $(function() {
     $('body').on('click touchstart', '.notif-list-toggle', function(){
         $(this).closest('.notif').find('.notif-list').toggleClass('toggled');
@@ -39,6 +41,102 @@ $(function() {
     //     }, 50);
     // });
 
+
+
+    // Generate Eaciit
+    eaciitGeneral(generalfunc, {
+        title:"Widget", 
+        breadcrumb: {urlhome:"/template/index", menu:[{
+            title:"Widget",
+            href:"#"
+        }]},
+        panel: { areaPanel:'#widgetArea' }
+    });
+
+    // generate menu top
+    $('#navbar').eaciitMenu('top',[
+        {title:'Dashboard',href:'/template/index',submenu:[],selected:false},
+        {title:'Widget',href:'/template/widget',submenu:[],selected:true},
+        {title:'Page',href:'#',submenu:[
+            {title:'Blank',href:"#",submenu:[]}
+        ],selected:false},
+        {title:'Example',href:'#',submenu:[],selected:false}
+    ]);
+
+    // function getTopMenu(){
+    //  var url = "/template/getmenutop";
+    //     $.ajax({
+    //      url: url,
+    //      type: 'post',
+    //      dataType: 'json',
+    //      data : {},
+    //      success : function(res) {
+    //          // Generate top menu with knot v.1 and dbox eaciit
+    //          $('#navbar').eaciitMenu('top',res);
+    //      },
+    //     });
+    // }
+
+    function getMenuLeft(){
+        var url = "/template/getmenuleft";
+        $.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'json',
+            data : {},
+            success : function(res) {
+                // Generate left menu with knot v.1 and dbox eaciit
+                $('#listmenuleft').eaciitMenu('left',res);
+            },
+        });
+    }
+
+    // getTopMenu();
+    getMenuLeft();
+
+    // If type panel inline and content have script in end script must <\/script>
+    // function init will run when add panel first and you can run again idpanel.init() example panel14.init()
+    // function dispose will run when close panel and you can run again idpanel.dispose() example panel14.dispose()
+    $('#addpanel').click(function(){
+        // Add Panel Type Inline
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget14', width: 'col-8', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function init(){alert("Hallo dari panel 14");} function dispose(){alert("close panel 14");} <\/script>'});
+    });
+
+    $('#addpanel2').click(function(){
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget15', width: 'col-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+    });
+
+    $('#addpanel3').click(function(){
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget16', width: 'col-6', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+    });
+
+    $('#addpanel4').click(function(){
+        // Add Panel Type Referance
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget17', width: 'col-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
+    });
+
+    $('#addpanel5').click(function(){
+        // Add Panel Type Data Binding
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget18', width: 'col-4', height:'500px', title:'Binding', type: 'reference', url: '/template/gethtmldatabind', reference:'config/addwidget.html'});
+    });
+
+    $('#hidepanel2').click(function(){
+        // Hide Panel
+        $('#widgetArea').eaciitPanel('hide',{id:'widget15'});
+        // Or can use function panel.panel15_hide()
+    });
+
+    $('#showpanel2').click(function(){
+        // Show Panel
+        $('#widgetArea').eaciitPanel('show',{id:'widget15'});
+        // Or can use function panel.widget15_show()
+    });
+
+    $('#closepanel2').click(function(){
+        // Close Panel
+        $('#widgetArea').eaciitPanel('close',{id:'widget15'});
+        // Or can use function panel.widget15_close()
+    });
 });
 
 function generalfunc (item) {

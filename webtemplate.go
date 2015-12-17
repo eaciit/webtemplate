@@ -11,6 +11,7 @@ import (
 type (
 	TemplateController struct {
 		appViewsPath string
+		layoutFile   string
 		Server       *knot.Server
 	}
 
@@ -19,15 +20,16 @@ type (
 	}
 )
 
-func InitTemplateController() *TemplateController {
+func InitTemplateController(isDevMode bool) *TemplateController {
 	yo := new(TemplateController)
 
 	// prepare view path
 	v, _ := os.Getwd()
 	yo.appViewsPath = v + "/"
+	yo.layoutFile = "view/layout.html"
 
 	// set knot output type
-	knot.DefaultOutputType = knot.OutputHtml
+	knot.DefaultOutputType = knot.OutputTemplate
 
 	// initiate server
 	yo.Server = new(knot.Server)
@@ -50,8 +52,6 @@ func (t *TemplateController) RegisterRoutes() {
 
 	dataSource, err := cursor.Fetch(nil, 0, false)
 	helper.HandleError(err)
-	content, err := ioutil.ReadFile(t.appViewsPath + "/view/layout.html")
-	helper.HandleError(err)
 
 	// dynamically route the url to single file
 	for _, eachDS := range dataSource.Data {
@@ -61,31 +61,23 @@ func (t *TemplateController) RegisterRoutes() {
 			continue
 		}
 
-		t.Server.Route(href, func(wc *knot.WebContext) interface{} {
-			return string(content)
+		t.Server.Route(href, func(r *knot.WebContext) interface{} {
+			r.Config.ViewName = t.layoutFile
+			return ""
 		})
 	}
 
 	// route the / and /index
 	for _, route := range []string{"/", "/index"} {
-		t.Server.Route(route, func(wc *knot.WebContext) interface{} {
-			return string(content)
+		t.Server.Route(route, func(r *knot.WebContext) interface{} {
+			r.Config.ViewName = t.layoutFile
+			return ""
 		})
 	}
 }
 
 func (t *TemplateController) Listen() {
 	t.Server.Listen()
-}
-
-func (t *TemplateController) Index(r *knot.WebContext) interface{} {
-	r.Config.ViewName = "view/index.html"
-	return ""
-}
-
-func (t *TemplateController) Widget(r *knot.WebContext) interface{} {
-	r.Config.ViewName = "view/widget.html"
-	return ""
 }
 
 func (t *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
@@ -147,7 +139,7 @@ func (t *TemplateController) GetHtmlDataBind(r *knot.WebContext) interface{} {
 }
 
 func main() {
-	yo := InitTemplateController()
+	yo := InitTemplateController(true)
 	yo.Server.Address = "localhost:7878"
 	yo.Listen()
 }
