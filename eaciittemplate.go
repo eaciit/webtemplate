@@ -4,46 +4,48 @@ import (
 	"fmt"
 	"github.com/eaciit/dbox"
 	_ "github.com/eaciit/dbox/dbc/json"
-	// "github.com/eaciit/ecbg"
-	// "github.com/eaciit/knot"
-	// "github.com/eaciit/knot/appcontainer"
 	"github.com/eaciit/knot/knot.v1"
-	// "github.com/eaciit/toolkit"
-	"os"
-	// "time"
 	"io/ioutil"
+	"os"
 )
-
-var (
-	appViewsPath = func() string {
-		d, _ := os.Getwd()
-		return d
-	}() + "/"
-)
-
-func main() {
-	// app := knot.NewApp("Webtemplate")
-	// app.ViewsPath = appViewsPath
-	// app.Register(&TemplateController{})
-	// app.Static("static", "/Users/arfianbagus/Documents/go/src/github.com/eaciit/webtemplate/")
-	// app.LayoutTemplate = "index.html"
-	// knot.RegisterApp(app)
-
-	knot.DefaultOutputType = knot.OutputTemplate
-	ks := new(knot.Server)
-	ks.Address = "localhost:7878"
-	ks.Register(new(TemplateController), "")
-	ks.RouteStatic("static", appViewsPath)
-	ks.Listen()
-}
 
 type TemplateController struct {
+	appViewsPath string
+	Server       *knot.Server
 }
 
-func prepareConnection(pathJson string) (dbox.IConnection, error) {
-	ci := &dbox.ConnectionInfo{pathJson, "", "", "", nil}
+type EaciitTemplate struct {
+	TemplateController
+}
 
+func InitTemplateController() *TemplateController {
+	e := new(TemplateController)
+
+	// prepare view path
+	v, _ := os.Getwd()
+	e.appViewsPath = v + "/"
+
+	// set knot output type
+	knot.DefaultOutputType = knot.OutputTemplate
+
+	// initiate server
+	e.Server = new(knot.Server)
+	e.Server.Address = "localhost:3000"
+	e.Server.RouteStatic("static", e.appViewsPath)
+	e.Server.Register(e, "")
+
+	return e
+}
+
+func (t *TemplateController) Listen() {
+	s := *t.Server
+	s.Listen()
+}
+
+func (t *TemplateController) prepareConnection(pathJson string) (dbox.IConnection, error) {
+	ci := &dbox.ConnectionInfo{t.appViewsPath + pathJson, "", "", "", nil}
 	c, e := dbox.NewConnection("json", ci)
+
 	if e != nil {
 		fmt.Printf("Yo to connect %s \n", e.Error())
 		return nil, e
@@ -70,24 +72,21 @@ func (t *TemplateController) Widget(r *knot.WebContext) interface{} {
 
 func (t *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
-	c, e := prepareConnection(appViewsPath + "/config/topmenu.json")
+
+	c, e := t.prepareConnection("/config/top-menu.json")
 	if e != nil {
 		fmt.Printf("Unable to connect %s \n", e.Error())
 	}
 	defer c.Close()
 
 	csr, e := c.NewQuery().Select("title").Cursor(nil)
-
 	if e != nil {
 		fmt.Printf("Cursor pre error: %s \n", e.Error())
 	}
 	if csr == nil {
 		fmt.Printf("Cursor not initialized")
 	}
-
 	defer csr.Close()
-
-	//rets := []toolkit.M{}
 
 	ds, e := csr.Fetch(nil, 0, false)
 	if e != nil {
@@ -95,29 +94,27 @@ func (t *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
 	} else {
 		fmt.Printf("Fetch all OK. Result: %d \n", len(ds.Data))
 	}
+
 	return ds.Data
 }
 
 func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
-	c, e := prepareConnection(appViewsPath + "/config/leftmenu.json")
+
+	c, e := t.prepareConnection("/config/left-menu.json")
 	if e != nil {
 		fmt.Printf("Unable to connect %s \n", e.Error())
 	}
 	defer c.Close()
 
 	csr, e := c.NewQuery().Select("titlegroup").Cursor(nil)
-
 	if e != nil {
 		fmt.Printf("Cursor pre error: %s \n", e.Error())
 	}
 	if csr == nil {
 		fmt.Printf("Cursor not initialized")
 	}
-
 	defer csr.Close()
-
-	//rets := []toolkit.M{}
 
 	ds, e := csr.Fetch(nil, 0, false)
 	if e != nil {
@@ -125,6 +122,7 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	} else {
 		fmt.Printf("Fetch all OK. Result: %d \n", len(ds.Data))
 	}
+
 	return ds.Data
 }
 
@@ -141,33 +139,27 @@ func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
 	fmt.Println(r.Request.FormValue("path"))
 	fmt.Println(r.Request.Body)
 
-	widgetFile, err := ioutil.ReadFile(appViewsPath + "/config/addwidget.html")
+	widgetFile, err := ioutil.ReadFile(t.appViewsPath + "/config/add-widget.html")
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	return string(widgetFile)
-	// defer widgetFile.Close()
 }
 
 func (t *TemplateController) GetHtmlDataBind(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputByte
-	// type Widget struct {
-	// 	Path string
-	// }
-	// datawidget := Widget{}
-	// r.GetPayload(&datawidget)
 
-	// fmt.Println(datawidget)
-	// fmt.Println(r.Query("path"))
-	// fmt.Println(r.Request.FormValue("path"))
-	// fmt.Println(r.Request.Body)
-
-	widgetFile, err := ioutil.ReadFile(appViewsPath + "/config/widget_databind.html")
+	widgetFile, err := ioutil.ReadFile(t.appViewsPath + "/config/widget-databind.html")
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	return string(widgetFile)
-	// defer widgetFile.Close()
+}
+
+func main() {
+	e := InitTemplateController()
+	e.Server.Address = "localhost:7878"
+	e.Listen()
 }
