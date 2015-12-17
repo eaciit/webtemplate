@@ -1,7 +1,7 @@
 /*Change header*/
 header#page-header {
     /*background: url(/static/asset/img/backgroudheader.jpg);*/
-	/*background: #3B78E7;*/
+    /*background: #3B78E7;*/
     background: #ffffff;
     /*background-size:contain;*/
     height: 48px;
@@ -9,43 +9,36 @@ header#page-header {
 
 /*Change Color Top Menu*/
 .navbar {
-    /*background: #AD975A;*/
-    background: #3E69B6;
+    background: #CC3D3D;
 }
 /*Change Color Seleted Top Menu*/
 .navbar .navbar-nav li.selected a { 
     color: #ffffff; 
-    /*background: #9C8851; */
-    background: #354A6F;
+    background: #A60F0F;
 }
 /*Change Color hover top menu*/
 .navbar .navbar-nav li a:hover, .navbar .navbar-nav li.active a:hover { 
     color: #ffffff; 
-    /*background: #E35A33;*/
-    background: #354A6F;
+    background: #A60F0F;
 }
 .navbar .open, .navbar .open > a, .navbar .open > a:focus, .navbar .open > a:hover { 
     color: #ffffff; 
-    /*background: #E35A33; */
-    background: #354A6F;
+    background: #A60F0F;
 }
 
 /*Change color dropdown menu top*/
 .navbar .dropdown .dropdown-menu { 
-    background: #3E69B6; 
-    /*border-top: 3px solid #E35A33; */
-    border-top: 3px solid #354A6F;
+    background: #CC3D3D; 
+    border-top: 3px solid #A60F0F;
 }
 .navbar .dropdown .dropdown-menu li { 
-    /*background: #B8B8B8;*/
-    background: #3E69B6;
+    background: #CC3D3D;
 }
 .navbar .dropdown .dropdown-menu li a { 
     color: #ffffff 
 }
 .navbar .dropdown .dropdown-menu li a:hover { 
-    /*background: #E35A33; */
-    background: #354A6F;
+    background: #A60F0F;
 }
 
 /*Change color left menu*/
@@ -56,15 +49,43 @@ header#page-header {
 }
 /*Change color button menu*/
 #menu-left .toogle-left span {
-    /*background: #7F7456;*/
     background: #ADADAD;
 }
 #menu-left .toogle-left span:hover{
     background: #737373;
 }
+ul.topnav li a:hover {
+    background-color: #F5BCBC;
+    color: #A62E2E!important;
+    border-left: 3px solid #A62E2E;
+}   
+ul.topnav li a:hover:after {
+    border-bottom:6px solid #A62E2E;
+}
+ul.topnav li a.selected {
+    background-color: #F5BCBC;
+    color: #A62E2E!important;
+    border-left: 3px solid #A62E2E;
+}
+ul.topnav li a.selected:after {
+    border-bottom:6px solid #A62E2E;
+}
+ul.topnav ul li a:hover {
+    color: #A62E2E!important;
+}
 
 /*Change color body notification*/
 .notif .content-notif {
-    /*background: rgb(136, 124, 90);*/
     background: #FAFAFA;
 }
+.notif {
+    background: #A60F0F;
+    border: 1px solid #A60F0F;
+}
+    .notif .content-notif .media-body {
+        background: #F7B2B2;
+    }
+    .notif .content-notif i {
+        color:#E61C1C;
+        font-size:25px;
+    }
