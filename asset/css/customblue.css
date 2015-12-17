@@ -50,17 +50,34 @@ header#page-header {
 
 /*Change color left menu*/
 #menu-left {
-    /*background: rgba(103, 87, 42, 0.75);*/
     background: #FAFAFA;
     border-right: 1px solid #E5E5E5;
 }
 /*Change color button menu*/
 #menu-left .toogle-left span {
-    /*background: #7F7456;*/
     background: #ADADAD;
 }
 #menu-left .toogle-left span:hover{
     background: #737373;
+}
+ul.topnav li a:hover {
+    background-color: #D6E0F7;
+    color: #6489EB!important;
+    border-left: 3px solid #6489EB;
+}   
+ul.topnav li a:hover:after {
+    border-bottom:6px solid #6489EB;
+}
+ul.topnav li a.selected {
+    background-color: #D6E0F7;
+    color: #6489EB!important;
+    border-left: 3px solid #6489EB;
+}
+ul.topnav li a.selected:after {
+    border-bottom:6px solid #6489EB;
+}
+ul.topnav ul li a:hover {
+    color: #6489EB!important;
 }
 
 /*Change color body notification*/
@@ -68,3 +85,14 @@ header#page-header {
     /*background: rgb(136, 124, 90);*/
     background: #FAFAFA;
 }
+    .notif {
+        background: #233D6C;
+        border: 1px solid #233D6C;
+    }
+    .notif .content-notif .media-body {
+        background: #D6E0F7;
+    }
+    .notif .content-notif i {
+        color:#26C7F0;
+        font-size:25px;
+    }
