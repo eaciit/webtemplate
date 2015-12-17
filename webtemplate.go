@@ -85,10 +85,12 @@ func (t *TemplateController) RegisterRoutes() {
 		})
 	}
 
-	// route the /
-	t.Server.Route("/", func(wc *knot.WebContext) interface{} {
-		return string(content)
-	})
+	// route the / and /index
+	for _, route := range []string{"/", "/index"} {
+		t.Server.Route(route, func(wc *knot.WebContext) interface{} {
+			return string(content)
+		})
+	}
 }
 
 func (t *TemplateController) Listen() {
