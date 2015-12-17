@@ -53,8 +53,10 @@ func (t *TemplateController) RegisterRoutes() {
 	dataSource, err := cursor.Fetch(nil, 0, false)
 	helper.HandleError(err)
 
-	helper.Recursiver(dataSource.Data, "submenu", func(each map[string]interface{}) {
-		href := each["href"].(string)
+	helper.Recursiver(dataSource.Data, func(each interface{}) []interface{} {
+		return each.(map[string]interface{})["submenu"].([]interface{})
+	}, func(each interface{}) {
+		href := each.(map[string]interface{})["href"].(string)
 
 		if href != "" && href != "#" && href != "/index" {
 			t.Server.Route(href, func(r *knot.WebContext) interface{} {
