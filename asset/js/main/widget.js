@@ -17,7 +17,22 @@ $(function() {
             container.removeClass('toggled');
         }
     });
+
+    generalfunc({
+        title:"Widget", 
+        breadcrumb: {urlhome:"/template/index", menu:[{
+            title:"Widget",
+            href:"#"
+        }]},
+        panel: { areaPanel:'#widgetArea' }
+    });
+
+    // generate menu top
     
+
+
+
+
     // If type panel inline and content have script in end script must <\/script>
     // function init will run when add panel first and you can run again idpanel.init() example panel14.init()
     // function dispose will run when close panel and you can run again idpanel.dispose() example panel14.dispose()
