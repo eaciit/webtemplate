@@ -53,19 +53,16 @@ func (t *TemplateController) RegisterRoutes() {
 	dataSource, err := cursor.Fetch(nil, 0, false)
 	helper.HandleError(err)
 
-	// dynamically route the url to single file
-	for _, eachDS := range dataSource.Data {
-		href := eachDS.(map[string]interface{})["href"].(string)
+	helper.Recursiver(dataSource.Data, "submenu", func(each map[string]interface{}) {
+		href := each["href"].(string)
 
-		if href == "" || href == "#" || href == "/index" {
-			continue
+		if href != "" && href != "#" && href != "/index" {
+			t.Server.Route(href, func(r *knot.WebContext) interface{} {
+				r.Config.ViewName = t.layoutFile
+				return ""
+			})
 		}
-
-		t.Server.Route(href, func(r *knot.WebContext) interface{} {
-			r.Config.ViewName = t.layoutFile
-			return ""
-		})
-	}
+	})
 
 	// route the / and /index
 	for _, route := range []string{"/", "/index"} {

@@ -39,3 +39,16 @@ func LoadConfig(pathJson string) (dbox.IConnection, error) {
 
 	return connection, nil
 }
+
+func Recursiver(data []interface{}, recursiveId string, callback func(map[string]interface{})) {
+	for _, eachRaw := range data {
+		each := eachRaw.(map[string]interface{})
+		recursiveContent := each[recursiveId].([]interface{})
+
+		if len(recursiveContent) > 0 {
+			Recursiver(recursiveContent, recursiveId, callback)
+		}
+
+		callback(each)
+	}
+}
