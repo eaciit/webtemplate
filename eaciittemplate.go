@@ -9,13 +9,21 @@ import (
 	"os"
 )
 
-type TemplateController struct {
-	appViewsPath string
-	Server       *knot.Server
-}
+type (
+	TemplateController struct {
+		appViewsPath string
+		Server       *knot.Server
+	}
 
-type EaciitTemplate struct {
-	TemplateController
+	EaciitTemplate struct {
+		TemplateController
+	}
+)
+
+func handleError(err error) {
+	if err != nil {
+		fmt.Printf("error occured: %s", err.Error())
+	}
 }
 
 func InitTemplateController() *TemplateController {
@@ -26,20 +34,54 @@ func InitTemplateController() *TemplateController {
 	e.appViewsPath = v + "/"
 
 	// set knot output type
-	knot.DefaultOutputType = knot.OutputTemplate
+	knot.DefaultOutputType = knot.OutputHtml
 
 	// initiate server
 	e.Server = new(knot.Server)
 	e.Server.Address = "localhost:3000"
 	e.Server.RouteStatic("static", e.appViewsPath)
+	e.RegisterRoutes()
 	e.Server.Register(e, "")
 
 	return e
 }
 
+func (t *TemplateController) RegisterRoutes() {
+	connection, err := t.prepareConnection("/config/top-menu.json")
+	handleError(err)
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Select("title").Cursor(nil)
+	handleError(err)
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	handleError(err)
+	content, err := ioutil.ReadFile(t.appViewsPath + "/view/layout.html")
+	handleError(err)
+
+	// dynamically route the url to single file
+	for _, eachDS := range dataSource.Data {
+		href := eachDS.(map[string]interface{})["href"].(string)
+
+		if href == "" || href == "#" || href == "/index" {
+			continue
+		}
+
+		t.Server.Route(href, func(wc *knot.WebContext) interface{} {
+			return string(content)
+		})
+	}
+
+	// route the /
+	t.Server.Route("/", func(wc *knot.WebContext) interface{} {
+		return string(content)
+	})
+}
+
 func (t *TemplateController) Listen() {
-	s := *t.Server
-	s.Listen()
+	server := *t.Server
+	server.Listen()
 }
 
 func (t *TemplateController) prepareConnection(pathJson string) (dbox.IConnection, error) {

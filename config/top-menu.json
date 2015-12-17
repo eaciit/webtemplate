@@ -1,12 +1,12 @@
 [{
 	"title":"Dashboard",
-	"href":"/template/index",
+	"href":"/index",
 	"submenu":[],
 	"selected":true
 },
 {
 	"title":"Widget",
-	"href":"/template/widget",
+	"href":"/widget",
 	"submenu":[],
 	"selected":false
 },
