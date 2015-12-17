@@ -21,7 +21,9 @@
     <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
     <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
     <link href="/static/asset/css/custom.css" type="text/css" rel="stylesheet" />
-	<script src="/static/asset/js/app.js"></script>
+    <script>var viewModel = {}</script>
+	<script src="/static/asset/js/main/app.js"></script>
+	<!-- <script src="/static/asset/js/main/widget.js"></script> -->
 
 	<script src="/static/asset/js/jquery.touch-punch.min.js"></script>
 	<script src="/static/asset/js/jquery.shapeshift.js"></script>
@@ -176,7 +178,7 @@
 </html>
 
 <script type="text/javascript">
-    ko.applyBindings(model);
+    ko.applyBindings(viewModel);
 </script>
 
 <script src="/static/asset/js/load.js"></script>

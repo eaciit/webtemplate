@@ -20,7 +20,7 @@ type (
 	}
 )
 
-func InitTemplateController(isDevMode bool) *TemplateController {
+func InitTemplateController() *TemplateController {
 	yo := new(TemplateController)
 
 	// prepare view path
@@ -139,7 +139,7 @@ func (t *TemplateController) GetHtmlDataBind(r *knot.WebContext) interface{} {
 }
 
 func main() {
-	yo := InitTemplateController(true)
+	yo := InitTemplateController()
 	yo.Server.Address = "localhost:7878"
 	yo.Listen()
 }
