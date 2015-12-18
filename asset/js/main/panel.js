@@ -1,26 +1,25 @@
 viewModel.panel.optionsWidth = ko.observableArray([
     { value: '', title: 'Select width' },
-    { value: '1', title: 'col-1' },
-    { value: '2', title: 'col-2' },
-    { value: '3', title: 'col-3' },
-    { value: '4', title: 'col-4' },
-    { value: '5', title: 'col-5' },
-    { value: '6', title: 'col-6' },
-    { value: '7', title: 'col-7' },
-    { value: '8', title: 'col-8' },
-    { value: '9', title: 'col-9' },
-    { value: '10', title: 'col-10' },
-    { value: '11', title: 'col-11' },
     { value: '12', title: 'col-12' },
+    { value: '11', title: 'col-11' },
+    { value: '10', title: 'col-10' },
+    { value: '9', title: 'col-9' },
+    { value: '8', title: 'col-8' },
+    { value: '7', title: 'col-7' },
+    { value: '6', title: 'col-6' },
+    { value: '5', title: 'col-5' },
+    { value: '4', title: 'col-4' },
+    { value: '3', title: 'col-3' },
+    { value: '2', title: 'col-2' },
+    { value: '1', title: 'col-1' },
 ]);
-viewModel.panel.form = ko.validatedObservable({
-    title: ko.observable('').extend({ required: true }),
-    width: ko.observable('').extend({ required: true })
-});
+viewModel.panel.title = ko.observable('').extend({ required: true });
+viewModel.panel.width = ko.observable('').extend({ required: true });
 viewModel.panel.iterator = ko.observable(1);
 viewModel.panel.create = function () {
-    if (!viewModel.panel.form.isValid()) {
-        alert('some inputs have empty value!');
+    var $validator = $(".form-panel form").kendoValidator().data("kendoValidator");
+
+    if (!$validator.validate()) {
         return;
     }
 
@@ -29,10 +28,10 @@ viewModel.panel.create = function () {
     var $panel = $($("#template-panel").html());
     
     $panel.attr("id", id);
-    $panel.attr("data-ss-colspan", viewModel.panel.form().width());
+    $panel.attr("data-ss-colspan", viewModel.panel.width());
     $panel.prependTo($columnEaciit);
     
-    $panel.find(".panel-title").html(viewModel.panel.form().title());
+    $panel.find(".panel-title").html(viewModel.panel.title());
     
     viewModel.panel.iterator(viewModel.panel.iterator() + 1);
     viewModel.mode('');

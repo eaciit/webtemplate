@@ -346,7 +346,15 @@ $.fn.eaciitMenu = function (method) {
 };
 
 viewModel.mode = ko.observable('');
+viewModel.dataSource = {};
 viewModel.panel = {};
+
+viewModel.mode.subscribe(function (value) {
+    if (value == 'panel') {
+        viewModel.panel.title('');
+        viewModel.panel.width('');
+    }
+});
 
 $.fn.eaciitHeader = function (method){
     viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -397,7 +405,8 @@ $(function () {
         }
     );
 
-    viewModel.ajaxPost("/template/getmenutop", {}, function (res) {
+    viewModel.ajaxPost("/template/getroutes", {}, function (res) {
+        res = [{"href":"/index","submenu":[],"selected":false,"title":"Dashboard"}].concat(res);
         $('#navbar').eaciitMenu('top', res);
     });
 

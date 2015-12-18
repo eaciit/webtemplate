@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/eaciit/knot/knot.v1"
 	"github.com/eaciit/toolkit"
@@ -43,7 +44,7 @@ func InitTemplateController() *TemplateController {
 }
 
 func (t *TemplateController) RegisterRoutes() {
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/top-menu.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "/config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -64,10 +65,7 @@ func (t *TemplateController) RegisterRoutes() {
 		if href != "" && href != "#" && href != "/index" {
 			t.Server.Route(href, func(r *knot.WebContext) interface{} {
 				r.Config.ViewName = t.layoutFile
-				return toolkit.M{
-					"title": title,
-					"href":  href,
-				}
+				return toolkit.M{"title": title, "href": href}
 			})
 		}
 	})
@@ -76,10 +74,7 @@ func (t *TemplateController) RegisterRoutes() {
 	for _, route := range []string{"/", "/index"} {
 		t.Server.Route(route, func(r *knot.WebContext) interface{} {
 			r.Config.ViewName = t.layoutFile
-			return toolkit.M{
-				"title": "index",
-				"href":  "/",
-			}
+			return toolkit.M{"title": "Dashboard", "href": route}
 		})
 	}
 }
@@ -88,10 +83,10 @@ func (t *TemplateController) Listen() {
 	t.Server.Listen()
 }
 
-func (t *TemplateController) GetMenuTop(r *knot.WebContext) interface{} {
+func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/top-menu.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "/config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -155,7 +150,7 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	err := r.GetForms(&payload)
 	helper.HandleError(err)
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/top-menu.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "/config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -169,7 +164,7 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	breadcrumbs := []map[string]interface{}{}
 
 	if payload["href"] == "/" || payload["href"] == "/index" {
-		return []map[string]interface{}{{"title": "Index", "href": "/index"}}
+		return []map[string]interface{}{{"title": "Dashboard", "href": "/index"}}
 	}
 
 	for _, level1 := range dataSource.Data {
@@ -200,6 +195,36 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	}
 
 	return breadcrumbs
+}
+
+func (t *TemplateController) GetDataSources(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputByte
+
+	files, err := ioutil.ReadDir(t.appViewsPath + "/data")
+	helper.HandleError(err)
+
+	filenames := []string{}
+	for _, f := range files {
+		filenames = append(filenames, f.Name())
+	}
+
+	bytes, err := json.Marshal(filenames)
+	helper.HandleError(err)
+
+	return string(bytes)
+}
+
+func (t *TemplateController) GetDataSource(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputByte
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	content, err := ioutil.ReadFile(t.appViewsPath + "/data/" + payload["id"])
+	helper.HandleError(err)
+
+	return string(content)
 }
 
 func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {

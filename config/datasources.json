@@ -1,0 +1,9 @@
+[{
+	"id": "d001",
+	"title": "Data Source 1",
+	"filename": "data-source-1.json"	
+}, {
+	"id": "d001",
+	"title": "Data Source 2",
+	"filename": "data-source-2.json"	
+}]
