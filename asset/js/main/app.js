@@ -350,8 +350,8 @@ viewModel.panel = {};
 
 viewModel.mode.subscribe(function (value) {
     if (value == 'panel') {
-        viewModel.panel.form().title('');
-        viewModel.panel.form().width('');
+        viewModel.panel.title('');
+        viewModel.panel.width('');
     }
 });
 

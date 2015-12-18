@@ -13,14 +13,13 @@ viewModel.panel.optionsWidth = ko.observableArray([
     { value: '2', title: 'col-2' },
     { value: '1', title: 'col-1' },
 ]);
-viewModel.panel.form = ko.validatedObservable({
-    title: ko.observable('').extend({ required: true }),
-    width: ko.observable('').extend({ required: true })
-});
+viewModel.panel.title = ko.observable('').extend({ required: true });
+viewModel.panel.width = ko.observable('').extend({ required: true });
 viewModel.panel.iterator = ko.observable(1);
 viewModel.panel.create = function () {
-    if (!viewModel.panel.form.isValid()) {
-        alert('some inputs have empty value!');
+    var $validator = $(".form-panel form").kendoValidator().data("kendoValidator");
+
+    if (!$validator.validate()) {
         return;
     }
 
@@ -29,10 +28,10 @@ viewModel.panel.create = function () {
     var $panel = $($("#template-panel").html());
     
     $panel.attr("id", id);
-    $panel.attr("data-ss-colspan", viewModel.panel.form().width());
+    $panel.attr("data-ss-colspan", viewModel.panel.width());
     $panel.prependTo($columnEaciit);
     
-    $panel.find(".panel-title").html(viewModel.panel.form().title());
+    $panel.find(".panel-title").html(viewModel.panel.title());
     
     viewModel.panel.iterator(viewModel.panel.iterator() + 1);
     viewModel.mode('');

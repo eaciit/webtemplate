@@ -29,7 +29,6 @@
 	<!-- knockout -->
     <script src="/static/asset/knockout/knockout-3.1.0.js"></script>
     <script src="/static/asset/knockout/knockout.mapping-latest.js"></script>
-    <script src="/static/asset/knockout/knockout.validation.js"></script>
 	
 	<!-- kendo-ui -->
     <link href="/static/asset/kendo-ui/styles/kendo.common.min.css" rel="stylesheet">
@@ -135,13 +134,15 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Title</label>
 								<div class="col-sm-10">
-									<input type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: form().title" />
+									<input required data-required-msg="Title cannot be empty" name="title" type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: title" />
+									<span class="k-invalid-msg" data-for="title"></span>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Width</label>
 								<div class="col-sm-10">
-									<select style="width: 100%" data-bind="kendoDropDownList: { data: optionsWidth, value: form().width, dataTextField: 'title', dataValueField: 'value' }"></select>
+									<select required data-required-msg="Width cannot be empty" name="width" style="width: 100%" data-bind="kendoDropDownList: { data: optionsWidth, value: width, dataTextField: 'title', dataValueField: 'value' }"></select>
+									<span class="k-invalid-msg" data-for="width"></span>
 								</div>
 							</div>
 						</form>
