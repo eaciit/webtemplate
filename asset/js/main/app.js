@@ -181,9 +181,208 @@ $.fn.eaciitMenu = function (method) {
     viewModel.methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
 };
 
+viewModel.methodsHeader = {
+    add: function(item){
+        var $o = this, $header, $linkheader, $search, $searchcontent, $icosearch, $inputsearch;
+        $header = jQuery('<div />');
+        $header.addClass('header-logo aside-md');
+        $header.appendTo($o);
+
+        $linkheader = jQuery('<a />');
+        $linkheader.addClass('header-brand');
+        $linkheader.attr({'data-toggle':'fullscreen'});
+        $linkheader.html('<img src="'+ item.logo +'" class="m-r-sm">'+ item.title);
+        $linkheader.appendTo($header);
+
+        $search = jQuery('<div />');
+        $search.addClass('header-search aside-lg');
+        $search.appendTo($o);
+
+        $searchcontent = jQuery('<div />');
+        $searchcontent.addClass('search-content');
+        $searchcontent.appendTo($search);
+
+        $icosearch = jQuery('<span />');
+        $icosearch.addClass('glyphicon glyphicon-search ico-search');
+        $icosearch.appendTo($searchcontent);
+
+        $inputsearch = jQuery('<input />');
+        $inputsearch.addClass('search-input');
+        $inputsearch.appendTo($searchcontent);
+
+        var $menuright, $liright, $contentli, $iconright, $menubadge;
+        $menuright = jQuery('<ul />');
+        $menuright.addClass('nav navbar-nav navbar-right m-n hidden-xs nav-user');
+        $menuright.appendTo($o);
+
+        for(var key in item.right){
+            $liright = jQuery('<li />');
+            $liright.addClass('hidden-xs');
+            $liright.appendTo($menuright);
+
+            $contentli = jQuery('<a />');
+            $contentli.addClass('dropdown-toggle dk');
+            if (item.right[key].dropdown.visible == true)
+                $contentli.attr({'href': item.right[key].href, 'data-toggle': 'dropdown'});
+            else
+                $contentli.attr({'href': item.right[key].href});
+            $contentli.appendTo($liright);
+
+            $iconright = jQuery('<i />');
+            $iconright.addClass(item.right[key].icon);
+            $iconright.appendTo($contentli);
+
+            if(item.right[key].number.visible === true){
+                $menubadge = jQuery('<span />');
+                $menubadge.addClass('badge badge-sm up bg-danger m-l-n-sm count');
+                $menubadge.html(item.right[key].number.value);
+                $menubadge.appendTo($contentli);
+            }
+
+            if(item.right[key].dropdown.visible === true){
+                var ddmenuright = item.right[key].dropdown, $ddcontent, $ddheader, $panelsection, $listdd, $itemdd, $icondd, $itemtitledd, $ddfooter;
+                $ddcontent = jQuery('<section />');
+                $ddcontent.addClass('dropdown-menu aside-xl');
+                $ddcontent.appendTo($liright);
+
+                $panelsection = jQuery('<section />');
+                $panelsection.addClass('panel');
+                $panelsection.appendTo($ddcontent);
+
+                $ddheader = jQuery('<header />');
+                $ddheader.addClass('panel-heading b-light bg-light');
+                $ddheader.html('<strong>'+ ddmenuright.header +'</strong>');
+                $ddheader.appendTo($panelsection);
+
+                $listdd = jQuery('<div />');
+                $listdd.addClass('list-group list-group-alt animated fadeInRight');
+                $listdd.appendTo($panelsection);
+
+                for(var key2 in ddmenuright.data){
+                    $itemdd = jQuery('<a />');
+                    $itemdd.addClass('media list-group-item');
+                    $itemdd.attr('href',ddmenuright.data[key2].href);
+                    $itemdd.appendTo($listdd);
+
+                    if(ddmenuright.data[key2].icon !== ''){
+                        $icondd = jQuery('<span />');
+                        $icondd.addClass('pull-left thumb-sm text-center');
+                        $icondd.html('<i class="'+ ddmenuright.data[key2].icon +'"></i>');
+                        $icondd.appendTo($itemdd);
+                    }
+                    $itemtitledd = jQuery('<span />');
+                    $itemtitledd.addClass('media-body block m-b-none');
+                    $itemtitledd.html(ddmenuright.data[key2].content + '<br><small class="text-muted">'+ ddmenuright.data[key2].detail +'</small>');
+                    $itemtitledd.appendTo($itemdd);
+                }
+
+                $ddfooter = jQuery('<footer />');
+                $ddfooter.addClass('panel-footer text-sm');
+                $ddfooter.html('<span class="pull-right"><i class="fa fa-cog"></i></span><span data-toggle="class:show animated fadeInRight" class="active">'+ ddmenuright.footer +'</span>');
+                $ddfooter.appendTo($panelsection);
+            }
+        }
+
+        var $usermenu, $userphoto, $menuuser, $arrow, $limenuuser;
+        $usermenu = jQuery('<li />');
+        $usermenu.addClass('dropdown hidden-xs');
+        $usermenu.appendTo($menuright);
+
+        $userphoto = jQuery('<a />');
+        $userphoto.addClass('dropdown-toggle');
+        $userphoto.attr({'href':'#','data-toggle':'dropdown'});
+        $userphoto.html('<span class="thumb-sm avatar pull-left"><img src="'+ item.user.photo +'" /></span><b class="caret"></b>');
+        $userphoto.appendTo($usermenu);
+
+        $menuuser = jQuery('<ul />');
+        $menuuser.addClass('dropdown-menu animated fadeInRight');
+        $menuuser.appendTo($usermenu);
+
+        $arrow = jQuery('<span />');
+        $arrow.addClass('arrow top');
+        $arrow.appendTo($menuuser);
+
+        for(var key in item.user.data){
+            $limenuuser = jQuery('<li />');
+            $limenuuser.attr('href',item.user.data[key].href);
+            if(item.user.data[key]['number'])
+                $limenuuser.html('<a href="'+item.user.data[key].href+'"><span class="badge bg-danger pull-right">'+ item.user.data[key].number +'</span>' + item.user.data[key].title + '</a>');
+            else
+                $limenuuser.html('<a href="'+item.user.data[key].href+'">'+item.user.data[key].title+'</a>');
+            $limenuuser.appendTo($menuuser);
+        }
+        $limenuuser = jQuery('<li />');
+        $limenuuser.addClass('divider');
+        $limenuuser.appendTo($menuuser);
+
+        $limenuuser = jQuery('<li />');
+        $limenuuser.html('<span class="title-chage-color">Change Color</span><div class="content-color"><ul class="list-color"><li id="blue"></li><li id="orange"></li><li id="yellow"></li><li id="green"></li><li id="red"></li></ul></div>');
+        $limenuuser.appendTo($menuuser);
+
+        $limenuuser = jQuery('<li />');
+        $limenuuser.addClass('divider');
+        $limenuuser.appendTo($menuuser);
+
+        $limenuuser = jQuery('<li />');
+        $limenuuser.html('<a href="'+ item.user.linkLogout +'" data-toggle="ajaxModal">Logout</a>');
+        $limenuuser.appendTo($menuuser);
+
+    },
+    change: function(){
+
+    },
+    search: function(item){
+        console.log(item);
+    }
+};
+
+$.fn.eaciitHeader = function (method){
+    viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
+}
 
 $(function () {
     viewModel.fixSideMenuHeight();
+
+    $('#page-header').eaciitHeader('add',
+        {
+            title:'Web Template',
+            logo: '/static/asset/img/logoeaciittrans.png',
+            right: [
+                {
+                    icon:'fa fa-bell',
+                    number: {visible: true, value: 3},
+                    href: '#',
+                    dropdown:{
+                        visible:true, header: 'You have 3 notifications', footer: 'See all notifications', 
+                        data:[
+                            {icon:'fa fa-envelope-o fa-2x text-success', href:'#', content:'Arfian sent you a email', detail:'1 minutes ago'},
+                            {icon:'fa fa-envelope-o fa-2x text-success', href:'#', content:'Noval sent you a email', detail:'1 hour ago'},
+                            {icon:'', content:'Release Web Template v1.1', href:'#', detail:'3 hour ago'}
+                        ]
+                    }
+                },
+                {
+                    icon:'fa fa-gear',
+                    number: {visible: false},
+                    dropdown:{
+                        visible:true, header: 'Configure Widget', footer: 'See all Configuration', 
+                        data:[
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Report', detail:''},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:''},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Selection', detail:''}
+                        ]
+                    },
+                    href: '#'
+                }
+            ],
+            user: { photo:'/static/asset/img/DSC_4844.jpg', linkLogout: '#', data: [
+                {title : 'Setting', href:'#'},
+                {title : 'Profile', href:'#'},
+                {title : 'Notification', href:'#', number: 3 },
+                {title : 'Help', href:'#'}
+            ]}
+        }
+    );
 
     viewModel.ajaxPost("/template/getmenutop", {}, function (res) {
         $('#navbar').eaciitMenu('top', res);
@@ -194,6 +393,7 @@ $(function () {
     });
 
     viewModel.ajaxPost("/template/getbreadcrumb", viewModel.header, function (res) {
+        $('.title-header').html(viewModel.header.title);
         var $breadcrumbs = $("ul.breadcrumb");
         $breadcrumbs.empty();
 
