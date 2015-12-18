@@ -286,6 +286,7 @@ li#red{
 	z-index: 999;
 	/*background: rgba(103, 87, 42, 0.75);*/
 	background: #FAFAFA;
+    border-right: 1px solid;
 }
 	#menu-left .list-group{
 		padding:0px;
@@ -417,10 +418,12 @@ ul.topnav li a {
 	    text-shadow: none;
 	    padding-left: 28px;
 	    position: relative;
+    	border-left: 3px solid;
 	}
 	ul.topnav li a:hover:after {
 	    border-left:8px solid transparent;
 	    border-right:8px solid transparent;
+    	border-bottom:6px solid;
 	    width:0;
 	    height:0;
 	    position: absolute;
@@ -438,12 +441,12 @@ ul.topnav li a {
 		/*background-color: #D6E0F7;*/
 	    /*color: #6489EB!important;*/
 	    text-shadow: none;
-	    /*border-left: 3px solid #6489EB;*/
+	    border-left: 3px solid;
 	    padding-left: 28px;
 	    position: relative;
 	}
 	ul.topnav li a.selected:after {
-		/*border-bottom:6px solid #6489EB;*/
+		border-bottom:6px solid;
 	    border-left:8px solid transparent;
 	    border-right:8px solid transparent;
 	    width:0;
@@ -618,8 +621,8 @@ ul.topnav li a {
     width: 120px;
     right: 15px;
     z-index: 1200;
-    /*background: #233D6C;
-    border: 1px solid #233D6C;*/
+    /*background: #233D6C;*/
+    border: 1px solid;
     height: 30px;
     overflow: hidden;
 }
@@ -652,6 +655,9 @@ ul.topnav li a {
 		    min-height: 50px;
 		    padding: 5px;
 		    font-size: 11px;
+		}
+		.notif .content-notif i {
+        	font-size:25px;
 		}
 		.media, .media-body {
 		    overflow: hidden;
