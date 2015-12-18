@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/eaciit/knot/knot.v1"
 	"github.com/eaciit/toolkit"
@@ -198,33 +197,52 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 }
 
 func (t *TemplateController) GetDataSources(r *knot.WebContext) interface{} {
-	r.Config.OutputType = knot.OutputByte
+	r.Config.OutputType = knot.OutputJson
 
-	files, err := ioutil.ReadDir(t.appViewsPath + "/data")
+	connection, err := helper.LoadConfig(t.appViewsPath + "/config/datasources.json")
 	helper.HandleError(err)
+	defer connection.Close()
 
-	filenames := []string{}
-	for _, f := range files {
-		filenames = append(filenames, f.Name())
+	cursor, err := connection.NewQuery().Select("title").Cursor(nil)
+	helper.HandleError(err)
+	if cursor == nil {
+		fmt.Printf("Cursor not initialized")
 	}
+	defer cursor.Close()
 
-	bytes, err := json.Marshal(filenames)
+	dataSource, err := cursor.Fetch(nil, 0, false)
 	helper.HandleError(err)
 
-	return string(bytes)
+	return dataSource.Data
 }
 
-func (t *TemplateController) GetDataSource(r *knot.WebContext) interface{} {
-	r.Config.OutputType = knot.OutputByte
+func (t *TemplateController) GetSelectedDataSource(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
 
-	payload := map[string]string{}
-	err := r.GetForms(&payload)
+	connection, err := helper.LoadConfig(t.appViewsPath + "/config/app.json")
+	helper.HandleError(err)
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Select("title").Cursor(nil)
+	helper.HandleError(err)
+	if cursor == nil {
+		fmt.Printf("Cursor not initialized")
+	}
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
 	helper.HandleError(err)
 
-	content, err := ioutil.ReadFile(t.appViewsPath + "/data/" + payload["id"])
-	helper.HandleError(err)
+	config := dataSource.Data[0].(map[string]interface{})
 
-	return string(content)
+	for _, eachRaw := range t.GetDataSources(r).([]interface{}) {
+		each := eachRaw.(map[string]interface{})
+		if each["id"] == config["datasource"] {
+			return each
+		}
+	}
+
+	return dataSource
 }
 
 func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {

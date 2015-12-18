@@ -1,9 +1,9 @@
 [{
-	"id": "d001",
+	"id": "ds01",
 	"title": "Data Source 1",
-	"filename": "data-source-1.json"	
+	"filename": "datasource-1.json"	
 }, {
-	"id": "d001",
+	"id": "ds02",
 	"title": "Data Source 2",
-	"filename": "data-source-2.json"	
+	"filename": "datasource-2.json"	
 }]
