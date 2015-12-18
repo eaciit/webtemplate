@@ -592,6 +592,10 @@ ul.topnav li a {
 	    padding: 10px;
 	    width: 300px;
 	}
+			.notif .content-notif i {
+        	font-size:25px;
+		}
+
 		.notif .content-notif .media-body {
 		    min-width: 100px;
 		    /*background: #D6E0F7;*/
