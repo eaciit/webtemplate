@@ -829,3 +829,7 @@ ul.topnav li a {
     background-color: lightblue;
 }*/
 /*End Content Widget*/
+
+.form-panel {
+	width: 400px;
+}

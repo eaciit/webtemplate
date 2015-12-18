@@ -181,6 +181,8 @@ $.fn.eaciitMenu = function (method) {
     viewModel.methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
 };
 
+viewModel.mode = ko.observable('');
+viewModel.panel = {};
 
 $(function () {
     viewModel.fixSideMenuHeight();
