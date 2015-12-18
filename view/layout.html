@@ -5,140 +5,82 @@
 	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="//static/asset/img/logo.png" type="image/x-icon" />
-    <link rel="icon" href="//static/asset/img/logo.png" type="image/x-icon" />
 
-    <script src="/static/asset/js/jquery-2.1.0.min.js"></script>
-    <script src="/static/asset/js/jquery-ui.min.js"></script>
-    <script src="/static/asset/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="/static/asset/img/logo.png" type="image/x-icon" />
+    <link rel="icon" href="/static/asset/img/logo.png" type="image/x-icon" />
 
-    <script src="/static/asset/js/knockout/knockout-3.1.0.js"></script>
-    <script src="/static/asset/js/knockout/knockout.mapping-latest.js"></script>
-    <script src="/static/asset/js/knockout/knockout.validation.js"></script>
-
-    <link href="/static/asset/css/bootstrap.css" type="text/css" rel="stylesheet" />
-    <link href="/static/asset/css/site.css" type="text/css" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
-    <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
-    <link href="/static/asset/css/animation.css" type="text/css" rel="stylesheet" />
-    <link href="/static/asset/css/customred.css" type="text/css" rel="stylesheet" id="customlayout" />
+	<!-- header -->
     <script>
     	var viewModel = {};
     	viewModel.header = { title: '{{.title}}', href: '{{.href}}' };
     </script>
+
+	<!-- jquery -->
+    <script src="/static/asset/jquery/jquery-2.1.0.min.js"></script>
+    <script src="/static/asset/jquery/jquery-ui.min.js"></script>
+	
+	<!-- bootstrap -->
+    <script src="/static/asset/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/asset/bootstrap/bootstrap.min.css" />
+	
+	<!-- font-awesome -->
+    <link rel="stylesheet" href="/static/asset/font-awesome/css/font-awesome.min.css" />
+
+	<!-- knockout -->
+    <script src="/static/asset/knockout/knockout-3.1.0.js"></script>
+    <script src="/static/asset/knockout/knockout.mapping-latest.js"></script>
+    <script src="/static/asset/knockout/knockout.validation.js"></script>
+	
+	<!-- kendo-ui -->
+    <link href="/static/asset/kendo-ui/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.rtl.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.default.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.default.min.css" rel="stylesheet">
+    <script src="/static/asset/kendo-ui/js/kendo.all.min.js"></script>
+
+	<!-- knockout-kendo -->
+    <script src="/static/asset/knockout-kendo/knockout-kendo.min.js"></script>
+
+	<!-- others -->
 	<script src="/static/asset/js/main/app.js"></script>
 	<script src="/static/asset/js/main/widget.js"></script>
-
-	<script src="/static/asset/js/jquery.touch-punch.min.js"></script>
-	<script src="/static/asset/js/jquery.shapeshift.js"></script>
+	<script src="/static/asset/js/main/widget.old.js"></script>
+	<script src="/static/asset/touch-punch/jquery.touch-punch.min.js"></script>
+	<script src="/static/asset/shapeshift/jquery.shapeshift.js"></script>
+	
+    <link rel="stylesheet" href="/static/asset/css/site.css" />
+    <link rel="stylesheet" href="/static/asset/css/overlay.css"/>
+    <link rel="stylesheet" href="/static/asset/css/custom.css" />
+    <link rel="stylesheet" href="/static/asset/css/animation.css" />
+    <link rel="stylesheet" href="/static/asset/css/customred.css" id="customlayout" />
     <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
+	
+	<!-- template -->
+	<script type="text/template" id="template-panel">
+		<div class="panel-eaciit ss-active-child ui-draggable-handle">
+			<div class="panel-container">
+				<div class="panel-header">
+					<span class="panel-title"></span>
+					<ul class="nav navbar-right panel-toolbox">
+						<li><a class="collapse-link">
+							<i class="fa fa-chevron-up" onclick="viewModel.panel.collapse(this)"></i>
+						</a></li>
+						<li><a class="close-link" onclick="viewModel.panel.close(this)">
+							<i class="fa fa-close"></i>
+						</a></li>
+					</ul>
+					<div style="clear: both;"></div>
+				</div>
+				<div class="panel-content">Empty content</div>
+			</div>
+		</div>
+	</script>
 </head>
-<body>
+<body data-bind="with: viewModel">
 	<!-- Navbar Header -->
 	<div class="container-fluid">
-		<header id="page-header">
-            <!-- <div class="header-logo aside-md">
-            	<a href="#" class="header-brand" data-toggle="fullscreen"><img src="/static/asset/img/logoeaciittrans.png" class="m-r-sm">Web Template</a>
-            </div>
-            <div class="header-search aside-lg">
-            	<div class="search-content">
-            		<span class="glyphicon glyphicon-search ico-search"></span>
-            		<input type="text" class="search-input"/>
-            	</div>
-            </div>
-            <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user">
-            	<li class="hidden-xs">
-            		<a href="#" class="dropdown-toggle dk" data-toggle="dropdown">
-						<i class="fa fa-bell"></i>
-						<span class="badge badge-sm up bg-danger m-l-n-sm count">2</span>
-					</a>
-					<section class="dropdown-menu aside-xl">
-						<section class="panel">
-							<header class="panel-heading b-light bg-light">
-								<strong>You have <span class="count" style="display: inline;">3</span> notifications</strong>
-							</header>
-							<div class="list-group list-group-alt animated fadeInRight">
-								<a href="#" class="media list-group-item" style="display: block;">
-									<span class="pull-left thumb-sm text-center">
-										<i class="fa fa-envelope-o fa-2x text-success"></i>
-									</span>
-									<span class="media-body block m-b-none">
-										Sophi sent you a email<br><small class="text-muted">1 minutes ago</small>
-									</span>
-								</a>
-								<a href="#" class="media list-group-item">
-									<span class="pull-left thumb-sm">
-										<img src="/static/asset/img/DSC_4844.jpg" alt="John said" class="img-circle">
-									</span>
-									<span class="media-body block m-b-none">
-										Use awesome animate.css<br>
-										<small class="text-muted">10 minutes ago</small>
-									</span>
-								</a>
-								<a href="#" class="media list-group-item">
-									<span class="media-body block m-b-none">
-										1.0 initial released<br>
-										<small class="text-muted">1 hour ago</small>
-									</span>
-								</a>
-							</div>
-							<footer class="panel-footer text-sm">
-								<span class="pull-right"><i class="fa fa-cog"></i></span>
-								<span data-toggle="class:show animated fadeInRight" class="active">See all the notifications</span>
-							</footer>
-						</section>
-					</section>
-            	</li>
-            	<li class="hidden-xs">
-            		<a href="#" class="dropdown-toggle dk" data-toggle="dropdown">
-						<i class="fa fa-gear"></i>
-					</a>
-            	</li>
-            	<li class="dropdown hidden-xs">
-            		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="thumb-sm avatar pull-left">
-							<img src="/static/asset/img/DSC_4844.jpg" />
-						</span>
-						<b class="caret"></b>
-					</a>
-					<ul class="dropdown-menu animated fadeInRight">
-						<span class="arrow top"></span>
-						<li>
-							<a href="#">Settings</a>
-						</li>
-						<li>
-							<a href="#">Profile</a>
-						</li>
-						<li>
-							<a href="#">
-								<span class="badge bg-danger pull-right">3</span>
-								Notifications
-							</a>
-						</li>
-						<li>
-							<a href="#">Help</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<span class="title-chage-color">Change Color</span>
-							<div class="content-color">
-								<ul class="list-color">
-									<li id="blue"></li>
-									<li id="orange"></li>
-									<li id="yellow"></li>
-									<li id="green"></li>
-									<li id="red"></li>
-								</ul>
-							</div>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="#" data-toggle="ajaxModal">Logout</a>
-						</li>
-					</ul>
-            	</li>
-            </ul> -->
-		</header>
+		<header id="page-header"></header>
 		<nav class="navbar">
 			<div class="container-fluid">
 				<div id="navbar" class="collapse navbar-collapse">
@@ -149,7 +91,7 @@
 	<!-- End Header Nabar -->
 
 	<!-- Content Menu Left -->
-	<div class="content-menu-left" id="menu-left" style="left:0px;">
+	<div class="content-menu-left" id="menu-left">
 		<div class="toogle-left">
 			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
 		</div>
@@ -158,8 +100,8 @@
 	<!-- End Content Menu Left -->
 
 	<!-- Content -->
-	<div class="wrap-fluid content-all" style="width: auto; margin-left: 250px;">
-		<div class="container-fluid content-main">
+	<div class="wrap-fluid content-all" style="margin-left: 250px;">
+		<div class="container-fluid content-main content-panel" data-bind="visible: (mode() == '')">
 			<div class="content-header">
 				<div class="row">
 					<div class="col-md-12 title-content">
@@ -178,21 +120,42 @@
 
 			<!-- Content Body -->
 			<div class="content-body" data-overlay-page-wrap>
-				<div class="row">
-					<button class="btn btn-sm btn-primary" id="addpanel">Add Widget 14</button>
-					<button class="btn btn-sm btn-primary" id="addpanel2">Add Widget 15</button>
-					<button class="btn btn-sm btn-primary" id="addpanel3">Add Widget 16</button>
-					<button class="btn btn-sm btn-primary" id="addpanel4">Add Widget 17 Referance</button>
-					<button class="btn btn-sm btn-primary" id="addpanel5">Add Widget 18 Data Binding</button>
-					<br /><br />
-					<button class="btn btn-sm btn-primary" id="hidepanel2">Hide Widget 15</button>
-					<button class="btn btn-sm btn-primary" id="showpanel2">Show Widget 15</button>
-					<button class="btn btn-sm btn-primary" id="closepanel2">Close Widget 15</button>
-				</div>
-				<div class="row" id="widgetArea" style="padding:10px;"></div>
+				<div class="column-eaciit"></div>
 			</div>
 			<!-- End Content Body -->
 
+		</div>
+
+		<div class="container-fluid content-main form-panel" data-bind="visible: (mode() == 'panel'), with: panel">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">Create New Panel</h1>
+				</div>
+				<div class="panel-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Title</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: form().title" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Width</label>
+							<div class="col-sm-10">
+								<select style="width: 100%" data-bind="kendoDropDownList: { data: optionsWidth, value: form().width, dataTextField: 'title', dataValueField: 'value' }"></select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="panel-footer">
+					<div class="pull-right">
+						<button class="btn btn-sm btn-success" data-bind="click: create">
+							<span class="glyphicon glyphicon-save"></span> Create
+						</button>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -226,13 +189,13 @@
 		</div>
 	</div>
 	<!-- End Content Chat -->
+
+	<script type="text/javascript">
+	    ko.applyBindings(viewModel);
+	</script>
+
+	<script src="/static/asset/js/load.js"></script>
+	<script src="/static/asset/js/main.js"></script>
+	<script src="/static/asset/js/overlay.js"></script>
 </body>
 </html>
-
-<script type="text/javascript">
-    ko.applyBindings(viewModel);
-</script>
-
-<script src="/static/asset/js/load.js"></script>
-<script src="/static/asset/js/main.js"></script>
-<script src="/static/asset/js/overlay.js"></script>

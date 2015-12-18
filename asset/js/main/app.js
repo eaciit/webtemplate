@@ -157,30 +157,6 @@ viewModel.methodsMenu = {
     }
 };
 
-viewModel.ajaxPost = function (url, data, callbackSuccess, callbackError) {
-    $.ajax({
-        url: url,
-        type: 'post',
-        dataType: 'json',
-        data: data,
-        success: callbackSuccess,
-        error: function (a, b, c) {
-            if (callbackError !== undefined) {
-                callbackError();
-            }
-        }
-    });
-};
-
-viewModel.fixSideMenuHeight = function () {
-    $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
-    $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
-};
-
-$.fn.eaciitMenu = function (method) {
-    viewModel.methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
-};
-
 viewModel.methodsHeader = {
     add: function(item){
         var $o = this, $header, $linkheader, $search, $searchcontent, $icosearch, $inputsearch;
@@ -262,6 +238,8 @@ viewModel.methodsHeader = {
                     $itemdd = jQuery('<a />');
                     $itemdd.addClass('media list-group-item');
                     $itemdd.attr('href',ddmenuright.data[key2].href);
+                    if (ddmenuright.data[key2].onclick != undefined)
+                        $itemdd.attr({'onclick': ddmenuright.data[key2].onclick});
                     $itemdd.appendTo($listdd);
 
                     if(ddmenuright.data[key2].icon !== ''){
@@ -336,6 +314,33 @@ viewModel.methodsHeader = {
     }
 };
 
+viewModel.ajaxPost = function (url, data, callbackSuccess, callbackError) {
+    $.ajax({
+        url: url,
+        type: 'post',
+        dataType: 'json',
+        data: data,
+        success: callbackSuccess,
+        error: function (a, b, c) {
+            if (callbackError !== undefined) {
+                callbackError();
+            }
+        }
+    });
+};
+
+viewModel.fixSideMenuHeight = function () {
+    $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
+    $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
+};
+
+$.fn.eaciitMenu = function (method) {
+    viewModel.methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
+};
+
+viewModel.mode = ko.observable('');
+viewModel.panel = {};
+
 $.fn.eaciitHeader = function (method){
     viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
@@ -367,6 +372,7 @@ $(function () {
                     dropdown:{
                         visible:true, header: 'Configure Widget', footer: 'See all Configuration', 
                         data:[
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Panel', detail:'', onclick: 'viewModel.mode("panel")'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Report', detail:''},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:''},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Selection', detail:''}
