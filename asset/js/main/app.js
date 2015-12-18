@@ -306,11 +306,18 @@ viewModel.methodsHeader = {
         $limenuuser.appendTo($menuuser);
 
     },
-    change: function(){
-
-    },
-    search: function(item){
-        console.log(item);
+    change: function(item){
+        var $linkcss = $('link[id=customlayout]');
+        if(item === 'yellow')
+            $linkcss.attr('href','/static/asset/css/customyellow.css');
+        else if(item === 'blue')
+            $linkcss.attr('href','/static/asset/css/customblue.css');
+        else if(item === 'orange')
+            $linkcss.attr('href','/static/asset/css/customorange.css');
+        else if(item === 'green')
+            $linkcss.attr('href','/static/asset/css/customgreen.css');
+        else
+            $linkcss.attr('href','/static/asset/css/customred.css');
     }
 };
 
@@ -414,5 +421,13 @@ $(function () {
         $('.navbar-nav li').removeClass('selected');
         var $target = $('.navbar-nav a[href="' + res.reverse()[0].href + '"]');
         $target.parents('li').last().addClass('selected');
+    });
+
+    $("header#page-header").on("click", "div.content-color>ul.list-color>li", function() {
+        viewModel.methodsHeader.change($(this).attr('id'));
+    });
+
+    $('header#page-header').on('keyup', '.header-search input.search-input', function(res){
+        console.log($(this).val());
     });
 })
