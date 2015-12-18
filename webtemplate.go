@@ -128,6 +128,26 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	return dataSource.Data
 }
 
+func (t *TemplateController) GetHeader(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	connection, err := helper.LoadConfig(t.appViewsPath + "/config/header-app.json")
+	helper.HandleError(err)
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Select("titlegroup").Cursor(nil)
+	helper.HandleError(err)
+	if cursor == nil {
+		fmt.Printf("Cursor not initialized")
+	}
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	helper.HandleError(err)
+
+	return dataSource.Data
+}
+
 func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
