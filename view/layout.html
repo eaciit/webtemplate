@@ -53,7 +53,7 @@
     <link rel="stylesheet" href="/static/asset/css/overlay.css"/>
     <link rel="stylesheet" href="/static/asset/css/custom.css" />
     <link rel="stylesheet" href="/static/asset/css/animation.css" />
-    <link rel="stylesheet" href="/static/asset/css/customred.css" id="customlayout" />
+    <!-- <link rel="stylesheet" href="/static/asset/css/customred.css" id="customlayout" /> -->
     <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
 	
 	<!-- template -->
@@ -79,23 +79,22 @@
 </head>
 <body data-bind="with: viewModel">
 	<!-- Navbar Header -->
-	<div class="container-fluid">
+	<div class="header">
 		<header id="page-header"></header>
 		<nav class="navbar">
-			<div class="container-fluid">
-				<div id="navbar" class="collapse navbar-collapse">
-				</div>
-			</div>
+			<div id="navbar" class="collapse navbar-collapse"></div>
 		</nav>
 	</div>
 	<!-- End Header Nabar -->
 
 	<!-- Content Menu Left -->
-	<div class="content-menu-left" id="menu-left">
+	<div id="menu-left">
 		<div class="toogle-left">
 			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
 		</div>
-		<div class="list-group" id="listmenuleft"></div>
+		<div class="list-group" id="listmenuleft">
+			
+		</div>
 	</div>
 	<!-- End Content Menu Left -->
 
@@ -123,37 +122,38 @@
 				<div class="column-eaciit"></div>
 			</div>
 			<!-- End Content Body -->
-
 		</div>
 
 		<div class="container-fluid content-main form-panel" data-bind="visible: (mode() == 'panel'), with: panel">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h1 class="panel-title">Create New Panel</h1>
-				</div>
-				<div class="panel-body">
-					<form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Title</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: form().title" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Width</label>
-							<div class="col-sm-10">
-								<select style="width: 100%" data-bind="kendoDropDownList: { data: optionsWidth, value: form().width, dataTextField: 'title', dataValueField: 'value' }"></select>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="panel-footer">
-					<div class="pull-right">
-						<button class="btn btn-sm btn-success" data-bind="click: create">
-							<span class="glyphicon glyphicon-save"></span> Create
-						</button>
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title">Create New Panel</h1>
 					</div>
-					<div class="clearfix"></div>
+					<div class="panel-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Title</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: form().title" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Width</label>
+								<div class="col-sm-10">
+									<select style="width: 100%" data-bind="kendoDropDownList: { data: optionsWidth, value: form().width, dataTextField: 'title', dataValueField: 'value' }"></select>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="panel-footer">
+						<div class="pull-right">
+							<button class="btn btn-sm btn-success" data-bind="click: create">
+								<span class="glyphicon glyphicon-save"></span> Create
+							</button>
+						</div>
+						<div class="clearfix"></div>
+					</div>
 				</div>
 			</div>
 		</div>

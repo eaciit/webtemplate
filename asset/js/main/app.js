@@ -348,6 +348,13 @@ $.fn.eaciitMenu = function (method) {
 viewModel.mode = ko.observable('');
 viewModel.panel = {};
 
+viewModel.mode.subscribe(function (value) {
+    if (value == 'panel') {
+        viewModel.panel.form().title('');
+        viewModel.panel.form().width('');
+    }
+});
+
 $.fn.eaciitHeader = function (method){
     viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }

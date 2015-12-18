@@ -77,7 +77,7 @@ func (t *TemplateController) RegisterRoutes() {
 		t.Server.Route(route, func(r *knot.WebContext) interface{} {
 			r.Config.ViewName = t.layoutFile
 			return toolkit.M{
-				"title": "index",
+				"title": "Dashboard",
 				"href":  "/",
 			}
 		})
@@ -169,7 +169,7 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	breadcrumbs := []map[string]interface{}{}
 
 	if payload["href"] == "/" || payload["href"] == "/index" {
-		return []map[string]interface{}{{"title": "Index", "href": "/index"}}
+		return []map[string]interface{}{{"title": "Dashboard", "href": "/index"}}
 	}
 
 	for _, level1 := range dataSource.Data {
