@@ -1,0 +1,5 @@
+[
+    { "activity": "Drilling", "plan": 24, "execution": 70 },
+    { "activity": "Completion", "plan": 20, "execution": 60 },
+    { "activity": "Abandonment", "plan": 15, "execution": 40 }
+]

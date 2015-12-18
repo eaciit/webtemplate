@@ -1,23 +1,22 @@
 [{
-	"title": "Dashboard",
-	"href": "/index",
-	"submenu": [],
-	"selected": true
-}, {
+	"id": "w001",
 	"title": "Widget",
 	"href": "/widget",
 	"submenu": [],
 	"selected": false
 }, {
+	"id": "p002",
 	"title": "Page",
 	"href": "#",
 	"submenu": [{
+		"id": "w003",
 		"title": "Blank",
 		"href": "/page/blank",
 		"submenu": []
 	}],
 	"selected": false
 }, {
+	"id": "w004",
 	"title": "Example",
 	"href": "/example",
 	"submenu": [],

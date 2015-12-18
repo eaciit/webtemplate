@@ -1,0 +1,6 @@
+{
+	"id": "web-template",
+	"app-title": "Web Template",
+	"logo": "/static/asset/img/logoeaciittrans.png",
+	"datasource": "data-source-1.json",
+}

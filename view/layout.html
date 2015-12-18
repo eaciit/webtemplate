@@ -43,7 +43,8 @@
 
 	<!-- others -->
 	<script src="/static/asset/js/main/app.js"></script>
-	<script src="/static/asset/js/main/widget.js"></script>
+	<script src="/static/asset/js/main/panel.js"></script>
+	<script src="/static/asset/js/main/data-source.js"></script>
 	<script src="/static/asset/js/main/widget.old.js"></script>
 	<script src="/static/asset/touch-punch/jquery.touch-punch.min.js"></script>
 	<script src="/static/asset/shapeshift/jquery.shapeshift.js"></script>
@@ -150,6 +151,27 @@
 					<div class="panel-footer">
 						<div class="pull-right">
 							<button class="btn btn-sm btn-success" data-bind="click: create">
+								<span class="glyphicon glyphicon-save"></span> Create
+							</button>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid content-main form-panel" data-bind="visible: (mode() == 'data-source'), with: dataSource">
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title">Create New Panel</h1>
+					</div>
+					<div class="panel-body">
+						
+					</div>
+					<div class="panel-footer">
+						<div class="pull-right">
+							<button class="btn btn-sm btn-success">
 								<span class="glyphicon glyphicon-save"></span> Create
 							</button>
 						</div>
