@@ -18,61 +18,68 @@ $(function() {
         }
     });
 
-    $('#menu-left .list-group').css('min-height', $('.content-all').height() - $('.content-header').height() - $('.content-breadcrumb').height());
-    $('#menu-right .list-menu-right').css('min-height', $('.content-all').height());
+    generalfunc({
+        title:"Widget", 
+        breadcrumb: {urlhome:"/template/index", menu:[{
+            title:"Widget",
+            href:"#"
+        }]},
+        panel: { areaPanel:'#widgetArea' }
+    });
 
-    // $('.collapse-link').click(function () {
-    //     var x_panel = $(this).closest('div.panel-container');
-    //     var button = $(this).find('i');
-    //     var content = x_panel.find('div.panel-content');
-    //     content.slideToggle(200);
-    //     (x_panel.hasClass('fixed_height_390') ? x_panel.toggleClass('').toggleClass('fixed_height_390') : '');
-    //     (x_panel.hasClass('fixed_height_320') ? x_panel.toggleClass('').toggleClass('fixed_height_320') : '');
-    //     button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
-    //     if(button.hasClass('fa-chevron-up'))
-    //         $(x_panel).animate({height:200},200);
-    //     else
-    //         $(x_panel).animate({height:55},200);
-    //     x_panel.toggle
-    //     setTimeout(function () {
-    //         x_panel.resize();
-    //     }, 50);
-    // });
+    // generate menu top
+    
 
+
+
+
+    // If type panel inline and content have script in end script must <\/script>
+    // function init will run when add panel first and you can run again idpanel.init() example panel14.init()
+    // function dispose will run when close panel and you can run again idpanel.dispose() example panel14.dispose()
+    $('#addpanel').click(function(){
+        // Add Panel Type Inline
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget14', width: 'col-8', height:'0px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br\/> Terimakasih !! <script>function init(){alert("Hallo dari panel 14");} function dispose(){alert("close panel 14");} <\/script>'});
+    });
+
+    $('#addpanel2').click(function(){
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget15', width: 'col-2', height:'300px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+    });
+
+    $('#addpanel3').click(function(){
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget16', width: 'col-6', height:'500px', title:'Yoi Yoi', type: 'inline', url: '', reference:'', content:'aku adalah seorang pahlawan bertopeng pembela kebenaran dari Indonesia yang pantang menyerah dan tidak rajin menabung !! <br/> Terimakasih !!'});
+    });
+
+    $('#addpanel4').click(function(){
+        // Add Panel Type Referance
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget17', width: 'col-3', height:'200px', title:'Yoi Yoi', type: 'reference', url: '/template/gethtmlwidget', reference:'config/addwidget.html'});
+    });
+
+    $('#addpanel5').click(function(){
+        // Add Panel Type Data Binding
+        $('#widgetArea').eaciitPanel('add', {idpanel:'widget18', width: 'col-4', height:'500px', title:'Binding', type: 'reference', url: '/template/gethtmldatabind', reference:'config/addwidget.html'});
+    });
+
+    $('#hidepanel2').click(function(){
+        // Hide Panel
+        $('#widgetArea').eaciitPanel('hide',{id:'widget15'});
+        // Or can use function panel.panel15_hide()
+    });
+
+    $('#showpanel2').click(function(){
+        // Show Panel
+        $('#widgetArea').eaciitPanel('show',{id:'widget15'});
+        // Or can use function panel.widget15_show()
+    });
+
+    $('#closepanel2').click(function(){
+        // Close Panel
+        $('#widgetArea').eaciitPanel('close',{id:'widget15'});
+        // Or can use function panel.widget15_close()
+    });
 });
 
 function generalfunc (item) {
     $.each( item, function( key, value ) {
-        if (key === 'title')
-            $('.title-header').html(value);
-        if (key === 'breadcrumb'){
-            var $o = $('.content-breadcrumb'), $ulbreadcrumb, $libreadcrumb, $linkbreadcrumb, totalItem = item.breadcrumb.menu.length - 1;
-            $ulbreadcrumb = jQuery('<ul />');
-            $ulbreadcrumb.addClass('breadcrumb');
-            $ulbreadcrumb.appendTo($o);
-
-            $libreadcrumb = jQuery('<li />');
-            $libreadcrumb.appendTo($ulbreadcrumb);
-
-            $linkbreadcrumb = jQuery('<a />');
-            $linkbreadcrumb.attr('href',item.breadcrumb.urlhome);
-            $linkbreadcrumb.html('<i class="fa fa-home"></i>  Home');
-            $linkbreadcrumb.appendTo($libreadcrumb);
-            for(var key in item.breadcrumb.menu){
-                $libreadcrumb = jQuery('<li />');
-                if(totalItem == key){
-                    $libreadcrumb.addClass('active');
-                    $libreadcrumb.html(item.breadcrumb.menu[key].title);
-                    $libreadcrumb.appendTo($ulbreadcrumb);
-                }else{
-                    $libreadcrumb.appendTo($ulbreadcrumb);
-                    $linkbreadcrumb = jQuery('<a />');
-                    $linkbreadcrumb.attr('href',item.breadcrumb.menu[key].href);
-                    $linkbreadcrumb.html(item.breadcrumb.menu[key].title);
-                    $linkbreadcrumb.appendTo($libreadcrumb);
-                }
-            }
-        }
         if (key === 'panel'){
             // console.log(item.panel);
             var $o = $(item.panel.areaPanel), $divColumn;
@@ -103,171 +110,6 @@ function generalfunc (item) {
     });
 }
 
-function eaciitGeneral (callback) {
-    callback (arguments[1]);
-}
-
-function navbarTemplateSub(item,parentsub){
-    var $ulnavbar, $linavbar, $linknavbar;
-    $ulnavbar = jQuery('<ul />');
-    $ulnavbar.addClass('dropdown-menu');
-    $ulnavbar.attr('role','menu');
-    $ulnavbar.appendTo(parentsub);
-
-    if(item.submenu.length === 0){
-        $linavbar = jQuery('<li />');
-        if(item.selected)
-            $linavbar.addClass('selected');
-        $linavbar.appendTo($ulnavbar);
-
-        $linknavbar = jQuery('<a />');
-        $linknavbar.attr('href',item.href);
-        $linknavbar.html(item.title);
-        $linknavbar.appendTo($linavbar);
-    } else {
-        $linavbar = jQuery('<li />');
-        if(item.selected)
-            $linavbar.addClass('selected dropdown');
-        else
-            $linavbar.addClass('dropdown');
-        $linavbar.appendTo($ulnavbar);
-
-        $linknavbar = jQuery('<a />');
-        $linknavbar.css('cursor','pointer');
-        $linknavbar.addClass('dropdown-toggle');
-        $linknavbar.attr('data-toggle','dropdown');
-        $linknavbar.html(item.title);
-        $linknavbar.appendTo($linavbar);
-
-        for(var key in item.submenu){
-            navbarTemplateSub(item.submenu[key],$linavbar);
-        }
-    }
-}
-
-function navleftTemplateSub(item,parentsub){
-    var $linav, $linknav, $iconav, $spannav;
-    $linav = jQuery('<li />');
-    $linav.css('text-align','left');
-    $linav.appendTo(parentsub);
-
-    $linknav = jQuery('<a />');
-    $linknav.addClass('tooltip-tip ajax-load tooltipster-disable');
-    $linknav.attr('href',item.href);
-    $linknav.appendTo($linav);
-
-    $iconav = jQuery('<i />');
-    $iconav.addClass(item.icon);
-    $iconav.appendTo($linknav);
-
-    $spannav = jQuery('<span />');
-    $spannav.css({'display':'inline-block','float':'none'});
-    $spannav.html(item.title);
-    $spannav.appendTo($linknav);
-}
-
-var methodsMenu = {
-    top: function(item){
-        var $o = this, $ulnavbar, $linavbar, $linknavbar;
-        for (var key in item){
-            $ulnavbar = jQuery('<ul />');
-            $ulnavbar.addClass('nav navbar-nav');
-            $ulnavbar.appendTo($o);
-
-            if(item[key].submenu.length === 0){
-                $linavbar = jQuery('<li />');
-                if(item[key].selected)
-                    $linavbar.addClass('selected');
-                $linavbar.appendTo($ulnavbar);
-
-                $linknavbar = jQuery('<a />');
-                $linknavbar.attr('href',item[key].href);
-                $linknavbar.html(item[key].title);
-                $linknavbar.appendTo($linavbar);
-            } else {
-                $linavbar = jQuery('<li />');
-                if(item[key].selected)
-                    $linavbar.addClass('selected dropdown');
-                else
-                    $linavbar.addClass('dropdown');
-                $linavbar.appendTo($ulnavbar);
-
-                $linknavbar = jQuery('<a />');
-                $linknavbar.css('cursor','pointer');
-                $linknavbar.addClass('dropdown-toggle');
-                $linknavbar.attr('data-toggle','dropdown');
-                $linknavbar.html(item[key].title);
-                $linknavbar.appendTo($linavbar);
-
-                for(var key2 in item[key].submenu){
-                    navbarTemplateSub(item[key].submenu[key2],$linavbar);
-                }
-            }
-        }
-    },
-    right: function(){
-        console.log('right');
-    },
-    left: function(item){
-        var $o = this, $ulnav, $ligroup, $linkgroup, $spangroup, $linav, $linknav, $spannav, $iconav, $ulnavsub;
-        for(var key in item){
-            $ulnav = jQuery('<ul />');
-            $ulnav.addClass('topnav menu-left-nest');
-            $ulnav.css('margin','10px');
-            $ulnav.appendTo($o);
-
-            $ligroup = jQuery('<li />');
-            $ligroup.css('text-align','left');
-            $ligroup.appendTo($ulnav);
-
-            $linkgroup = jQuery('<div />');
-            // $linkgroup.attr('href','#');
-            $linkgroup.css({'border-left-width':'0px !important', 'border-left-style':'solid !important','display':'inline-block','float':'none'});
-            $linkgroup.addClass('title-menu-left');
-            $linkgroup.appendTo($ligroup);
-
-            $spangroup = jQuery('<span />');
-            $spangroup.css({'display':'inline-block', 'float':'none'});
-            $spangroup.html(item[key].titlegroup);
-            $spangroup.appendTo($linkgroup);
-
-            for(var key2 in item[key].leftmenu){
-                $linav = jQuery('<li />');
-                $linav.appendTo($ulnav);
-
-                $linknav = jQuery('<a />');
-                $linknav.addClass('tooltip-tip ajax-load tooltipster-disable');
-                if(item[key].leftmenu[key2].submenu.length === 0){
-                    $linknav.attr('href',item[key].leftmenu[key2].href);
-                    $linknav.appendTo($linav);
-                } else {
-                    $linknav.attr('href','#');
-                    $linknav.appendTo($linav);
-
-                    $ulnavsub = jQuery('<ul />');
-                    $ulnavsub.appendTo($linav);
-                    for(var key3 in item[key].leftmenu[key2].submenu){
-                        navleftTemplateSub(item[key].leftmenu[key2].submenu[key3], $ulnavsub);
-                    }
-                }
-
-                $iconav = jQuery('<i />');
-                $iconav.addClass(item[key].leftmenu[key2].icon);
-                $iconav.appendTo($linknav);
-
-                $spannav = jQuery('<span />');
-                $spannav.css({'display':'inline-block','float':'none'});
-                $spannav.html(item[key].leftmenu[key2].title);
-                $spannav.appendTo($linknav);
-            }
-        }
-    }
-}
-
-$.fn.eaciitMenu = function (method) {
-    methodsMenu[method].apply(this, Array.prototype.slice.call(arguments, 1));
-}
-
 var methodsNotif = {
     data_notiv: [],
     add: function(item){
@@ -280,6 +122,7 @@ var methodsNotif = {
         $iconnotiv = jQuery('<i />');
         $iconnotiv.addClass('pull-left glyphicon glyphicon-info-sign');
         // $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+        $iconnotiv.css({'color':'#26C7F0','font-size':'25px'});
         $iconnotiv.appendTo($divmedia);
 
         $divtext = jQuery('<div />');
@@ -302,6 +145,7 @@ var methodsNotif = {
             $iconnotiv = jQuery('<i />');
             $iconnotiv.addClass('pull-left glyphicon glyphicon-info-sign');
             // $iconnotiv.css({'color':'#D1F026','font-size':'25px'});
+            $iconnotiv.css({'color':'#26C7F0','font-size':'25px'});
             $iconnotiv.appendTo($divmedia);
 
             $divtext = jQuery('<div />');

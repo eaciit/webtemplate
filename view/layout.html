@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>EACIIT Web Template</title>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="//static/asset/img/logo.png" type="image/x-icon" />
+    <link rel="icon" href="//static/asset/img/logo.png" type="image/x-icon" />
+
+    <script src="/static/asset/js/jquery-2.1.0.min.js"></script>
+    <script src="/static/asset/js/jquery-ui.min.js"></script>
+    <script src="/static/asset/js/bootstrap.min.js"></script>
+
+    <script src="/static/asset/js/knockout/knockout-3.1.0.js"></script>
+    <script src="/static/asset/js/knockout/knockout.mapping-latest.js"></script>
+    <script src="/static/asset/js/knockout/knockout.validation.js"></script>
+
+    <link href="/static/asset/css/bootstrap.css" type="text/css" rel="stylesheet" />
+    <link href="/static/asset/css/site.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/asset/css/font-awesome.css" />
+    <link href="/static/asset/css/overlay.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/asset/css/custom.css" type="text/css" rel="stylesheet" />
+    <script>
+    	var viewModel = {};
+    	viewModel.header = { title: '{{.title}}', href: '{{.href}}' };
+    </script>
+	<script src="/static/asset/js/main/app.js"></script>
+	<script src="/static/asset/js/main/widget.js"></script>
+
+	<script src="/static/asset/js/jquery.touch-punch.min.js"></script>
+	<script src="/static/asset/js/jquery.shapeshift.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
+</head>
+<body>
+	<!-- Navbar Header -->
+	<div class="container-fluid">
+		<header id="page-header">
+            <div class="header-logo aside-md">
+            	<a href="#" class="header-brand" data-toggle="fullscreen"><img src="/static/asset/img/logoeaciittrans.png" class="m-r-sm">Web Template</a>
+            </div>
+            <div class="header-search aside-lg">
+            	<div class="search-content">
+            		<span class="glyphicon glyphicon-search ico-search"></span>
+            		<input type="text" class="search-input"/>
+            	</div>
+            </div>
+            <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user">
+            	<li class="hidden-xs">
+            		<a href="#" class="dropdown-toggle dk" data-toggle="dropdown">
+						<i class="fa fa-bell"></i>
+						<span class="badge badge-sm up bg-danger m-l-n-sm count">2</span>
+					</a>
+            	</li>
+            	<li class="hidden-xs">
+            		<a href="#" class="dropdown-toggle dk" data-toggle="dropdown">
+						<i class="fa fa-gear"></i>
+					</a>
+            	</li>
+            	<li class="dropdown hidden-xs">
+            		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						<span class="thumb-sm avatar pull-left">
+							<img src="/static/asset/img/DSC_4844.jpg" />
+						</span>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight">
+						<span class="arrow top"></span>
+						<li>
+							<a href="#">Settings</a>
+						</li>
+						<li>
+							<a href="#">Profile</a>
+						</li>
+						<li>
+							<a href="#">
+								<span class="badge bg-danger pull-right">3</span>
+								Notifications
+							</a>
+						</li>
+						<li>
+							<a href="#">Help</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="#" data-toggle="ajaxModal">Logout</a>
+						</li>
+					</ul>
+            	</li>
+            </ul>
+		</header>
+		<nav class="navbar">
+			<div class="container-fluid">
+				<div id="navbar" class="collapse navbar-collapse">
+				</div>
+			</div>
+		</nav>
+	</div>
+	<!-- End Header Nabar -->
+
+	<!-- Content Menu Left -->
+	<div class="content-menu-left" id="menu-left" style="left:0px;">
+		<div class="toogle-left">
+			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
+		</div>
+		<div class="list-group" id="listmenuleft"></div>
+	</div>
+	<!-- End Content Menu Left -->
+
+	<!-- Content -->
+	<div class="wrap-fluid content-all" style="width: auto; margin-left: 250px;">
+		<div class="container-fluid content-main">
+			<div class="content-header">
+				<div class="row">
+					<div class="col-md-12 title-content">
+						<span class="title-breadcrumb content-breadcrumb">
+							<ul class="breadcrumb"></ul>
+						</span>
+						<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Content Body -->
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="row">
+					<button class="btn btn-sm btn-primary" id="addpanel">Add Widget 14</button>
+					<button class="btn btn-sm btn-primary" id="addpanel2">Add Widget 15</button>
+					<button class="btn btn-sm btn-primary" id="addpanel3">Add Widget 16</button>
+					<button class="btn btn-sm btn-primary" id="addpanel4">Add Widget 17 Referance</button>
+					<button class="btn btn-sm btn-primary" id="addpanel5">Add Widget 18 Data Binding</button>
+					<br /><br />
+					<button class="btn btn-sm btn-primary" id="hidepanel2">Hide Widget 15</button>
+					<button class="btn btn-sm btn-primary" id="showpanel2">Show Widget 15</button>
+					<button class="btn btn-sm btn-primary" id="closepanel2">Close Widget 15</button>
+				</div>
+				<div class="row" id="widgetArea" style="padding:10px;"></div>
+			</div>
+			<!-- End Content Body -->
+
+		</div>
+	</div>
+
+	<!-- Content Menu Right -->
+	<div class="content-menu-right" id="menu-right" style="right:-250px;">
+		<div class="list-menu-right">
+			<div class="menu-right-nest">
+				<div class="menu-title">Server Statistic</div>
+				<div class="content-menu-right"></div>
+			</div>
+			<div class="menu-right-nest">
+				<div class="menu-title">Database Request</div>
+				<div class="content-menu-right"></div>
+			</div>
+			<div class="menu-right-nest">
+				<div class="menu-title">Server Response</div>
+				<div class="content-menu-right"></div>
+			</div>
+		</div>
+	</div>
+	<!-- End Content Menu Right -->
+
+	<!-- Content Chat -->
+	<div class="notif">
+		<div class="media-body">
+			<div class="header-notif">
+				<a class="btn btn-sm"><i class="fa fa-circle-o status" style="margin-right: 5px !important;"></i> Notification</a>
+			</div>
+			<div class="content-notif">
+			</div>
+		</div>
+	</div>
+	<!-- End Content Chat -->
+</body>
+</html>
+
+<script type="text/javascript">
+    ko.applyBindings(viewModel);
+</script>
+
+<script src="/static/asset/js/load.js"></script>
+<script src="/static/asset/js/main.js"></script>
+<script src="/static/asset/js/overlay.js"></script>

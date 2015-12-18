@@ -1,0 +1,25 @@
+[{
+	"title": "Dashboard",
+	"href": "/index",
+	"submenu": [],
+	"selected": true
+}, {
+	"title": "Widget",
+	"href": "/widget",
+	"submenu": [],
+	"selected": false
+}, {
+	"title": "Page",
+	"href": "#",
+	"submenu": [{
+		"title": "Blank",
+		"href": "/page/blank",
+		"submenu": []
+	}],
+	"selected": false
+}, {
+	"title": "Example",
+	"href": "/example",
+	"submenu": [],
+	"selected": false
+}]
