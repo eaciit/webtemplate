@@ -1,9 +1,11 @@
 package helper
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/eaciit/dbox"
 	_ "github.com/eaciit/dbox/dbc/json"
+	"net/http"
 )
 
 func HandleError(err error, optionalArgs ...interface{}) bool {
@@ -50,4 +52,21 @@ func Recursiver(data []interface{}, sub func(interface{}) []interface{}, callbac
 
 		callback(each)
 	}
+}
+
+func FetchJSON(url string) ([]map[string]interface{}, error) {
+	response, err := http.Get(url)
+	if !HandleError(err) {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	decoder := json.NewDecoder(response.Body)
+	data := []map[string]interface{}{}
+	err = decoder.Decode(&data)
+	if !HandleError(err) {
+		return nil, err
+	}
+
+	return data, nil
 }

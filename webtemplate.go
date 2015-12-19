@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/eaciit/dbox"
 	"github.com/eaciit/knot/knot.v1"
 	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
@@ -242,10 +243,35 @@ func (t *TemplateController) GetDataSource(r *knot.WebContext) interface{} {
 
 		return dataSource.Data
 	} else if payload["type"] == "url" {
-		// not yet borther
+		data, err := helper.FetchJSON(payload["path"])
+
+		return data
 	}
 
 	return []interface{}{}
+}
+
+func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	connection, err := helper.LoadConfig(t.appViewsPath + "data/" + payload["path"])
+	helper.HandleError(err)
+	defer connection.Close()
+
+	// NOT WORKING
+	err = connection.NewQuery().Where(dbox.Eq("id", payload["id"])).Delete().Exec(nil)
+	helper.HandleError(err)
+
+	if payload["type"] == "file" {
+		err = os.Remove(t.appViewsPath + "data/" + payload["path"])
+		helper.HandleError(err)
+	}
+
+	return err == nil
 }
 
 func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
