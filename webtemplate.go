@@ -7,6 +7,8 @@ import (
 	"github.com/eaciit/webtemplate/helper"
 	"io/ioutil"
 	"os"
+	"os/exec"
+	"time"
 )
 
 type (
@@ -43,7 +45,7 @@ func InitTemplateController() *TemplateController {
 }
 
 func (t *TemplateController) RegisterRoutes() {
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/routes.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -85,7 +87,7 @@ func (t *TemplateController) Listen() {
 func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/routes.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -105,7 +107,7 @@ func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/left-menu.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/left-menu.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -125,7 +127,7 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetHeader(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/header-app.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/header-app.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -149,7 +151,7 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	err := r.GetForms(&payload)
 	helper.HandleError(err)
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/routes.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -199,7 +201,7 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetDataSources(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/datasources.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/datasources.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
@@ -216,39 +218,40 @@ func (t *TemplateController) GetDataSources(r *knot.WebContext) interface{} {
 	return dataSource.Data
 }
 
-func (t *TemplateController) GetSelectedDataSource(r *knot.WebContext) interface{} {
+func (t *TemplateController) GetDataSource(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "/config/app.json")
-	helper.HandleError(err)
-	defer connection.Close()
-
-	cursor, err := connection.NewQuery().Select("title").Cursor(nil)
-	helper.HandleError(err)
-	if cursor == nil {
-		fmt.Printf("Cursor not initialized")
-	}
-	defer cursor.Close()
-
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
 	helper.HandleError(err)
 
-	config := dataSource.Data[0].(map[string]interface{})
+	if payload["type"] == "file" {
+		connection, err := helper.LoadConfig(t.appViewsPath + "data/" + payload["path"])
+		helper.HandleError(err)
+		defer connection.Close()
 
-	for _, eachRaw := range t.GetDataSources(r).([]interface{}) {
-		each := eachRaw.(map[string]interface{})
-		if each["id"] == config["datasource"] {
-			return each
+		cursor, err := connection.NewQuery().Select("").Cursor(nil)
+		helper.HandleError(err)
+		if cursor == nil {
+			fmt.Printf("Cursor not initialized")
 		}
+		defer cursor.Close()
+
+		dataSource, err := cursor.Fetch(nil, 0, false)
+		helper.HandleError(err)
+
+		return dataSource.Data
+	} else if payload["type"] == "url" {
+		// not yet borther
 	}
 
-	return dataSource
+	return []interface{}{}
 }
 
 func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputByte
 
-	content, err := ioutil.ReadFile(t.appViewsPath + "/config/add-widget.html")
+	content, err := ioutil.ReadFile(t.appViewsPath + "config/add-widget.html")
 	helper.HandleError(err)
 
 	return string(content)
@@ -257,14 +260,21 @@ func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetHtmlDataBind(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputByte
 
-	content, err := ioutil.ReadFile(t.appViewsPath + "/config/widget-databind.html")
+	content, err := ioutil.ReadFile(t.appViewsPath + "config/widget-databind.html")
 	helper.HandleError(err)
 
 	return string(content)
 }
 
+func (t *TemplateController) Open() {
+	time.AfterFunc(time.Second, func() {
+		exec.Command("open", "http://"+t.Server.Address).Run()
+	})
+}
+
 func main() {
 	yo := InitTemplateController()
 	yo.Server.Address = "localhost:7878"
+	yo.Open()
 	yo.Listen()
 }

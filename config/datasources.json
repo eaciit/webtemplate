@@ -1,9 +1,16 @@
 [{
 	"id": "ds01",
 	"title": "Data Source 1",
-	"filename": "datasource-1.json"	
+	"type": "file",
+	"path": "datasource-1.json"	
 }, {
 	"id": "ds02",
 	"title": "Data Source 2",
-	"filename": "datasource-2.json"	
+	"type": "file",
+	"path": "datasource-2.json"	
+}, {
+	"id": "ds03",
+	"title": "Data Source 3",
+	"type": "url",
+	"path": "http://google.com/api.json"	
 }]

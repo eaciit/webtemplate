@@ -23,18 +23,19 @@ viewModel.panel.create = function () {
         return;
     }
 
-    var id = "panel-" + viewModel.panel.iterator();
+    var id = "panel-" + this.iterator();
     var $columnEaciit = $(".column-eaciit");
     var $panel = $($("#template-panel").html());
     
     $panel.attr("id", id);
-    $panel.attr("data-ss-colspan", viewModel.panel.width());
+    $panel.attr("data-ss-colspan", this.width());
     $panel.prependTo($columnEaciit);
     
-    $panel.find(".panel-title").html(viewModel.panel.title());
+    $panel.find(".panel-title").html(this.title());
     
-    viewModel.panel.iterator(viewModel.panel.iterator() + 1);
-    viewModel.mode('');
+    this.iterator(this.iterator() + 1);
+    this.clearForm();
+    this.back();
     
     ko.applyBindings(viewModel, $panel[0]);
     
@@ -55,4 +56,11 @@ viewModel.panel.collapse = function (o) {
         $(o).attr("class", "fa fa-chevron-down");
         $panelContent.hide();
     }
+};
+viewModel.panel.clearForm = function () {
+    this.title('');
+    this.width('');
+};
+viewModel.panel.back = function () {
+    viewModel.mode('');
 };

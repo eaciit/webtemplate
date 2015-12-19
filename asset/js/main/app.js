@@ -349,13 +349,6 @@ viewModel.mode = ko.observable('');
 viewModel.dataSource = {};
 viewModel.panel = {};
 
-viewModel.mode.subscribe(function (value) {
-    if (value == 'panel') {
-        viewModel.panel.title('');
-        viewModel.panel.width('');
-    }
-});
-
 $.fn.eaciitHeader = function (method){
     viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
@@ -388,6 +381,7 @@ $(function () {
                         visible:true, header: 'Configure Widget', footer: 'See all Configuration', 
                         data:[
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Panel', detail:'', onclick: 'viewModel.mode("panel")'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'viewModel.mode("data-source")'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Report', detail:''},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:''},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Selection', detail:''}
@@ -415,7 +409,7 @@ $(function () {
     });
 
     viewModel.ajaxPost("/template/getbreadcrumb", viewModel.header, function (res) {
-        $('.title-header').html(viewModel.header.title);
+        $('#title-app').html(viewModel.header.title);
         var $breadcrumbs = $("ul.breadcrumb");
         $breadcrumbs.empty();
 
