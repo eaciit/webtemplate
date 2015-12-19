@@ -41,10 +41,13 @@
 	<!-- knockout-kendo -->
     <script src="/static/asset/knockout-kendo/knockout-kendo.min.js"></script>
 
+    <!-- lazy -->
+    <script src="/static/asset/lazyjs/lazy.min.js"></script>
+
 	<!-- others -->
 	<script src="/static/asset/js/main/app.js"></script>
 	<script src="/static/asset/js/main/panel.js"></script>
-	<script src="/static/asset/js/main/data-source.js"></script>
+	<script src="/static/asset/js/main/datasource.js"></script>
 	<script src="/static/asset/js/main/widget.old.js"></script>
 	<script src="/static/asset/touch-punch/jquery.touch-punch.min.js"></script>
 	<script src="/static/asset/shapeshift/jquery.shapeshift.js"></script>
@@ -185,6 +188,20 @@
 			<div class="content-body" data-overlay-page-wrap>
 				<div class="row">
 					<div class="grid grid-data-source" data-bind="kendoGrid: grid"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade modal-data-source-detail" tabindex="-1" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" data-bind="text: viewModel.dataSource.detail.title"></h4>
+					</div>
+					<div class="modal-body">
+						<div class="grid"></div>
+					</div>
 				</div>
 			</div>
 		</div>
