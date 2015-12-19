@@ -1,1 +1,0 @@
-viewModel.dataSource.title = ko.observable('');

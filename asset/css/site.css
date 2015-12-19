@@ -471,26 +471,28 @@ ul.topnav li a {
 }
 
 .title-content {
+	height: 46px;
 	padding: 4px;
 	text-align: center;
 	border-bottom: 1px solid rgb(221, 221, 221);
 	color: #666666;
+    text-align: left;
+    padding: 8px 7px 7px;
 }
-.title-content .col-md-9 {
-	padding-top: 11px;
+.title-content .title-nav {
+	padding-top: 7px;
 }
-.title-header{
-	font-size: 26px;
+.title-content .col-md-3 {
+	font-size: 20px;
 	display: inline-block;
 	text-align: left;
-    height: 37px;
 }
-.title-header:after {
+.title-content .col-md-3:after {
 	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	position: absolute;
 	right: 0px;
-	top: 6px;
-	bottom: 6px;
+	top: 3px;
+    bottom: 1px;
 	content: " ";
 }
 .title-breadcrumb{
@@ -804,6 +806,13 @@ ul.topnav li a {
 }*/
 /*End Content Widget*/
 
-.form-panel {
+.form-panel .content-body {
 	width: 400px;
+}
+.k-grid .k-grid-content tbody tr td a {
+	cursor: pointer;
+	font-weight: bold;
+}
+.k-grid .k-grid-content tbody tr td a:hover {
+	text-decoration: none;
 }
