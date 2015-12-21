@@ -819,3 +819,15 @@ ul.topnav li a {
 .k-grid .k-grid-content tbody tr td a:hover {
 	text-decoration: none;
 }
+.panel .bg-notif {
+	padding: 15px;
+}
+.panel-notif .bg-notif {
+	margin-bottom: 0px;
+}
+.panel .nav-control {
+	padding-bottom: 10px;
+}
+.modal-chart-preview .modal-dialog {
+	width: 800px;
+}
