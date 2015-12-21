@@ -6,7 +6,6 @@ import (
 	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
 	"gopkg.in/mgo.v2/bson"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"time"
@@ -99,11 +98,11 @@ func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "config/left-menu.json")
+	connection, err := helper.Connect()
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().Select("titlegroup").Cursor(nil)
+	cursor, err := connection.NewQuery().From("leftmenus").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -254,24 +253,6 @@ func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
 	}
 
 	return success
-}
-
-func (t *TemplateController) GetHtmlWidget(r *knot.WebContext) interface{} {
-	r.Config.OutputType = knot.OutputByte
-
-	content, err := ioutil.ReadFile(t.appViewsPath + "config/add-widget.html")
-	helper.HandleError(err)
-
-	return string(content)
-}
-
-func (t *TemplateController) GetHtmlDataBind(r *knot.WebContext) interface{} {
-	r.Config.OutputType = knot.OutputByte
-
-	content, err := ioutil.ReadFile(t.appViewsPath + "config/widget-databind.html")
-	helper.HandleError(err)
-
-	return string(content)
 }
 
 func (t *TemplateController) Open() {
