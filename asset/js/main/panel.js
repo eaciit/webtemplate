@@ -17,7 +17,7 @@ viewModel.panel.title = ko.observable('').extend({ required: true });
 viewModel.panel.width = ko.observable('').extend({ required: true });
 viewModel.panel.iterator = ko.observable(1);
 viewModel.panel.create = function () {
-    var $validator = $(".form-panel form").kendoValidator().data("kendoValidator");
+    var $validator = $(".panel-widget form").kendoValidator().data("kendoValidator");
 
     if (!$validator.validate()) {
         return;
