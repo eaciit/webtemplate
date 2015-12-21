@@ -349,6 +349,7 @@ viewModel.mode = ko.observable('');
 viewModel.dataSource = {};
 viewModel.panel = {};
 viewModel.chart = {};
+viewModel.grid = {};
 
 $.fn.eaciitHeader = function (method){
     viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -384,7 +385,7 @@ $(function () {
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Panel', detail:'', onclick: 'viewModel.mode("panel")'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'viewModel.mode("data-source")'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Chart', detail:'', onclick: 'viewModel.mode("chart")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:''},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:'', onclick: 'viewModel.mode("grid")'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Selection', detail:''}
                         ]
                     },
@@ -423,8 +424,10 @@ $(function () {
         });
 
         $('.navbar-nav li').removeClass('selected');
-        var $target = $('.navbar-nav a[href="' + res.reverse()[0].href + '"]');
-        $target.parents('li').last().addClass('selected');
+        if (res.length > 0){
+            var $target = $('.navbar-nav a[href="' + res.reverse()[0].href + '"]');
+            $target.parents('li').last().addClass('selected');
+        }
     });
 
     $("header#page-header").on("click", "div.content-color>ul.list-color>li", function() {

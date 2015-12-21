@@ -44,7 +44,7 @@ func LoadConfig(pathJson string) (dbox.IConnection, error) {
 }
 
 func Connect() (dbox.IConnection, error) {
-	connectionInfo := &dbox.ConnectionInfo{"localhost", "ecwebtemplate", "", "", nil}
+	connectionInfo := &dbox.ConnectionInfo{"192.168.0.200", "ecwebtemplate", "", "", nil}
 	connection, e := dbox.NewConnection("mongo", connectionInfo)
 	if !HandleError(e) {
 		return nil, e

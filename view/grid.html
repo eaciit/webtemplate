@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>EACIIT Web Template</title>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" href="/static/asset/img/logo.png" type="image/x-icon" />
+    <link rel="icon" href="/static/asset/img/logo.png" type="image/x-icon" />
+
+	<!-- header -->
+    <script>
+    	var viewModel = {};
+    	viewModel.header = { title: '{{.title}}', href: '{{.href}}' };
+    </script>
+
+	<!-- jquery -->
+    <script src="/static/asset/jquery/jquery-2.1.0.min.js"></script>
+    <script src="/static/asset/jquery/jquery-ui.min.js"></script>
+	
+	<!-- bootstrap -->
+    <script src="/static/asset/bootstrap/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/asset/bootstrap/bootstrap.min.css" />
+	
+	<!-- font-awesome -->
+    <link rel="stylesheet" href="/static/asset/font-awesome/css/font-awesome.min.css" />
+
+	<!-- knockout -->
+    <script src="/static/asset/knockout/knockout-3.1.0.js"></script>
+    <script src="/static/asset/knockout/knockout.mapping-latest.js"></script>
+	
+	<!-- kendo-ui -->
+    <link href="/static/asset/kendo-ui/styles/kendo.common.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.rtl.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.default.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.min.css" rel="stylesheet">
+    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.default.min.css" rel="stylesheet">
+    <script src="/static/asset/kendo-ui/js/kendo.all.min.js"></script>
+
+	<!-- knockout-kendo -->
+    <script src="/static/asset/knockout-kendo/knockout-kendo.min.js"></script>
+
+    <!-- lazy -->
+    <script src="/static/asset/lazyjs/lazy.min.js"></script>
+
+	<!-- main -->
+	<script src="/static/asset/js/main/app.js"></script>
+
+	<!-- widget -->
+	<script src="/static/asset/js/main/grid.js"></script>
+
+	<!-- others -->
+	<script src="/static/asset/touch-punch/jquery.touch-punch.min.js"></script>
+	<script src="/static/asset/shapeshift/jquery.shapeshift.js"></script>
+	
+    <link rel="stylesheet" href="/static/asset/css/site.css" />
+    <link rel="stylesheet" href="/static/asset/css/overlay.css"/>
+    <link rel="stylesheet" href="/static/asset/css/customred.css" />
+    <link rel="stylesheet" href="/static/asset/css/animation.css" />
+    <!-- <link rel="stylesheet" href="/static/asset/css/customred.css" id="customlayout" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
+	
+	<!-- template -->
+	<script type="text/template" id="template-panel">
+		<div class="panel-eaciit ss-active-child ui-draggable-handle">
+			<div class="panel-container">
+				<div class="panel-header">
+					<span class="panel-title"></span>
+					<ul class="nav navbar-right panel-toolbox">
+						<li><a class="collapse-link">
+							<i class="fa fa-chevron-up" onclick="viewModel.panel.collapse(this)"></i>
+						</a></li>
+						<li><a class="close-link" onclick="viewModel.panel.close(this)">
+							<i class="fa fa-close"></i>
+						</a></li>
+					</ul>
+					<div style="clear: both;"></div>
+				</div>
+				<div class="panel-content">Empty content</div>
+			</div>
+		</div>
+	</script>
+
+	<script type="text/html" id="template-column">
+		<tr>
+			<td></td>
+			<td data-bind="text:field"></td>
+			<td data-bind="text:title"></td>
+			<td></td>
+			<td><button class="btn btn-danger btn-sm" data-bind="click:viewModel.grid.removeColumn"><span class="glyphicon glyphicon-trash"></span></button></td>
+		</tr>
+	</script>
+</head>
+<body data-bind="with: viewModel">
+	<!-- Navbar Header -->
+	<div class="header">
+		<header id="page-header"></header>
+		<nav class="navbar">
+			<div id="navbar" class="collapse navbar-collapse"></div>
+		</nav>
+	</div>
+	<!-- End Header Nabar -->
+
+	<!-- Content Menu Left -->
+	<div id="menu-left">
+		<div class="toogle-left">
+			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
+		</div>
+		<div class="list-group" id="listmenuleft">
+			
+		</div>
+	</div>
+	<!-- End Content Menu Left -->
+
+	<!-- Content -->
+	<div class="wrap-fluid content-all" style="margin-left: 250px;">
+
+		<div class="container-fluid content-main content-widget" data-bind="visible: (mode() == '')">
+			<div class="content-header">
+				<div class="row">
+					<div class="col-md-12 title-content">
+						<span class="col-md-3" id="title-app">
+							<!-- Title App Setting di EaciitGeneral -->
+						</span>
+						<div class="col-md-9 title-nav">
+							<span class="title-breadcrumb content-breadcrumb">
+								<ul class="breadcrumb"></ul>
+							</span>
+							<span id="imenu-right" class="glyphicon glyphicon-align-left imenu-right"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Content Body -->
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="column-eaciit"></div>
+			</div>
+			<!-- End Content Body -->
+		</div>
+
+		<!-- Content Conf Grid -->
+		<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'grid'), with: grid">
+			<div class="content-header">
+				<div class="row">
+					<div class="col-md-12 title-content">
+						<span class="col-md-3">Widget Grid Menu</span>
+						<div class="col-md-9">
+							<button class="btn btn-sm btn-primary" data-bind="click:save">
+								<span class="glyphicon glyphicon-save"></span> Save
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="row">
+					<div class="editor" data-bind="with: viewModel.grid.config">
+						<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+							<li class="active"><a href="#general" data-toggle="tab">General Setting</a></li>
+							<li><a href="#column" data-toggle="tab">Columns Setting</a></li>
+					    </ul>
+					    <div id="chart-tab-content" class="tab-content">
+							<div class="tab-pane active" id="general" data-bind="with:general">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">General</h1>
+									</div>
+									<div class="panel-body form-panel">
+										<div class="row">
+											<div class="col-md-6">
+									            <label class="col-md-3 filter-label">Page Size</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:pageSize" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Groupable</label>
+									            <div class="col-md-8">
+									                <select class="form-control" data-bind="value:groupable">
+														<option value="true">true</option>
+														<option value="false">false</option>
+													</select>
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Sortable</label>
+									            <div class="col-md-8">
+									                <select class="form-control" data-bind="value:sortable">
+														<option value="true">true</option>
+														<option value="false">false</option>
+													</select>
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Filterable</label>
+									            <div class="col-md-8">
+									                <select class="form-control" data-bind="value:filterable">
+														<option value="true">true</option>
+														<option value="false">false</option>
+													</select>
+									            </div>
+									        </div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="column" data-bind="with:column">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Column</h1>
+									</div>
+									<div class="panel-body form-panel">
+										<div class="row">
+											<div class="col-md-6">
+									            <label class="col-md-3 filter-label">Template</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Field</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:field" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Title</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:title" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Format</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" />
+									            </div>
+									        </div>
+									        <div class="col-md-12">
+									        	<button class="btn btn-sm btn-primary" data-bind="click:viewModel.grid.addColumn"><span class="glyphicon glyphicon-plus"></span>Add Column</button>
+									        </div>
+									        <div class="col-md-11">
+									        	<table class="table table-hover">
+									        		<thead>
+									        			<tr>
+									        				<th>Template</th>
+									        				<th>Field</th>
+									        				<th>Title</th>
+									        				<th>Format</th>
+									        				<th>Action</th>
+									        			</tr>
+									        		</thead>
+									        		<tbody data-bind="template:{name:'template-column', foreach:viewModel.grid.config.general.columns()}"></tbody>
+												</table>
+									        </div>
+										</div>
+									</div>
+								</div>
+							</div>
+					    </div>
+					</div>
+
+					<div class="col-md-11" id="gridResult"></div>
+				</div>
+			</div>
+		</div>
+		<!-- End Content Grid -->
+	</div>
+
+	<!-- Content Menu Right -->
+	<div class="content-menu-right" id="menu-right" style="right:-250px;">
+		<div class="list-menu-right">
+			<div class="menu-right-nest">
+				<div class="menu-title">Server Statistic</div>
+				<div class="content-menu-right"></div>
+			</div>
+			<div class="menu-right-nest">
+				<div class="menu-title">Database Request</div>
+				<div class="content-menu-right"></div>
+			</div>
+			<div class="menu-right-nest">
+				<div class="menu-title">Server Response</div>
+				<div class="content-menu-right"></div>
+			</div>
+		</div>
+	</div>
+	<!-- End Content Menu Right -->
+
+	<!-- Content Chat -->
+	<div class="notif">
+		<div class="media-body">
+			<div class="header-notif">
+				<a class="btn btn-sm"><i class="fa fa-circle-o status" style="margin-right: 5px !important;"></i> Notification</a>
+			</div>
+			<div class="content-notif">
+			</div>
+		</div>
+	</div>
+	<!-- End Content Chat -->
+
+	<script type="text/javascript">
+	    ko.applyBindings(viewModel);
+	    viewModel.mode("grid")
+	</script>
+
+	<script src="/static/asset/js/load.js"></script>
+	<script src="/static/asset/js/main.js"></script>
+	<script src="/static/asset/js/overlay.js"></script>
+</body>
+</html>
