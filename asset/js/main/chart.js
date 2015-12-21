@@ -44,3 +44,7 @@ viewModel.chart.template = {
 		visible: false
 	}
 };
+viewModel.chart.config = ko.mapping.fromJS(viewModel.chart.template);
+viewModel.chart.save = function () {
+
+};
