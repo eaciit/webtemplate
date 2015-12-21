@@ -206,17 +206,14 @@
 			</div>
 		</div>
 
-		<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'data-source'), with: dataSource">
+		<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'chart'), with: chart">
 			<div class="content-header">
 				<div class="row">
 					<div class="col-md-12 title-content">
-						<span class="col-md-3">Data Source Menu</span>
+						<span class="col-md-3">Widget Chart Menu</span>
 						<div class="col-md-9">
-							<button class="btn btn-sm btn-primary" data-bind="click: refresh">
-								<span class="glyphicon glyphicon-refresh"></span> Refresh
-							</button>
-							<button class="btn btn-sm btn-primary" data-bind="click: add">
-								<span class="glyphicon glyphicon-plus"></span> Add
+							<button class="btn btn-sm btn-primary" data-bind="click: save">
+								<span class="glyphicon glyphicon-save"></span> Save
 							</button>
 						</div>
 					</div>
@@ -225,7 +222,107 @@
 
 			<div class="content-body" data-overlay-page-wrap>
 				<div class="row">
-					<div class="grid grid-data-source" data-bind="kendoGrid: grid"></div>
+					<div class="editor" data-bind="with: viewModel.chart.config">
+						<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+							<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+							<li><a href="#series" data-toggle="tab">Series Defaults</a></li>
+							<li><a href="#legend" data-toggle="tab">Legend</a></li>
+							<li><a href="#valueAxis" data-toggle="tab">Value Axis</a></li>
+							<!-- <li><a href="#valueAxes" data-toggle="tab">Value Axes</a></li> -->
+							<li><a href="#categoryAxis" data-toggle="tab">Category Axis</a></li>
+							<!-- <li><a href="#categoryAxes" data-toggle="tab">Category Axes</a></li> -->
+							<li><a href="#tooltip" data-toggle="tab">Tooltip</a></li>
+					    </ul>
+					    <div id="chart-tab-content" class="tab-content">
+							<div class="tab-pane active" id="general">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Chart Area</h1>
+									</div>
+									<div class="panel-body">
+										<form class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Title</label>
+												<div class="col-sm-10">
+													<input class="form-control input-sm" data-bind="value: chartArea.title" placeholder="Type title here ..." style="width: 200px;" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Width</label>
+												<div class="col-sm-10">
+													<input data-bind="kendoNumericTextBox: { format: '#', value: chartArea.width }" style="width: 200px;" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Height</label>
+												<div class="col-sm-10">
+													<input data-bind="kendoNumericTextBox: { format: '#', value: chartArea.height }" style="width: 200px;" />
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Data Source</h1>
+									</div>
+									<div class="panel-body">
+										<form class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Data Source</label>
+												<div class="col-sm-10">
+													<select data-bind="kendoDropDownList: { data: [] }" style="width: 200px;"></select>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="series">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Series Defaults</h1>
+									</div>
+									<div class="panel-body">
+										<form class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Type</label>
+												<div class="col-sm-10">
+													<select data-bind="kendoDropDownList: { data: [] }" style="width: 200px;"></select>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Series</h1>
+									</div>
+									<div class="panel-body">
+										<form class="form-horizontal">
+											<div class="form-group"></div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="legend">
+								
+							</div>
+							<div class="tab-pane" id="valueAxis">
+								
+							</div>
+							<!-- <div class="tab-pane" id="valueAxes"></div> -->
+							<div class="tab-pane" id="categoryAxis">
+								
+							</div>
+							<!-- <div class="tab-pane" id="categoryAxes"></div> -->
+							<div class="tab-pane" id="tooltip">
+								
+							</div>
+					    </div>
+					</div>
 				</div>
 			</div>
 		</div>
