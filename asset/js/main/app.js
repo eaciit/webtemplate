@@ -351,6 +351,10 @@ viewModel.panel = {};
 viewModel.chart = {};
 viewModel.grid = {};
 
+viewModel.camelToCapitalize = function (s) {
+    return s.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
+};
+
 $.fn.eaciitHeader = function (method){
     viewModel.methodsHeader[method].apply(this, Array.prototype.slice.call(arguments, 1));
 }
@@ -437,4 +441,4 @@ $(function () {
     $('header#page-header').on('keyup', '.header-search input.search-input', function(res){
         console.log($(this).val());
     });
-})
+});
