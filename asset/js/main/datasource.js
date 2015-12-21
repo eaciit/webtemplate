@@ -5,7 +5,7 @@ viewModel.dataSource.grid = {
 	filterable: false,
 	pageable: true,
 	columns: [
-		{ field: "id", title: "ID", width: 100, attributes: { style: "text-align: center;" }, headerTemplate: "<center>ID</center>", template: "<a onclick='viewModel.dataSource.detail.show(this)'>#: id #</a>" },
+		{ field: "_id", title: "ID", width: 100, attributes: { style: "text-align: center;" }, headerTemplate: "<center>ID</center>", template: "<a onclick='viewModel.dataSource.detail.show(this)'>#: _id #</a>" },
 		{ field: "type", title: "Source Type", width: 150 },
 		{ field: "title", title: "Title" },
 		{ title: "", template: '<button class="btn btn-xs btn-danger" onclick="viewModel.dataSource.remove(this)"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', attributes: { style: "text-align: center;" }, width: 100 }
@@ -77,7 +77,7 @@ viewModel.dataSource.remove = function (o) {
 
 	viewModel.ajaxPost("/template/removedatasource", rowData, function (res) {
 		if (res) {
-			alert("Data source \"" + rowData.title + "\" successfully removed");
+			alert("\"" + rowData.title + "\" successfully removed");
 		}
 
 		viewModel.dataSource.refresh()		

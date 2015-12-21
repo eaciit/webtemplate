@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/eaciit/dbox"
 	_ "github.com/eaciit/dbox/dbc/json"
+	_ "github.com/eaciit/dbox/dbc/mongo"
+	"github.com/eaciit/knot/knot.v1"
 	"net/http"
 )
 
@@ -32,7 +34,21 @@ func LoadConfig(pathJson string) (dbox.IConnection, error) {
 	if !HandleError(e) {
 		return nil, e
 	}
-	defer connection.Close()
+
+	e = connection.Connect()
+	if !HandleError(e) {
+		return nil, e
+	}
+
+	return connection, nil
+}
+
+func Connect() (dbox.IConnection, error) {
+	connectionInfo := &dbox.ConnectionInfo{"localhost", "ecwebtemplate", "", "", nil}
+	connection, e := dbox.NewConnection("mongo", connectionInfo)
+	if !HandleError(e) {
+		return nil, e
+	}
 
 	e = connection.Connect()
 	if !HandleError(e) {
@@ -69,4 +85,8 @@ func FetchJSON(url string) ([]map[string]interface{}, error) {
 	}
 
 	return data, nil
+}
+
+func FakeWebContext() *knot.WebContext {
+	return &knot.WebContext{Config: &knot.ResponseConfig{}}
 }
