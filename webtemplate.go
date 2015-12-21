@@ -255,6 +255,11 @@ func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
 	return success
 }
 
+func (t *TemplateController) ChartBuilder(r *knot.WebContext) interface{} {
+	r.Config.ViewName = "view/chart.html"
+	return toolkit.M{"title": "Chart Builder", "href": "/chartbuilder"}
+}
+
 func (t *TemplateController) Open() {
 	time.AfterFunc(time.Second, func() {
 		exec.Command("open", "http://"+t.Server.Address).Run()

@@ -15,6 +15,12 @@ viewModel.dataSource.grid = {
         pageSize: 20,
         transport: {
             read: '/template/getdatasources'
+        },
+        schema: {
+            data: function (data) {
+            	viewModel.dataSource.data(data);
+                return data;
+            }
         }
     },
     data: []
@@ -25,6 +31,7 @@ viewModel.dataSource.add = function () {
 viewModel.dataSource.refresh = function () {
 	$(".grid-data-source").data("kendoGrid").dataSource.read();
 };
+viewModel.dataSource.data = ko.observableArray([]);
 viewModel.dataSource.detail = {
 	title: ko.observable(''),
 	show: function (o) {
@@ -48,7 +55,7 @@ viewModel.dataSource.detail = {
 						columnsHolder.push(f);
 						columns.push({ 
 							field: f, 
-							title: f.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1"), 
+							title: viewModel.camelToCapitalize(f),
 							width: 100
 						});
 					}
