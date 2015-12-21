@@ -806,7 +806,7 @@ ul.topnav li a {
 }*/
 /*End Content Widget*/
 
-.form-panel .content-body {
+.panel-widget .content-body {
 	width: 400px;
 }
 .k-grid .k-grid-content tbody tr td a {
