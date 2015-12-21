@@ -5,9 +5,10 @@ viewModel.dataSource.grid = {
 	filterable: false,
 	pageable: true,
 	columns: [
-		{ field: "id", title: "ID", width: 100, attributes: { style: "text-align: center;" }, headerTemplate: "<center>ID</center>", template: "<a onclick='viewModel.dataSource.detail.show(this)'>#: id #</a>" },
+		{ field: "_id", title: "ID", width: 100, attributes: { style: "text-align: center;" }, headerTemplate: "<center>ID</center>", template: "<a onclick='viewModel.dataSource.detail.show(this)'>#: _id #</a>" },
 		{ field: "type", title: "Source Type", width: 150 },
 		{ field: "title", title: "Title" },
+		{ title: "", template: '<button class="btn btn-xs btn-danger" onclick="viewModel.dataSource.remove(this)"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', attributes: { style: "text-align: center;" }, width: 100 }
 	],
 	dataSource: {
         type: 'json',
@@ -17,6 +18,12 @@ viewModel.dataSource.grid = {
         }
     },
     data: []
+};
+viewModel.dataSource.add = function () {
+
+};
+viewModel.dataSource.refresh = function () {
+	$(".grid-data-source").data("kendoGrid").dataSource.read();
 };
 viewModel.dataSource.detail = {
 	title: ko.observable(''),
@@ -49,11 +56,6 @@ viewModel.dataSource.detail = {
 			});
 
 			$modal.modal("show");
-			
-			if (res.length == 0) {
-				return;
-			}
-
 			$modal.find(".grid").kendoGrid({
 				sortable: true,
 				resizable: false,
@@ -67,4 +69,17 @@ viewModel.dataSource.detail = {
 			});
 	    });
 	}
+};
+viewModel.dataSource.remove = function (o) {
+	var uid = $(o).closest("tr").data("uid");
+	var dataSource = $(o).closest(".k-grid").data("kendoGrid").dataSource;
+	var rowData = JSON.parse(kendo.stringify(dataSource.getByUid(uid)));
+
+	viewModel.ajaxPost("/template/removedatasource", rowData, function (res) {
+		if (res) {
+			alert("\"" + rowData.title + "\" successfully removed");
+		}
+
+		viewModel.dataSource.refresh()		
+	});
 };
