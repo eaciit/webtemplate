@@ -69,6 +69,10 @@ func (t *TemplateController) RegisterRoutes() {
 			return toolkit.M{"title": "Dashboard", "href": route}
 		})
 	}
+	t.Server.Route("/grid", func(r *knot.WebContext) interface{} {
+		r.Config.ViewName = "view/grid.html"
+		return toolkit.M{"title": "Grid", "href": "/grid"}
+	})
 }
 
 func (t *TemplateController) Listen() {

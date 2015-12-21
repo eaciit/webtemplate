@@ -36,7 +36,21 @@ body {
         width: 300px;
     }
 }
+.filter-label{
+    line-height: 25px;
+}
+.filter-label-nodot{
+    line-height: 25px;
+}
 
+.filter-label:after{
+    content: ":";
+    position: absolute;
+    right: 5px;
+}
+.form-panel .row > div {
+	margin-top:10px;
+}
 
 
 /*Content Header*/
