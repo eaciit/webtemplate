@@ -1,11 +1,15 @@
 viewModel.chart.template = {
 	config: {
+		outsider: {
+			dataSourceKey: "",
+			widthMode: "numeric",
+			heightMode: "numeric",
+		},
 		chartArea: {
 			title: "My Chart",
 			height: 400,
-			width: 800
+			width: 700,
 		},
-		dataSourceKey: "",
 		dataSource: {
 			data: []
 		},
@@ -16,6 +20,17 @@ viewModel.chart.template = {
 		},
 		series: [],
 		valueAxis: {
+			max: 1,
+			min: 0,
+            line: {
+                visible: true
+            },
+            minorGridLines: {
+                visible: false
+            },
+            labels: {
+                rotation: 0
+            }
 		},
 		// valueAxes: [],
 		categoryAxis: {
@@ -23,7 +38,8 @@ viewModel.chart.template = {
 		},
 		// categoryAxes: [],
 		tooltip: {
-			visible: false
+			visible: false,
+			template: ""
 		}
 	},
 	series: {
@@ -33,7 +49,7 @@ viewModel.chart.template = {
 	},
 };
 viewModel.chart.options = {
-	seriesTypes: ko.observableArray([
+	seriesTypes: ko.observableArray(Lazy([
 		// { value: "area", title: "area" },
 		{ value: "bar", title: "bar" },
 		// { value: "bubble", title: "bubble" },
@@ -60,7 +76,9 @@ viewModel.chart.options = {
 		// { value: "verticalBullet", title: "verticalBullet" },
 		// { value: "verticalLine", title: "verticalLine" },
 		{ value: "waterfall", title: "waterfall" }
-	]),
+	]).sort(function (e) { 
+		return e.title; 
+	}).toArray()),
 	dataSourceFields: ko.observableArray([])
 };
 viewModel.chart.config = ko.mapping.fromJS(viewModel.chart.template.config);
@@ -91,8 +109,32 @@ viewModel.chart.selectDataSource = function (e) {
 			}
 		});
 
-		viewModel.chart.options.dataSourceFields(fields);
+		viewModel.chart.options.dataSourceFields(Lazy(fields).sort(function (e) {
+			return e.title
+		}).toArray());
     });
+};
+viewModel.chart.percentageHandler = function (mode) {
+	return ko.pureComputed({
+	    read: function () {
+	        return parseInt(String(viewModel.chart.config.chartArea[mode]()).replace(/%/g, ""), 10);
+	    },
+	    write: function (value) {
+	    	viewModel.chart.config.chartArea[mode](value + "%");
+	    },
+	    owner: this
+	});
+};
+viewModel.chart.changeAreaSizeMode = function (mode) {
+	return function () {
+		if (this.value() == 'percentage') {
+			viewModel.chart.config.chartArea[mode]('100%');
+		} else if (this.value() == 'numeric') {
+			viewModel.chart.config.chartArea[mode](mode == 'width' ? 700 : 400);
+		} else {
+			viewModel.chart.config.chartArea[mode]('auto');
+		}
+	};
 };
 viewModel.chart.fetchDataSource = function () {
 	viewModel.ajaxPost("/template/getdatasources", {}, function (res) {
@@ -109,7 +151,6 @@ viewModel.chart.seriesGridColumns = [
         	dataSource: { data: viewModel.chart.options.dataSourceFields() }, 
         	dataTextField: "title", 
         	dataValueField: "value", 
-        	optionLabel: "Select one"
         });
     } },
 	{ title: "Type", field: "type", /** locked: true */ width: 200, editor: function (container, option) {
@@ -119,7 +160,6 @@ viewModel.chart.seriesGridColumns = [
         	dataSource: { data: viewModel.chart.options.seriesTypes() }, 
         	dataTextField: "title", 
         	dataValueField: "value", 
-        	optionLabel: "Select one"
         });
     } },
 	{ title: "", template: '<button class="btn btn-xs btn-danger" onclick="viewModel.chart.removeSeries(this)"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', attributes: { style: "text-align: center;" }, width: 100, editable: false }
@@ -157,7 +197,7 @@ viewModel.chart.saveSeries = function () {
 	viewModel.chart.config.series(data);
 };
 viewModel.chart.save = function () {
-
+	viewModel.chart.saveSeries();
 };
 viewModel.chart.registerEvents = function () {
 	$('.chart-config-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -172,10 +212,21 @@ viewModel.chart.putNotifyToSelectDataSource = function () {
 		ko.applyBindings(viewModel, $(e).find(".panel-danger")[0]);
 	});
 };
+viewModel.chart.parseConfig = function (config) {
+	config = $.extend(true, {}, config);
+	
+	if (config.categoryAxis.template == "")
+		delete config.categoryAxis.template;
+
+	console.log("config", config);
+
+	return config;
+}
 viewModel.chart.preview = function () {
+	viewModel.chart.saveSeries();
 	$(".modal-chart-preview").modal("show");
 
-	var chartConfig = ko.mapping.toJS(viewModel.chart.config);
+	var chartConfig = viewModel.chart.parseConfig(ko.mapping.toJS(viewModel.chart.config));
 	$(".chart-preview").replaceWith("<div class='chart-preview'></div>");
 	$(".chart-preview").kendoChart(chartConfig);
 };
