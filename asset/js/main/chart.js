@@ -4,6 +4,8 @@ viewModel.chart.template = {
 			dataSourceKey: "",
 			widthMode: "numeric",
 			heightMode: "numeric",
+			valueAxisUseMaxMode: false,
+			valueAxisUseMinMode: false,
 		},
 		chartArea: {
 			title: "My Chart",
@@ -14,6 +16,7 @@ viewModel.chart.template = {
 			data: []
 		},
 		legend: {
+			visible: true,
 		},
 		seriesDefaults: {
 			type: "bar"
@@ -136,6 +139,11 @@ viewModel.chart.changeAreaSizeMode = function (mode) {
 		}
 	};
 };
+viewModel.chart.boolValueOf = function (which) {
+	return ko.computed(function () {
+		return eval('viewModel.chart.config.' + which + '()');
+	}, viewModel);
+};
 viewModel.chart.fetchDataSource = function () {
 	viewModel.ajaxPost("/template/getdatasources", {}, function (res) {
 		viewModel.chart.dataSources(res);
@@ -217,6 +225,12 @@ viewModel.chart.parseConfig = function (config) {
 	
 	if (config.categoryAxis.template == "")
 		delete config.categoryAxis.template;
+	
+	if (!config.outsider.valueAxisUseMaxMode)
+		delete config.valueAxis.max;
+	
+	if (!config.outsider.valueAxisUseMinMode)
+		delete config.valueAxis.min;
 
 	console.log("config", config);
 

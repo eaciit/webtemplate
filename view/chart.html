@@ -153,8 +153,8 @@
 												<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'auto')">
 													<input disabled class="form-control input-sm" value="auto" style="width: 200px;" />
 												</div>
-												<div class="col-sm-6">
-													<label>Mode</label>
+												<label class="col-sm-2 control-label">Mode</label>
+												<div class="col-sm-4">
 													<select data-bind="kendoDropDownList: { data: ['numeric', 'percentage', 'auto'], value: outsider.widthMode, change: $parent.changeAreaSizeMode('width') }"></select>
 												</div>
 											</div>
@@ -169,8 +169,8 @@
 												<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'auto')">
 													<input disabled class="form-control input-sm" value="auto" style="width: 200px;" />
 												</div>
-												<div class="col-sm-6">
-													<label>Mode</label>
+												<label class="col-sm-2 control-label">Mode</label>
+												<div class="col-sm-4">
 													<select data-bind="kendoDropDownList: { data: ['numeric', 'percentage', 'auto'], value: outsider.heightMode, change: $parent.changeAreaSizeMode('height') }"></select>
 												</div>
 											</div>
@@ -230,7 +230,7 @@
 												</button>
 											</div>
 
-											<div class="grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: viewModel.chart.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
+											<div class="grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
 										</form>
 									</div>
 								</div>
@@ -262,14 +262,22 @@
 										<form class="form-horizontal">
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Max</label>
-												<div class="col-sm-10">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.max }" style="width: 200px;" />
+												<div class="col-sm-4">
+													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.max, enabled: $parent.boolValueOf('outsider.valueAxisUseMaxMode') }" style="width: 200px;" />
+												</div>
+												<label class="col-sm-2 control-label">Use Max</label>
+												<div class="col-sm-4">
+													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: outsider.valueAxisUseMaxMode" />
 												</div>
 											</div>
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Min</label>
-												<div class="col-sm-10">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.min }" style="width: 200px;" />
+												<div class="col-sm-4">
+													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.min, enabled: $parent.boolValueOf('outsider.valueAxisUseMinMode') }" style="width: 200px;" />
+												</div>
+												<label class="col-sm-2 control-label">Use Min</label>
+												<div class="col-sm-4">
+													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: outsider.valueAxisUseMinMode" />
 												</div>
 											</div>
 										</form>
@@ -285,7 +293,7 @@
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Visible</label>
 												<div class="col-sm-10">
-													<input type="checkbox" data-bind="checked: valueAxis.line.visible" />
+													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: valueAxis.line.visible" />
 												</div>
 											</div>
 										</form>
@@ -299,25 +307,9 @@
 									<div class="panel-body">
 										<form class="form-horizontal">
 											<div class="form-group">
-												<label class="col-sm-2 control-label">Min</label>
+												<label class="col-sm-2 control-label">Visible</label>
 												<div class="col-sm-10">
-													<input type="checkbox" data-bind="checked: valueAxis.minorGridLines.visible" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Labels</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Min</label>
-												<div class="col-sm-10">
-													<input type="checkbox" data-bind="checked: valueAxis.minorGridLines.visible" />
+													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: valueAxis.minorGridLines.visible" />
 												</div>
 											</div>
 										</form>
@@ -352,7 +344,7 @@
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Visible</label>
 												<div class="col-sm-10">
-													<input type="checkbox" data-bind="checked: tooltip.visible" />
+													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: tooltip.visible" />
 												</div>
 											</div>
 											<div class="form-group">
@@ -366,6 +358,21 @@
 								</div>
 							</div>
 							<div class="tab-pane" id="legend">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Legend</h1>
+									</div>
+									<div class="panel-body">
+										<form class="form-horizontal">
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Visible</label>
+												<div class="col-sm-10">
+													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: legend.visible" />
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
 							</div>
 					    </div>
 					</div>
