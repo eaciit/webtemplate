@@ -7,7 +7,6 @@ import (
 	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
 	m "github.com/eaciit/webtemplate/models"
-	"gopkg.in/mgo.v2/bson"
 	"io"
 	"os"
 	"os/exec"
@@ -51,9 +50,9 @@ func (t *TemplateController) RegisterRoutes() {
 	routes := t.GetRoutes(helper.FakeWebContext()).([]interface{})
 
 	helper.Recursiver(routes, func(each interface{}) []interface{} {
-		return each.(bson.M)["submenu"].([]interface{})
+		return each.(map[string]interface{})["submenu"].([]interface{})
 	}, func(each interface{}) {
-		eachMap := each.(bson.M)
+		eachMap := each.(map[string]interface{})
 		title := eachMap["title"].(string)
 		href := eachMap["href"].(string)
 
@@ -72,6 +71,11 @@ func (t *TemplateController) RegisterRoutes() {
 			return toolkit.M{"title": "Dashboard", "href": route}
 		})
 	}
+
+	t.Server.Route("/chart", func(r *knot.WebContext) interface{} {
+		r.Config.ViewName = "view/chart.html"
+		return toolkit.M{"title": "Chart Builder", "href": "/chartbuilder"}
+	})
 	t.Server.Route("/grid", func(r *knot.WebContext) interface{} {
 		r.Config.ViewName = "view/grid.html"
 		return toolkit.M{"title": "Grid", "href": "/grid"}
@@ -85,11 +89,11 @@ func (t *TemplateController) Listen() {
 func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.Connect()
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().From("routes").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("_id", "title", "href", "submenu", "selected").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -105,11 +109,11 @@ func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.Connect()
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/left-menu.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().From("leftmenus").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("_id", "titlegroup", "leftmenu").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -150,14 +154,14 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	helper.HandleError(err)
 
 	if payload["href"] == "/" || payload["href"] == "/index" {
-		return []bson.M{{"title": "Dashboard", "href": "/index"}}
+		return []map[string]interface{}{{"title": "Dashboard", "href": "/index"}}
 	}
 
 	routes := t.GetRoutes(helper.FakeWebContext()).([]interface{})
-	breadcrumbs := []bson.M{}
+	breadcrumbs := []map[string]interface{}{}
 
 	for _, level1 := range routes {
-		var level1Each = level1.(bson.M)
+		var level1Each = level1.(map[string]interface{})
 		var level1Title = level1Each["title"].(string)
 		var level1Href = level1Each["href"].(string)
 		var level1Submenu = level1Each["submenu"].([]interface{})
@@ -169,7 +173,7 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 
 		if len(level1Submenu) > 0 {
 			for _, level2 := range level1Submenu {
-				var level2Each = level2.(bson.M)
+				var level2Each = level2.(map[string]interface{})
 				var level2Title = level2Each["title"].(string)
 				var level2Href = level2Each["href"].(string)
 				// var level2Submenu = level2Each["submenu"].([]interface{})
@@ -189,11 +193,11 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetDataSources(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.Connect()
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/datasources.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().From("datasources").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("_id", "title", "type", "path").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -246,11 +250,11 @@ func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
 	err := r.GetForms(&payload)
 	helper.HandleError(err)
 
-	connection, err := helper.Connect()
+	connection, err := helper.LoadConfig(t.appViewsPath + "config/datasources.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
-	err = connection.NewQuery().From("datasources").Delete().Exec(toolkit.M{"data": payload})
+	err = connection.NewQuery().Delete().Exec(toolkit.M{"data": payload})
 	helper.HandleError(err)
 	success := err == nil
 
@@ -260,11 +264,6 @@ func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
 	}
 
 	return success
-}
-
-func (t *TemplateController) ChartBuilder(r *knot.WebContext) interface{} {
-	r.Config.ViewName = "view/chart.html"
-	return toolkit.M{"title": "Chart Builder", "href": "/chartbuilder"}
 }
 
 func (t *TemplateController) Open() {
