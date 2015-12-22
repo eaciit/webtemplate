@@ -108,7 +108,7 @@
 								<span class="glyphicon glyphicon-save"></span> Save
 							</button>
 							<button class="btn btn-sm btn-primary" data-bind="click: preview">
-								<span class="glyphicon glyphicon-eye"></span> Preview
+								<span class="glyphicon glyphicon-eye-open"></span> Preview
 							</button>
 						</div>
 					</div>
@@ -226,7 +226,7 @@
 													<span class="glyphicon glyphicon-plus"></span> Add
 												</button>
 												<button class="btn btn-sm btn-success" data-bind="click: $parent.saveSeries">
-													<span class="glyphicon glyphicon-save"></span> Save
+													<span class="glyphicon glyphicon-save"></span> Save Series
 												</button>
 											</div>
 
@@ -405,14 +405,13 @@
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title" data-bind="text: viewModel.chart.config.chartArea.title"></h4>
+	                <h4 class="modal-title" data-bind="text: viewModel.chart.config.chartArea.title() + ' Preview'"></h4>
 	            </div>
 	            <div class="modal-body">
 	                <div class="chart-preview"></div>
 	            </div>
 	            <div class="modal-footer">
-	                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	                <button type="button" class="btn btn-primary">Save changes</button>
+	                <button type="button" class="btn btn-sm btn-warning" data-dismiss="modal">Close</button>
 	            </div>
 	        </div>
 	    </div>
