@@ -1,0 +1,25 @@
+[{
+    "_id" : "234f123v4123c4123",
+    "title" : "Widget",
+    "href" : "/widget",
+    "submenu" : [],
+    "selected" : false
+}, {
+    "_id" : "erqwer1234123412341234",
+    "title" : "Example",
+    "href" : "/example",
+    "submenu" : [],
+    "selected" : false
+}, {
+    "_id" : "erqwer234123wqer123qwer",
+    "title" : "Page",
+    "href" : "#",
+    "submenu" : [ 
+        {
+            "title" : "Blank",
+            "href" : "/page/blank",
+            "submenu" : []
+        }
+    ],
+    "selected" : false
+}]
