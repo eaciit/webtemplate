@@ -32,7 +32,7 @@ viewModel.grid.template = {
 viewModel.grid.dataSources = ko.observableArray([]);
 viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
-viewModel.grid.save = function () {
+viewModel.grid.createGrid = function () {
 	var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]);
 	for (var key in columns){
 		var column = {};
@@ -43,10 +43,22 @@ viewModel.grid.save = function () {
 		newColumns.push(column);
 	}
 	viewModel.grid.config.columns(newColumns());
-	$(".grid-preview").kendoGrid(ko.toJS(viewModel.grid.config));
+	$(".grid-preview").kendoGrid(ko.mapping.toJS(viewModel.grid.config));
 };
+viewModel.grid.save = function(){
+	$.ajax({
+        url: "/template/savejsongrid",
+        type: 'post',
+        // dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data : ko.mapping.toJSON(viewModel.grid.config),
+        success : function(res) {
+			console.log(res);
+        },
+	});
+}
 viewModel.grid.preview = function (){
-	viewModel.grid.save();
+	viewModel.grid.createGrid();
 	$(".modal-grid-preview").modal("show");
 }
 viewModel.grid.addColumn = function(){
@@ -70,6 +82,7 @@ viewModel.grid.selectDataSource = function(e){
 
 	var row = JSON.parse(kendo.stringify(this.dataItem(e.item)));
 	console.log("fetching " + row.path);
+	console.log(row);
 
 	viewModel.ajaxPost("/template/getdatasource", row, function (res) {
 		viewModel.grid.config.dataSource.data(res);
@@ -92,6 +105,22 @@ viewModel.grid.selectDataSource = function(e){
 		viewModel.grid.template.dataSourceFields(fields);
     });
 }
+
+ko.bindingHandlers.booleanValue = {
+    init: function(element, valueAccessor, allBindingsAccessor) {
+        var observable = valueAccessor(),
+            interceptor = ko.computed({
+                read: function() {
+                    return observable().toString();
+                },
+                write: function(newValue) {
+                    observable(newValue === "true");
+                }                   
+            });
+        
+        ko.applyBindingsToNode(element, { value: interceptor });
+    }
+};
 
 $(function () {
 	var c = viewModel.grid;

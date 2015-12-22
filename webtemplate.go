@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/eaciit/knot/knot.v1"
 	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
+	m "github.com/eaciit/webtemplate/models"
 	"gopkg.in/mgo.v2/bson"
+	"io"
 	"os"
 	"os/exec"
 	"time"
@@ -268,6 +271,19 @@ func (t *TemplateController) Open() {
 	time.AfterFunc(time.Second, func() {
 		exec.Command("open", "http://"+t.Server.Address).Run()
 	})
+}
+
+func (t *TemplateController) SaveJsonGrid(r *knot.WebContext) interface{} {
+	datagrid := m.Grid{}
+	err := r.GetPayload(&datagrid)
+
+	f, err := os.Create(t.appViewsPath + "data/grid/grid1.json")
+	b, err := json.Marshal(datagrid)
+	n, err := io.WriteString(f, string(b))
+	if err != nil {
+		fmt.Println(n, err)
+	}
+	return datagrid
 }
 
 func main() {
