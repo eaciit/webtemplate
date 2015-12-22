@@ -274,6 +274,7 @@ func (t *TemplateController) Open() {
 }
 
 func (t *TemplateController) SaveJsonGrid(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
 	datagrid := m.Grid{}
 	err := r.GetPayload(&datagrid)
 
