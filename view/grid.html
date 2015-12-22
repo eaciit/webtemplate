@@ -150,7 +150,7 @@
 							<button class="btn btn-sm btn-primary" data-bind="click:save">
 								<span class="glyphicon glyphicon-save"></span> Save
 							</button>
-							<button class="btn btn-sm btn-success">
+							<button class="btn btn-sm btn-success" data-bind="click:preview">
 								<span class="glyphicon glyphicon-eye"></span> Preview
 							</button>
 						</div>
@@ -166,7 +166,7 @@
 							<li><a href="#column" data-toggle="tab">Columns Setting</a></li>
 					    </ul>
 					    <div id="chart-tab-content" class="tab-content">
-							<div class="tab-pane active" id="general" data-bind="with:general">
+							<div class="tab-pane active" id="general">
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h1 class="panel-title">General</h1>
@@ -182,7 +182,7 @@
 									        <div class="col-md-6">
 									            <label class="col-md-3 filter-label">Groupable</label>
 									            <div class="col-md-8">
-									                <select class="form-control" data-bind="value:groupable">
+									                <select class="form-control" data-bind="booleanValue:groupable">
 														<option value="true">true</option>
 														<option value="false">false</option>
 													</select>
@@ -191,7 +191,7 @@
 									        <div class="col-md-6">
 									            <label class="col-md-3 filter-label">Sortable</label>
 									            <div class="col-md-8">
-									                <select class="form-control" data-bind="value:sortable">
+									                <select class="form-control" data-bind="booleanValue:sortable">
 														<option value="true">true</option>
 														<option value="false">false</option>
 													</select>
@@ -200,7 +200,7 @@
 									        <div class="col-md-6">
 									            <label class="col-md-3 filter-label">Filterable</label>
 									            <div class="col-md-8">
-									                <select class="form-control" data-bind="value:filterable">
+									                <select class="form-control" data-bind="booleanValue:filterable">
 														<option value="true">true</option>
 														<option value="false">false</option>
 													</select>
@@ -210,7 +210,27 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane" id="column" data-bind="with:column">
+							<div class="tab-pane" id="column" data-bind="with:viewModel.grid.column">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h1 class="panel-title">Data Source</h1>
+									</div>
+									<div class="panel-body">
+										<form class="form-horizontal">
+											<p class="bg-notif bg-info">
+												<span class="glyphicon glyphicon-info-sign"></span>
+												This data source will be used for testing purpose.
+											</p>
+											<div class="form-group">
+												<label class="col-sm-2 control-label">Data Source</label>
+												<div class="col-sm-10">
+													<select data-bind="kendoDropDownList: { data: viewModel.grid.dataSources, select: viewModel.grid.selectDataSource, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: $parent.dataSourceKey }" style="width: 200px;"></select>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h1 class="panel-title">Column</h1>
@@ -220,13 +240,13 @@
 											<div class="col-md-6">
 									            <label class="col-md-3 filter-label">Template</label>
 									            <div class="col-md-8">
-									                <input name="txtPage" class="form-input form-control" type="text" />
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:template" />
 									            </div>
 									        </div>
 									        <div class="col-md-6">
 									            <label class="col-md-3 filter-label">Field</label>
 									            <div class="col-md-8">
-									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:field" />
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="kendoDropDownList: { data: viewModel.grid.template.dataSourceFields, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: viewModel.grid.column.field }" />
 									            </div>
 									        </div>
 									        <div class="col-md-6">
@@ -238,7 +258,7 @@
 									        <div class="col-md-6">
 									            <label class="col-md-3 filter-label">Format</label>
 									            <div class="col-md-8">
-									                <input name="txtPage" class="form-input form-control" type="text" />
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:format" />
 									            </div>
 									        </div>
 									        <div class="col-md-12">
@@ -255,17 +275,34 @@
 									        				<th>Action</th>
 									        			</tr>
 									        		</thead>
-									        		<tbody data-bind="template:{name:'template-column', foreach:viewModel.grid.config.general.columns()}"></tbody>
+									        		<tbody data-bind="template:{name:'template-column', foreach:viewModel.grid.config.columns()}"></tbody>
 												</table>
 									        </div>
 										</div>
 									</div>
 								</div>
+
 							</div>
 					    </div>
 					</div>
 
-					<div class="col-md-11" id="gridResult"></div>
+					<!-- <div class="col-md-11" id="gridResult"></div> -->
+					<div class="modal fade modal-grid-preview" tabindex="-1" role="dialog">
+					    <div class="modal-dialog">
+					        <div class="modal-content">
+					            <div class="modal-header">
+					                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					                <h4 class="modal-title">Grid Preview</h4>
+					            </div>
+					            <div class="modal-body">
+					                <div class="grid-preview"></div>
+					            </div>
+					            <div class="modal-footer">
+					                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					            </div>
+					        </div>
+					    </div>
+					</div>
 				</div>
 			</div>
 		</div>
