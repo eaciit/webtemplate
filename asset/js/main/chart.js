@@ -269,7 +269,7 @@ viewModel.chart.grid = {
 	pageable: true, 
 	columns: [
 		{ field: "title", title: "Name" },
-		{ title: "", template: '<button class="btn btn-xs btn-success" onclick="viewModel.chart.previewChart(\'#: _id #\')"> <span class="glyphicon glyphicon-eye-open"></span> Preview</button>&nbsp;<button class="btn btn-xs btn-primary" onclick="viewModel.chart.editChart(\'#: _id #\')"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.chart.removeChart(\'#: _id #\')"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', width: 240, attributes: { style: "text-align: center;" } },
+		{ title: "", template: '<button class="btn btn-xs btn-success" onclick="viewModel.chart.previewChart(\'#: _id #\')"> <span class="glyphicon glyphicon-eye-open"></span> Preview</button>&nbsp;<button class="btn btn-xs btn-primary" onclick="viewModel.chart.editChart(\'#: _id #\')"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.chart.removeChart(\'#: _id #\', \'#: title #\')"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', width: 240, attributes: { style: "text-align: center;" } },
 	],
 	data: [],
 	dataSource: {
@@ -310,6 +310,15 @@ viewModel.chart.editChart = function (_id) {
 		}, 1000);
     });
 };
+viewModel.chart.removeChart = function (_id, title) {
+	var y = confirm("Are you sure want to delete chart " + title + " ?");
+
+	if (y == true) {
+		viewModel.ajaxPost("/template/removechartconfig", { _id: _id }, function (res) {
+			viewModel.chart.refresh();
+	    });
+    }
+}
 viewModel.chart.previewChart = function (_id) {
 	var isWithDataSource = true;
 

@@ -399,6 +399,45 @@ func (t *TemplateController) GetChartConfig(r *knot.WebContext) interface{} {
 	return data
 }
 
+func (t *TemplateController) RemoveChartConfig(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	_id := payload["_id"]
+	v, _ := os.Getwd()
+
+	// remove chart
+	path := fmt.Sprintf("%s/data/chart/chart-%s.json", v, _id)
+	os.Remove(path)
+
+	// remove chart meta data
+	pathConfig := fmt.Sprintf("%s/data/chart.json", v)
+	fileContent, err := ioutil.ReadFile(pathConfig)
+
+	metaData := []interface{}{}
+	newMetaData := []interface{}{}
+	err = json.Unmarshal(fileContent, &metaData)
+	helper.HandleError(err)
+
+	for _, eachRaw := range metaData {
+		each := eachRaw.(map[string]interface{})
+		if each["_id"].(string) != _id {
+			newMetaData = append(newMetaData, each)
+		}
+	}
+
+	dataAsBytes, err := json.Marshal(newMetaData)
+	helper.HandleError(err)
+
+	os.Remove(pathConfig)
+	ioutil.WriteFile(pathConfig, dataAsBytes, 0644)
+
+	return true
+}
+
 func (t *TemplateController) Open() {
 	time.AfterFunc(time.Second, func() {
 		exec.Command("open", "http://"+t.Server.Address).Run()
