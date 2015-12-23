@@ -1,1 +1,1 @@
-{"dataSourceKey":"Data Source 2","pageSize":10,"groupable":true,"sortable":true,"filterable":true,"pageable":{"refresh":true,"pageSize":false,"buttonCount":5},"columns":[{"template":"","field":"execution","title":"asd","format":""}]}
+{"dataSourceKey":"","pageSize":10,"groupable":true,"sortable":true,"filterable":true,"pageable":{"refresh":true,"pageSize":false,"buttonCount":5},"columns":[]}

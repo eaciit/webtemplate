@@ -27,3 +27,13 @@ type Column struct {
 	Title    string `json:"title"`
 	Format   string `json:"format"`
 }
+
+type MapGrid struct {
+	Seq  int           `json:"seq"`
+	Data []DataMapGrid `json:"data"`
+}
+
+type DataMapGrid struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
