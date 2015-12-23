@@ -97,13 +97,39 @@
 
 	<!-- Content -->
 	<div class="wrap-fluid content-all" style="margin-left: 250px;">
-
-		<div class="container-fluid content-main chart-widget" data-bind="with: chart">
+		<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: chart">
 			<div class="content-header">
 				<div class="row">
 					<div class="col-md-12 title-content">
-						<span class="col-md-3">Widget Chart Menu</span>
+						<span class="col-md-3">Chart Widget</span>
 						<div class="col-md-9">
+							<button class="btn btn-sm btn-success" data-bind="click: refresh">
+								<span class="glyphicon glyphicon-refresh"></span> Refresh
+							</button>
+							<button class="btn btn-sm btn-primary" data-bind="click: addChart">
+								<span class="glyphicon glyphicon-plus"></span> Create New Chart
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="row">
+					<div class="chart-grid grid" data-bind="kendoGrid: viewModel.chart.grid" style="height: 400px; width: 100%;"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == 'editor', with: chart">
+			<div class="content-header">
+				<div class="row">
+					<div class="col-md-12 title-content">
+						<span class="col-md-3">Chart Editor</span>
+						<div class="col-md-9">
+							<button class="btn btn-sm btn-warning" data-bind="click: back">
+								<span class="glyphicon glyphicon-chevron-left"></span> Back
+							</button>
 							<button class="btn btn-sm btn-success" data-bind="click: save">
 								<span class="glyphicon glyphicon-save"></span> Save
 							</button>
@@ -191,7 +217,7 @@
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Data Source</label>
 												<div class="col-sm-10">
-													<select data-bind="kendoDropDownList: { data: $parent.dataSources, select: $parent.selectDataSource, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: outsider.dataSourceKey }" style="width: 200px;"></select>
+													<select class="data-source-selector" data-bind="kendoDropDownList: { data: $parent.dataSources, select: $parent.selectDataSource, dataTextField: 'title', dataValueField: '_id', optionLabel: 'Select one', value: outsider.dataSourceKey }" style="width: 200px;"></select>
 												</div>
 											</div>
 										</form>
@@ -230,7 +256,7 @@
 												</button>
 											</div>
 
-											<div class="grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
+											<div class="grid series-grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
 										</form>
 									</div>
 								</div>
