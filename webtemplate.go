@@ -8,6 +8,7 @@ import (
 	"github.com/eaciit/webtemplate/helper"
 	m "github.com/eaciit/webtemplate/models"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"time"
@@ -93,7 +94,7 @@ func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().Select("_id", "title", "href", "submenu", "selected").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -113,7 +114,7 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().Select("_id", "titlegroup", "leftmenu").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -133,7 +134,7 @@ func (t *TemplateController) GetHeader(r *knot.WebContext) interface{} {
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().Select("titlegroup").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -193,11 +194,11 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetDataSources(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.appViewsPath + "config/datasources.json")
+	connection, err := helper.LoadConfig(t.appViewsPath + "data/datasources.json")
 	helper.HandleError(err)
 	defer connection.Close()
 
-	cursor, err := connection.NewQuery().Select("_id", "title", "type", "path").Cursor(nil)
+	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	if cursor == nil {
 		fmt.Printf("Cursor not initialized")
@@ -218,11 +219,11 @@ func (t *TemplateController) GetDataSource(r *knot.WebContext) interface{} {
 	helper.HandleError(err)
 
 	if payload["type"] == "file" {
-		connection, err := helper.LoadConfig(t.appViewsPath + "data/" + payload["path"])
+		connection, err := helper.LoadConfig(t.appViewsPath + "data/datasource/" + payload["path"])
 		helper.HandleError(err)
 		defer connection.Close()
 
-		cursor, err := connection.NewQuery().Select("").Cursor(nil)
+		cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 		helper.HandleError(err)
 		if cursor == nil {
 			fmt.Printf("Cursor not initialized")
@@ -266,6 +267,87 @@ func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
 	return success
 }
 
+func (t *TemplateController) GetChartConfigs(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	configFilepath := t.appViewsPath + "data/chart.json"
+
+	if _, err := os.Stat(configFilepath); err != nil {
+		if os.IsNotExist(err) {
+			os.Create(configFilepath, 0755)
+		} else {
+			helper.HandleError(err)
+		}
+	}
+
+	connection, err := helper.LoadConfig(configFilepath)
+	helper.HandleError(err)
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
+	if !helper.HandleError(err) {
+		return []interface{}{}
+	}
+
+	if cursor == nil {
+		fmt.Printf("Cursor not initialized")
+	}
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	helper.HandleError(err)
+
+	if len(dataSource.Data) > 0 {
+		return dataSource.Data
+	}
+
+	return []interface{}{}
+}
+
+func (t *TemplateController) SaveChartConfig(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	_id := payload["_id"]
+	v, _ := os.Getwd()
+
+	data := t.GetChartConfigs(helper.FakeWebContext()).([]interface{})
+	if _id == "" {
+		_id = helper.RandomIDWithPrefix("c")
+		filename := fmt.Sprintf("chart-%s.json", _id)
+
+		// save chart configuration
+		path := fmt.Sprintf("%s/data/chart/%s", v, filename)
+		os.Remove(path)
+		ioutil.WriteFile(path, []byte(payload["config"]), 0644)
+
+		// save chart meta data
+		data = append(data, map[string]interface{}{
+			"_id":   _id,
+			"title": payload["title"],
+			"file":  filename,
+		})
+		dataAsBytes, err := json.Marshal(data)
+		helper.HandleError(err)
+
+		pathConfig := fmt.Sprintf("%s/data/chart.json", v)
+		os.Remove(pathConfig)
+		ioutil.WriteFile(pathConfig, dataAsBytes, 0644)
+	} else {
+		filename := fmt.Sprintf("chart-%s.json", _id)
+
+		// save chart configuration
+		path := fmt.Sprintf("%s/data/chart/%s", v, filename)
+		os.Remove(path)
+		ioutil.WriteFile(path, []byte(payload["config"]), 0644)
+	}
+
+	return _id
+}
+
 func (t *TemplateController) Open() {
 	time.AfterFunc(time.Second, func() {
 		exec.Command("open", "http://"+t.Server.Address).Run()
@@ -289,6 +371,6 @@ func (t *TemplateController) SaveJsonGrid(r *knot.WebContext) interface{} {
 func main() {
 	yo := InitTemplateController()
 	yo.Server.Address = "localhost:7878"
-	yo.Open()
+	// yo.Open()
 	yo.Listen()
 }

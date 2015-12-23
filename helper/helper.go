@@ -8,6 +8,7 @@ import (
 	_ "github.com/eaciit/dbox/dbc/mongo"
 	"github.com/eaciit/knot/knot.v1"
 	"net/http"
+	"time"
 )
 
 func HandleError(err error, optionalArgs ...interface{}) bool {
@@ -89,4 +90,9 @@ func FetchJSON(url string) ([]map[string]interface{}, error) {
 
 func FakeWebContext() *knot.WebContext {
 	return &knot.WebContext{Config: &knot.ResponseConfig{}}
+}
+
+func RandomIDWithPrefix(prefix string) string {
+	timestamp := time.Now().UnixNano() / int64(time.Millisecond)
+	return fmt.Sprintf("%s%d", prefix, timestamp)
 }

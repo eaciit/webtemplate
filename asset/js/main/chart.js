@@ -84,6 +84,7 @@ viewModel.chart.options = {
 	}).toArray()),
 	dataSourceFields: ko.observableArray([])
 };
+viewModel.chart.id = ko.observable('');
 viewModel.chart.config = ko.mapping.fromJS(viewModel.chart.template.config);
 viewModel.chart.selectDataSource = function (e) {
 	if (e == undefined) {
@@ -206,6 +207,20 @@ viewModel.chart.saveSeries = function () {
 };
 viewModel.chart.save = function () {
 	viewModel.chart.saveSeries();
+
+	configObject = ko.mapping.toJS(viewModel.chart.config);
+	configObject.data = [];
+	var config = JSON.stringify(configObject);
+
+	var param = {
+		title: configObject.chartArea.title,
+		config: config,
+		_id: viewModel.chart.id()
+	};
+
+	viewModel.ajaxPost("/template/savechartconfig", param, function (res) {
+		viewModel.chart.id(res);
+    });
 };
 viewModel.chart.registerEvents = function () {
 	$('.chart-config-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -243,6 +258,41 @@ viewModel.chart.preview = function () {
 	var chartConfig = viewModel.chart.parseConfig(ko.mapping.toJS(viewModel.chart.config));
 	$(".chart-preview").replaceWith("<div class='chart-preview'></div>");
 	$(".chart-preview").kendoChart(chartConfig);
+};
+viewModel.chart.grid = { 
+	sortable: true, 
+	resizable: false, 
+	filterable: false, 
+	pageable: true, 
+	columns: [
+		{ field: "title", title: "Name" },
+		{ title: "", template: '<button class="btn btn-xs btn-success" onclick="viewModel.chart.preview(this)"> <span class="glyphicon glyphicon-eye-open"></span> Preview</button>&nbsp;<button class="btn btn-xs btn-primary" onclick="viewModel.chart.editChart(this)"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.chart.removeChart(this)"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', width: 240, attributes: { style: "text-align: center;" } },
+	],
+	data: [],
+	dataSource: {
+        type: 'json',
+        pageSize: 20,
+        transport: {
+            read: '/template/getchartconfigs'
+        },
+        schema: {
+            data: function (data) {
+            	return data;
+            }
+        }
+    },
+};
+viewModel.chart.back = function () {
+	viewModel.mode('');
+	viewModel.chart.refresh();
+}
+viewModel.chart.addChart = function () {
+	viewModel.chart.id('');
+	viewModel.mode('editor');
+	ko.mapping.fromJS(viewModel.chart.config, viewModel.chart.template.config);
+}
+viewModel.chart.refresh = function () {
+	$(".chart-grid").data("kendoGrid").dataSource.read();
 };
 
 $(function () {
