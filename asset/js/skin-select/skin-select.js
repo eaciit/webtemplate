@@ -12,6 +12,7 @@ $(document).ready(function() {
 			$('.tooltip-tip2').addClass('tooltipster-disable');
 			$('.tooltip-tip').addClass('tooltipster-disable');
 			$('.list-group').css({"visibility":"visible"});
+			$('#menu-left .list-group').css('margin-top','0px');
 		} else {
 			$(this).addClass('active');
 			$('#menu-left').animate({ left:-200 }, 100);
@@ -21,6 +22,7 @@ $(document).ready(function() {
 			$('.tooltip-tip2').removeClass('tooltipster-disable');
 			$('.tooltip-tip').removeClass('tooltipster-disable');
 			$('.list-group').css({"visibility":"visible"});
+			$('#menu-left .list-group').css('margin-top','45px');
 		}
 		if ($('.column-eaciit > .panel-eaciit').length > 0)
 			$(".column-eaciit").shapeshift();
