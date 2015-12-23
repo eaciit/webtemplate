@@ -217,7 +217,7 @@
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Data Source</label>
 												<div class="col-sm-10">
-													<select data-bind="kendoDropDownList: { data: $parent.dataSources, select: $parent.selectDataSource, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: outsider.dataSourceKey }" style="width: 200px;"></select>
+													<select class="data-source-selector" data-bind="kendoDropDownList: { data: $parent.dataSources, select: $parent.selectDataSource, dataTextField: 'title', dataValueField: '_id', optionLabel: 'Select one', value: outsider.dataSourceKey }" style="width: 200px;"></select>
 												</div>
 											</div>
 										</form>
@@ -256,7 +256,7 @@
 												</button>
 											</div>
 
-											<div class="grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
+											<div class="grid series-grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
 										</form>
 									</div>
 								</div>

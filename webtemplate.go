@@ -219,30 +219,11 @@ func (t *TemplateController) GetDataSource(r *knot.WebContext) interface{} {
 	err := r.GetForms(&payload)
 	helper.HandleError(err)
 
-	if payload["type"] == "file" {
-		connection, err := helper.LoadConfig(t.appViewsPath + "data/datasource/" + payload["path"])
-		helper.HandleError(err)
-		defer connection.Close()
+	_id := payload["_id"]
+	dsType := payload["type"]
+	path := payload["path"]
 
-		cursor, err := connection.NewQuery().Select("*").Cursor(nil)
-		helper.HandleError(err)
-		if cursor == nil {
-			fmt.Printf("Cursor not initialized")
-		}
-		defer cursor.Close()
-
-		dataSource, err := cursor.Fetch(nil, 0, false)
-		helper.HandleError(err)
-
-		return dataSource.Data
-	} else if payload["type"] == "url" {
-		data, err := helper.FetchJSON(payload["path"])
-		helper.HandleError(err)
-
-		return data
-	}
-
-	return []interface{}{}
+	return helper.FetchDataSource(_id, dsType, path)
 }
 
 func (t *TemplateController) RemoveDataSource(r *knot.WebContext) interface{} {
@@ -275,7 +256,7 @@ func (t *TemplateController) GetChartConfigs(r *knot.WebContext) interface{} {
 
 	if _, err := os.Stat(configFilepath); err != nil {
 		if os.IsNotExist(err) {
-			os.Create(configFilepath, 0755)
+			os.Create(configFilepath)
 		} else {
 			helper.HandleError(err)
 		}
@@ -344,9 +325,78 @@ func (t *TemplateController) SaveChartConfig(r *knot.WebContext) interface{} {
 		path := fmt.Sprintf("%s/data/chart/%s", v, filename)
 		os.Remove(path)
 		ioutil.WriteFile(path, []byte(payload["config"]), 0644)
+
+		// save chart meta data
+		pathConfig := fmt.Sprintf("%s/data/chart.json", v)
+		fileContent, err := ioutil.ReadFile(pathConfig)
+
+		metaData := []interface{}{}
+		err = json.Unmarshal(fileContent, &metaData)
+		helper.HandleError(err)
+
+		for i, eachRaw := range metaData {
+			each := eachRaw.(map[string]interface{})
+			if each["_id"].(string) == _id {
+				each["title"] = payload["title"]
+				metaData[i] = each
+			}
+		}
+
+		dataAsBytes, err := json.Marshal(metaData)
+		helper.HandleError(err)
+
+		os.Remove(pathConfig)
+		ioutil.WriteFile(pathConfig, dataAsBytes, 0644)
 	}
 
 	return _id
+}
+
+func (t *TemplateController) GetChartConfig(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	filename := fmt.Sprintf("chart-%s.json", payload["_id"])
+	isWithDataSource, err := strconv.ParseBool(payload["isWithDataSource"])
+	helper.HandleError(err)
+
+	v, _ := os.Getwd()
+	path := fmt.Sprintf("%s/data/chart/%s", v, filename)
+
+	fileContent, err := ioutil.ReadFile(path)
+	helper.HandleError(err)
+
+	data := map[string]interface{}{}
+	err = json.Unmarshal(fileContent, &data)
+	helper.HandleError(err)
+
+	if isWithDataSource {
+		dataSourceID := data["outsider"].(map[string]interface{})["dataSourceKey"].(string)
+		dsPath := fmt.Sprintf("%s/data/datasources.json", v)
+
+		dsFileContent, err := ioutil.ReadFile(dsPath)
+		helper.HandleError(err)
+
+		dataSources := []map[string]interface{}{}
+		err = json.Unmarshal(dsFileContent, &dataSources)
+		helper.HandleError(err)
+
+		for _, each := range dataSources {
+			if each["_id"] == dataSourceID {
+				dsID := each["_id"].(string)
+				dsType := each["type"].(string)
+				dsPath := each["path"].(string)
+				dataSource := helper.FetchDataSource(dsID, dsType, dsPath)
+				data["dataSource"] = map[string]interface{}{"data": dataSource}
+				break
+			}
+		}
+	}
+
+	return data
 }
 
 func (t *TemplateController) Open() {

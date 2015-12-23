@@ -209,7 +209,8 @@ viewModel.chart.save = function () {
 	viewModel.chart.saveSeries();
 
 	configObject = ko.mapping.toJS(viewModel.chart.config);
-	configObject.data = [];
+	configObject.dataSource.data = [];
+	delete configObject.data;
 	var config = JSON.stringify(configObject);
 
 	var param = {
@@ -252,9 +253,11 @@ viewModel.chart.parseConfig = function (config) {
 	return config;
 }
 viewModel.chart.preview = function () {
-	viewModel.chart.saveSeries();
+	if (viewModel.mode() == 'editor')
+		viewModel.chart.saveSeries();
+	
 	$(".modal-chart-preview").modal("show");
-
+	
 	var chartConfig = viewModel.chart.parseConfig(ko.mapping.toJS(viewModel.chart.config));
 	$(".chart-preview").replaceWith("<div class='chart-preview'></div>");
 	$(".chart-preview").kendoChart(chartConfig);
@@ -266,7 +269,7 @@ viewModel.chart.grid = {
 	pageable: true, 
 	columns: [
 		{ field: "title", title: "Name" },
-		{ title: "", template: '<button class="btn btn-xs btn-success" onclick="viewModel.chart.preview(this)"> <span class="glyphicon glyphicon-eye-open"></span> Preview</button>&nbsp;<button class="btn btn-xs btn-primary" onclick="viewModel.chart.editChart(this)"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.chart.removeChart(this)"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', width: 240, attributes: { style: "text-align: center;" } },
+		{ title: "", template: '<button class="btn btn-xs btn-success" onclick="viewModel.chart.previewChart(\'#: _id #\')"> <span class="glyphicon glyphicon-eye-open"></span> Preview</button>&nbsp;<button class="btn btn-xs btn-primary" onclick="viewModel.chart.editChart(\'#: _id #\')"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.chart.removeChart(\'#: _id #\')"> <span class="glyphicon glyphicon-remove"></span> Remove</button>', width: 240, attributes: { style: "text-align: center;" } },
 	],
 	data: [],
 	dataSource: {
@@ -285,12 +288,42 @@ viewModel.chart.grid = {
 viewModel.chart.back = function () {
 	viewModel.mode('');
 	viewModel.chart.refresh();
-}
+};
 viewModel.chart.addChart = function () {
-	viewModel.chart.id('');
 	viewModel.mode('editor');
-	ko.mapping.fromJS(viewModel.chart.config, viewModel.chart.template.config);
-}
+	viewModel.chart.id('');
+	ko.mapping.fromJS(viewModel.chart.template.config, viewModel.chart.config);
+	viewModel.chart.addSeries();
+};
+viewModel.chart.editChart = function (_id) {
+	var param = {
+		isWithDataSource: true,
+		_id: _id
+	};
+	viewModel.ajaxPost("/template/getchartconfig", param, function (res) {
+		viewModel.mode('editor');
+		viewModel.chart.id(_id);
+		ko.mapping.fromJS(res, viewModel.chart.config);
+
+		setTimeout(function () {
+			$("select.data-source-selector").data("kendoDropDownList").trigger("select");
+		}, 1000);
+    });
+};
+viewModel.chart.previewChart = function (_id) {
+	var isWithDataSource = true;
+
+	var param = {
+		isWithDataSource: isWithDataSource,
+		_id: _id
+	};
+
+	viewModel.ajaxPost("/template/getchartconfig", param, function (res) {
+		viewModel.chart.id(_id);
+		ko.mapping.fromJS(res, viewModel.chart.config);
+		viewModel.chart.preview();
+    });
+};
 viewModel.chart.refresh = function () {
 	$(".chart-grid").data("kendoGrid").dataSource.read();
 };
@@ -298,7 +331,6 @@ viewModel.chart.refresh = function () {
 $(function () {
 	var c = viewModel.chart;
 	c.fetchDataSource();
-	c.addSeries();
 	c.registerEvents();
 	c.putNotifyToSelectDataSource();
 });

@@ -7,7 +7,9 @@ import (
 	_ "github.com/eaciit/dbox/dbc/json"
 	_ "github.com/eaciit/dbox/dbc/mongo"
 	"github.com/eaciit/knot/knot.v1"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -95,4 +97,32 @@ func FakeWebContext() *knot.WebContext {
 func RandomIDWithPrefix(prefix string) string {
 	timestamp := time.Now().UnixNano() / int64(time.Millisecond)
 	return fmt.Sprintf("%s%d", prefix, timestamp)
+}
+
+func FetchDataSource(_id string, dsType string, path string) []map[string]interface{} {
+	if dsType == "file" {
+		v, _ := os.Getwd()
+		filename := fmt.Sprintf("%s/data/datasource/%s", v, path)
+		content, err := ioutil.ReadFile(filename)
+		if !HandleError(err) {
+			return []map[string]interface{}{}
+		}
+
+		data := []map[string]interface{}{}
+		err = json.Unmarshal(content, &data)
+		if !HandleError(err) {
+			return []map[string]interface{}{}
+		}
+
+		return data
+	} else if dsType == "url" {
+		data, err := FetchJSON(path)
+		if !HandleError(err) {
+			return []map[string]interface{}{}
+		}
+
+		return data
+	}
+
+	return []map[string]interface{}{}
 }
