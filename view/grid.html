@@ -141,14 +141,41 @@
 		</div>
 
 		<!-- Content Conf Grid -->
+		<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'viewgrid'), with: grid">
+			<div class="content-header">
+				<div class="row">
+					<div class="col-md-12 title-content">
+						<span class="col-md-3">Widget Grid</span>
+						<div class="col-md-9">
+							<button class="btn btn-sm btn-primary" data-bind="click:AddNew">
+								<span class="glyphicon glyphicon-plus"></span> Add
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="content-body" data-overlay-page-wrap>
+				<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h1 class="panel-title">Data Grid</h1>
+						</div>
+						<div class="panel-body form-panel">
+							<div id="grid-data"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'grid'), with: grid">
 			<div class="content-header">
 				<div class="row">
 					<div class="col-md-12 title-content">
 						<span class="col-md-3">Widget Grid Menu</span>
 						<div class="col-md-9">
+							<button class="btn btn-sm btn-danger" data-bind="click:backGridData"><span class="glyphicon glyphicon-chevron-left"></span></button>
 							<button class="btn btn-sm btn-primary" data-bind="click:save">
-								<span class="glyphicon glyphicon-save"></span> Save
+								<span class="glyphicon glyphicon-save"></span> <span data-bind="text:status"></span>
 							</button>
 							<button class="btn btn-sm btn-success" data-bind="click:preview">
 								<span class="glyphicon glyphicon-eye"></span> Preview
@@ -303,6 +330,7 @@
 					        </div>
 					    </div>
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -342,7 +370,7 @@
 
 	<script type="text/javascript">
 	    ko.applyBindings(viewModel);
-	    viewModel.mode("grid")
+	    viewModel.mode("viewgrid");
 	</script>
 
 	<script src="/static/asset/js/load.js"></script>

@@ -30,8 +30,47 @@ viewModel.grid.template = {
 	dataSourceFields: ko.observableArray([]),
 }
 viewModel.grid.dataSources = ko.observableArray([]);
+viewModel.grid.dataGrid = ko.observableArray([]);
+viewModel.grid.status = ko.observable("");
 viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
+viewModel.grid.showDataGrid = function(){
+	viewModel.mode("viewgrid");
+	viewModel.ajaxPost("/template/getgriddata", {}, function (res) {
+		viewModel.grid.dataGrid(res);
+		$("#grid-data").kendoGrid({
+			dataSource : {
+				data:viewModel.grid.dataGrid()[0].data
+			},
+			pageSize:10,
+			groupable: false,
+			sortable: false,
+			filterable: false,
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [
+            	{field: "name", title: "Name Grid", headerAttributes: { style: 'text-align: center; font-weight: bold;' }, template:"<a style=\"cursor:pointer\" onclick=\"viewModel.grid.selectGrid(this)\" recordid=\"#: value#\">#:name#</a>"},
+            	{field: "value", title: "Filename", headerAttributes: {style: 'text-align: center; font-weight: bold;'}},
+            	{template:"<button class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-trash'></span></button>"}
+            ]
+		});
+    });
+}
+viewModel.grid.selectGrid = function(obj){
+	viewModel.mode("grid");
+	viewModel.grid.status("Update");
+}
+viewModel.grid.backGridData = function(){
+	viewModel.mode("viewgrid");
+	viewModel.grid.status("");
+}
+viewModel.grid.AddNew = function(){
+	viewModel.mode("grid");
+	viewModel.grid.status("Save");
+}
 viewModel.grid.createGrid = function () {
 	var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]);
 	for (var key in columns){
@@ -53,7 +92,8 @@ viewModel.grid.save = function(){
         contentType: "application/json; charset=utf-8",
         data : ko.mapping.toJSON(viewModel.grid.config),
         success : function(res) {
-			console.log(res);
+			// console.log(res);
+			viewModel.grid.showDataGrid();
         },
 	});
 }
@@ -125,4 +165,5 @@ ko.bindingHandlers.booleanValue = {
 $(function () {
 	var c = viewModel.grid;
 	c.fetchDataSource();
+	c.showDataGrid();
 });

@@ -10,6 +10,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strconv"
 	"time"
 )
 
@@ -272,17 +273,53 @@ func (t *TemplateController) Open() {
 	})
 }
 
+func (t *TemplateController) GetGridData(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	connection, err := helper.LoadConfig(t.appViewsPath + "data/mapgrid.json")
+	helper.HandleError(err)
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Select("seq", "data").Cursor(nil)
+	helper.HandleError(err)
+	if cursor == nil {
+		fmt.Printf("Cursor not initialized")
+	}
+	defer cursor.Close()
+
+	dataGrid, err := cursor.Fetch(nil, 0, false)
+	helper.HandleError(err)
+
+	return dataGrid.Data
+}
+
 func (t *TemplateController) SaveJsonGrid(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
-	datagrid := m.Grid{}
-	err := r.GetPayload(&datagrid)
-
-	f, err := os.Create(t.appViewsPath + "data/grid/grid1.json")
-	b, err := json.Marshal(datagrid)
+	filename := t.appViewsPath + "data/mapgrid.json"
+	f, err := os.Open(filename)
+	mapgrid := []m.MapGrid{}
+	jsonParser := json.NewDecoder(f)
+	if err = jsonParser.Decode(&mapgrid); err != nil {
+		fmt.Println(err)
+	}
+	mapgrid[0].Seq = mapgrid[0].Seq + 1
+	datamapgrid := m.DataMapGrid{}
+	datamapgrid.Name = "grid example"
+	datamapgrid.Value = "grid" + strconv.Itoa(mapgrid[0].Seq) + ".json"
+	mapgrid[0].Data = append(mapgrid[0].Data, datamapgrid)
+	b, err := json.Marshal(mapgrid)
+	f, err = os.Create(filename)
 	n, err := io.WriteString(f, string(b))
+
+	datagrid := m.Grid{}
+	r.GetPayload(&datagrid)
+	f, err = os.Create(t.appViewsPath + "data/grid/grid1.json")
+	b, err = json.Marshal(datagrid)
+	n, err = io.WriteString(f, string(b))
 	if err != nil {
 		fmt.Println(n, err)
 	}
+	defer f.Close()
 	return datagrid
 }
 
