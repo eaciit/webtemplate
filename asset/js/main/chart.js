@@ -296,6 +296,7 @@ viewModel.chart.addChart = function () {
 	viewModel.mode('editor');
 	$('.chart-config-tabs a[href="#general"]').tab('show');
 	viewModel.chart.id('');
+	$("#series .k-grid").data("kendoGrid").dataSource.read();
 	ko.mapping.fromJS(viewModel.chart.template.config, viewModel.chart.config);
 	viewModel.chart.addSeries();
 };
