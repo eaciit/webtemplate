@@ -236,7 +236,6 @@ viewModel.chart.registerEvents = function () {
 viewModel.chart.putNotifyToSelectDataSource = function () {
 	$("#chart-tab-content .tab-pane").each(function (i, e)  {
 		$($("#template-data-source-not-selected").html()).prependTo($(e));
-		ko.applyBindings(viewModel, $(e).find(".panel-danger")[0]);
 	});
 };
 viewModel.chart.parseConfig = function (config) {

@@ -20,6 +20,7 @@ type (
 	TemplateController struct {
 		appViewsPath string
 		layoutFile   string
+		includeFiles []string
 		Server       *knot.Server
 	}
 
@@ -35,8 +36,8 @@ func InitTemplateController() *TemplateController {
 	v, _ := os.Getwd()
 	yo.appViewsPath = v + "/"
 	yo.layoutFile = "view/layout.html"
+	yo.includeFiles = []string{"view/_head.html"}
 
-	// set knot output type
 	knot.DefaultOutputType = knot.OutputTemplate
 
 	// initiate server
@@ -76,6 +77,8 @@ func (t *TemplateController) RegisterRoutes() {
 	}
 
 	t.Server.Route("/chart", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.layoutFile
+		r.Config.IncludeFiles = t.includeFiles
 		r.Config.ViewName = "view/chart.html"
 		return toolkit.M{"title": "Chart Builder", "href": "/chartbuilder"}
 	})
@@ -84,10 +87,14 @@ func (t *TemplateController) RegisterRoutes() {
 		return toolkit.M{"title": "Grid", "href": "/grid"}
 	})
 	t.Server.Route("/datasource", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.layoutFile
+		r.Config.IncludeFiles = t.includeFiles
 		r.Config.ViewName = "view/datasource.html"
 		return toolkit.M{"title": "Grid", "href": "/datasource"}
 	})
 	t.Server.Route("/page", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.layoutFile
+		r.Config.IncludeFiles = t.includeFiles
 		r.Config.ViewName = "view/page.html"
 		return toolkit.M{"title": "Grid", "href": "/page"}
 	})

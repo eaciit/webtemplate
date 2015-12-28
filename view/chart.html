@@ -1,466 +1,330 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>EACIIT Web Template</title>
-	<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- widget -->
+<script>viewModel.header = { title: "Chart Builder", href: "/chart" }</script>
+<script src="/static/asset/js/main/chart.js"></script>
 
-    <link rel="shortcut icon" href="/static/asset/img/logo.png" type="image/x-icon" />
-    <link rel="icon" href="/static/asset/img/logo.png" type="image/x-icon" />
-
-	<!-- header -->
-    <script>
-    	var viewModel = {};
-    	viewModel.header = { title: '{{.title}}', href: '{{.href}}' };
-    </script>
-
-	<!-- jquery -->
-    <script src="/static/asset/jquery/jquery-2.1.0.min.js"></script>
-    <script src="/static/asset/jquery/jquery-ui.min.js"></script>
-	
-	<!-- bootstrap -->
-    <script src="/static/asset/bootstrap/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/static/asset/bootstrap/bootstrap.min.css" />
-	
-	<!-- font-awesome -->
-    <link rel="stylesheet" href="/static/asset/font-awesome/css/font-awesome.min.css" />
-
-	<!-- knockout -->
-    <script src="/static/asset/knockout/knockout-3.4.0.js"></script>
-    <script src="/static/asset/knockout/knockout.mapping-latest.js"></script>
-	
-	<!-- kendo-ui -->
-    <link href="/static/asset/kendo-ui/styles/kendo.common.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.rtl.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.default.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.default.min.css" rel="stylesheet">
-    <script src="/static/asset/kendo-ui/js/kendo.all.min.js"></script>
-
-	<!-- knockout-kendo -->
-    <script src="/static/asset/knockout-kendo/knockout-kendo.min.js"></script>
-
-    <!-- lazy -->
-    <script src="/static/asset/lazyjs/lazy.min.js"></script>
-
-	<!-- main -->
-	<script src="/static/asset/js/main/app.js"></script>
-
-	<!-- widget -->
-	<script src="/static/asset/js/main/chart.js"></script>
-
-	<!-- others -->
-	<script src="/static/asset/touch-punch/jquery.touch-punch.min.js"></script>
-	<script src="/static/asset/shapeshift/jquery.shapeshift.js"></script>
-	
-    <link rel="stylesheet" href="/static/asset/css/site.css" />
-    <link rel="stylesheet" href="/static/asset/css/overlay.css"/>
-    <link rel="stylesheet" href="/static/asset/css/customred.css" />
-    <link rel="stylesheet" href="/static/asset/css/animation.css" />
-    <!-- <link rel="stylesheet" href="/static/asset/css/customred.css" id="customlayout" /> -->
-    <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
-	
-	<script type='text/html' id='template-data-source-not-selected'>
-		<div class="panel panel-danger panel-notif" data-bind="visible: (viewModel.chart.config.outsider.dataSourceKey() == '')">
-			<div class="panel-body">
-				<form class="form-horizontal">
-					<p class="bg-notif bg-danger">
-						<span class="glyphicon glyphicon-warning-sign"></span>
-						You havent select any data source. Please select one first.
-					</p>
-				</form>
+<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: chart">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Chart Widget</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-success" data-bind="click: refresh">
+						<span class="glyphicon glyphicon-refresh"></span> Refresh
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: addChart">
+						<span class="glyphicon glyphicon-plus"></span> Create New Chart
+					</button>
+				</div>
 			</div>
 		</div>
-	</script>
-</head>
-<body data-bind="with: viewModel">
-	<!-- Navbar Header -->
-	<div class="header">
-		<header id="page-header"></header>
-		<nav class="navbar">
-			<div id="navbar" class="collapse navbar-collapse"></div>
-		</nav>
 	</div>
-	<!-- End Header Nabar -->
 
-	<!-- Content Menu Left -->
-	<div id="menu-left">
-		<div class="toogle-left">
-			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
-		</div>
-		<div class="list-group" id="listmenuleft">
-			
+	<div class="content-body" data-overlay-page-wrap>
+		<div class="row">
+			<div class="chart-grid grid" data-bind="kendoGrid: viewModel.chart.grid" style="height: 400px; width: 100%;"></div>
 		</div>
 	</div>
-	<!-- End Content Menu Left -->
+</div>
 
-	<!-- Content -->
-	<div class="wrap-fluid content-all" style="margin-left: 250px;">
-		<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: chart">
-			<div class="content-header">
-				<div class="row">
-					<div class="col-md-12 title-content">
-						<span class="col-md-3">Chart Widget</span>
-						<div class="col-md-9">
-							<button class="btn btn-sm btn-success" data-bind="click: refresh">
-								<span class="glyphicon glyphicon-refresh"></span> Refresh
-							</button>
-							<button class="btn btn-sm btn-primary" data-bind="click: addChart">
-								<span class="glyphicon glyphicon-plus"></span> Create New Chart
-							</button>
+<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == 'editor', with: chart">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Chart Editor</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-warning" data-bind="click: back">
+						<span class="glyphicon glyphicon-chevron-left"></span> Back
+					</button>
+					<button class="btn btn-sm btn-success" data-bind="click: save">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: preview">
+						<span class="glyphicon glyphicon-eye-open"></span> Preview
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-body" data-overlay-page-wrap>
+		<div class="row">
+			<div class="editor" data-bind="with: viewModel.chart.config">
+				<ul class="nav nav-tabs chart-config-tabs" data-tabs="tabs">
+					<li class="active"><a href="#general" data-toggle="tab">General</a></li>
+					<li><a href="#series" data-toggle="tab">Series</a></li>
+					<li><a href="#categoryAxis" data-toggle="tab">Category Axis</a></li>
+					<!-- <li><a href="#categoryAxes" data-toggle="tab">Category Axes</a></li> -->
+					<li><a href="#valueAxis" data-toggle="tab">Value Axis</a></li>
+					<!-- <li><a href="#valueAxes" data-toggle="tab">Value Axes</a></li> -->
+					<li><a href="#tooltip" data-toggle="tab">Tooltip</a></li>
+					<li><a href="#legend" data-toggle="tab">Legend</a></li>
+			    </ul>
+			    <div id="chart-tab-content" class="tab-content">
+					<div class="tab-pane active" id="general">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Chart Area</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Title</label>
+										<div class="col-sm-10">
+											<input class="form-control input-sm" data-bind="value: chartArea.title" placeholder="Type title here ..." style="width: 200px;" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Width</label>
+										<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'numeric')">
+											<input data-bind="kendoNumericTextBox: { format: '#', value: chartArea.width }" style="width: 200px;" />
+										</div>
+										<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'percentage')">
+											<input data-bind="kendoNumericTextBox: { format: '# \\%', value: $parent.percentageHandler('width') }" style="width: 200px;" />
+										</div>
+										<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'auto')">
+											<input disabled class="form-control input-sm" value="auto" style="width: 200px;" />
+										</div>
+										<label class="col-sm-2 control-label">Mode</label>
+										<div class="col-sm-4">
+											<select data-bind="kendoDropDownList: { data: ['numeric', 'percentage', 'auto'], value: outsider.widthMode, change: $parent.changeAreaSizeMode('width') }"></select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Height</label>
+										<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'numeric')">
+											<input data-bind="kendoNumericTextBox: { format: '#', value: chartArea.height }" style="width: 200px;" />
+										</div>
+										<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'percentage')">
+											<input data-bind="kendoNumericTextBox: { format: '# \\%', value: $parent.percentageHandler('height') }" style="width: 200px;" />
+										</div>
+										<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'auto')">
+											<input disabled class="form-control input-sm" value="auto" style="width: 200px;" />
+										</div>
+										<label class="col-sm-2 control-label">Mode</label>
+										<div class="col-sm-4">
+											<select data-bind="kendoDropDownList: { data: ['numeric', 'percentage', 'auto'], value: outsider.heightMode, change: $parent.changeAreaSizeMode('height') }"></select>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Data Source</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<p class="bg-notif bg-info">
+										<span class="glyphicon glyphicon-info-sign"></span>
+										This data source will be used for testing purpose.
+									</p>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Data Source</label>
+										<div class="col-sm-10">
+											<select class="data-source-selector" data-bind="kendoDropDownList: { data: $parent.dataSources, select: $parent.selectDataSource, dataTextField: 'title', dataValueField: '_id', optionLabel: 'Select one', value: outsider.dataSourceKey }" style="width: 200px;"></select>
+										</div>
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
+					<div class="tab-pane" id="series">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Series Defaults</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Type</label>
+										<div class="col-sm-10">
+											<select data-bind="kendoDropDownList: { data: $parent.options.seriesTypes, dataTextField: 'title', dataValueField: 'value', value: seriesDefaults.type, optionLabel: 'Select one' }" style="width: 200px;"></select>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
 
-			<div class="content-body" data-overlay-page-wrap>
-				<div class="row">
-					<div class="chart-grid grid" data-bind="kendoGrid: viewModel.chart.grid" style="height: 400px; width: 100%;"></div>
-				</div>
-			</div>
-		</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Series</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="nav-control">
+										<button class="btn btn-sm btn-primary" data-bind="click: $parent.addSeries">
+											<span class="glyphicon glyphicon-plus"></span> Add
+										</button>
+										<button class="btn btn-sm btn-success" data-bind="click: $parent.saveSeries">
+											<span class="glyphicon glyphicon-save"></span> Save Series
+										</button>
+									</div>
 
-		<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == 'editor', with: chart">
-			<div class="content-header">
-				<div class="row">
-					<div class="col-md-12 title-content">
-						<span class="col-md-3">Chart Editor</span>
-						<div class="col-md-9">
-							<button class="btn btn-sm btn-warning" data-bind="click: back">
-								<span class="glyphicon glyphicon-chevron-left"></span> Back
-							</button>
-							<button class="btn btn-sm btn-success" data-bind="click: save">
-								<span class="glyphicon glyphicon-save"></span> Save
-							</button>
-							<button class="btn btn-sm btn-primary" data-bind="click: preview">
-								<span class="glyphicon glyphicon-eye-open"></span> Preview
-							</button>
+									<div class="grid series-grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
+								</form>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-
-			<div class="content-body" data-overlay-page-wrap>
-				<div class="row">
-					<div class="editor" data-bind="with: viewModel.chart.config">
-						<ul class="nav nav-tabs chart-config-tabs" data-tabs="tabs">
-							<li class="active"><a href="#general" data-toggle="tab">General</a></li>
-							<li><a href="#series" data-toggle="tab">Series</a></li>
-							<li><a href="#categoryAxis" data-toggle="tab">Category Axis</a></li>
-							<!-- <li><a href="#categoryAxes" data-toggle="tab">Category Axes</a></li> -->
-							<li><a href="#valueAxis" data-toggle="tab">Value Axis</a></li>
-							<!-- <li><a href="#valueAxes" data-toggle="tab">Value Axes</a></li> -->
-							<li><a href="#tooltip" data-toggle="tab">Tooltip</a></li>
-							<li><a href="#legend" data-toggle="tab">Legend</a></li>
-					    </ul>
-					    <div id="chart-tab-content" class="tab-content">
-							<div class="tab-pane active" id="general">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Chart Area</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Title</label>
-												<div class="col-sm-10">
-													<input class="form-control input-sm" data-bind="value: chartArea.title" placeholder="Type title here ..." style="width: 200px;" />
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Width</label>
-												<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'numeric')">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: chartArea.width }" style="width: 200px;" />
-												</div>
-												<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'percentage')">
-													<input data-bind="kendoNumericTextBox: { format: '# \\%', value: $parent.percentageHandler('width') }" style="width: 200px;" />
-												</div>
-												<div class="col-sm-4" data-bind="visible: (outsider.widthMode() == 'auto')">
-													<input disabled class="form-control input-sm" value="auto" style="width: 200px;" />
-												</div>
-												<label class="col-sm-2 control-label">Mode</label>
-												<div class="col-sm-4">
-													<select data-bind="kendoDropDownList: { data: ['numeric', 'percentage', 'auto'], value: outsider.widthMode, change: $parent.changeAreaSizeMode('width') }"></select>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Height</label>
-												<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'numeric')">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: chartArea.height }" style="width: 200px;" />
-												</div>
-												<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'percentage')">
-													<input data-bind="kendoNumericTextBox: { format: '# \\%', value: $parent.percentageHandler('height') }" style="width: 200px;" />
-												</div>
-												<div class="col-sm-4" data-bind="visible: (outsider.heightMode() == 'auto')">
-													<input disabled class="form-control input-sm" value="auto" style="width: 200px;" />
-												</div>
-												<label class="col-sm-2 control-label">Mode</label>
-												<div class="col-sm-4">
-													<select data-bind="kendoDropDownList: { data: ['numeric', 'percentage', 'auto'], value: outsider.heightMode, change: $parent.changeAreaSizeMode('height') }"></select>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Data Source</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<p class="bg-notif bg-info">
-												<span class="glyphicon glyphicon-info-sign"></span>
-												This data source will be used for testing purpose.
-											</p>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Data Source</label>
-												<div class="col-sm-10">
-													<select class="data-source-selector" data-bind="kendoDropDownList: { data: $parent.dataSources, select: $parent.selectDataSource, dataTextField: 'title', dataValueField: '_id', optionLabel: 'Select one', value: outsider.dataSourceKey }" style="width: 200px;"></select>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
+					<div class="tab-pane" id="categoryAxis">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Category Axis</h1>
 							</div>
-							<div class="tab-pane" id="series">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Series Defaults</h1>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Field</label>
+										<div class="col-sm-10">
+											<select data-bind="kendoDropDownList: { data: $parent.options.dataSourceFields, value: categoryAxis.field, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one' }" style="width: 200px;"></select>
+										</div>
 									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Type</label>
-												<div class="col-sm-10">
-													<select data-bind="kendoDropDownList: { data: $parent.options.seriesTypes, dataTextField: 'title', dataValueField: 'value', value: seriesDefaults.type, optionLabel: 'Select one' }" style="width: 200px;"></select>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Series</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="nav-control">
-												<button class="btn btn-sm btn-primary" data-bind="click: $parent.addSeries">
-													<span class="glyphicon glyphicon-plus"></span> Add
-												</button>
-												<button class="btn btn-sm btn-success" data-bind="click: $parent.saveSeries">
-													<span class="glyphicon glyphicon-save"></span> Save Series
-												</button>
-											</div>
-
-											<div class="grid series-grid" data-bind="kendoGrid: { sortable: true, resizable: false, filterable: false, pageable: true, editable: true, dataSource: { pageSize: 15 }, columns: $parent.seriesGridColumns, data: series }" style="height: 400px; width: 100%;"></div>
-										</form>
-									</div>
-								</div>
+								</form>
 							</div>
-							<div class="tab-pane" id="categoryAxis">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Category Axis</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Field</label>
-												<div class="col-sm-10">
-													<select data-bind="kendoDropDownList: { data: $parent.options.dataSourceFields, value: categoryAxis.field, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one' }" style="width: 200px;"></select>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-							<!-- <div class="tab-pane" id="categoryAxes"></div> -->
-							<div class="tab-pane" id="valueAxis">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Value Axis</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Max</label>
-												<div class="col-sm-4">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.max, enabled: $parent.boolValueOf('outsider.valueAxisUseMaxMode') }" style="width: 200px;" />
-												</div>
-												<label class="col-sm-2 control-label">Use Max</label>
-												<div class="col-sm-4">
-													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: outsider.valueAxisUseMaxMode" />
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Min</label>
-												<div class="col-sm-4">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.min, enabled: $parent.boolValueOf('outsider.valueAxisUseMinMode') }" style="width: 200px;" />
-												</div>
-												<label class="col-sm-2 control-label">Use Min</label>
-												<div class="col-sm-4">
-													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: outsider.valueAxisUseMinMode" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Line</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Visible</label>
-												<div class="col-sm-10">
-													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: valueAxis.line.visible" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Minor Grid Lines</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Visible</label>
-												<div class="col-sm-10">
-													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: valueAxis.minorGridLines.visible" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Labels</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Rotation</label>
-												<div class="col-sm-10">
-													<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.labels.rotation }" style="width: 200px;" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-
-							</div>
-							<!-- <div class="tab-pane" id="valueAxes"></div> -->
-							<div class="tab-pane" id="tooltip">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Tooltip</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Visible</label>
-												<div class="col-sm-10">
-													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: tooltip.visible" />
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Template</label>
-												<div class="col-sm-10">
-													<input class="form-control input-sm" data-bind="value: tooltip.template" placeholder="Type template here ..." style="width: 200px;" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-							<div class="tab-pane" id="legend">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h1 class="panel-title">Legend</h1>
-									</div>
-									<div class="panel-body">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Visible</label>
-												<div class="col-sm-10">
-													<input class="fotm-control input-sm" type="checkbox" data-bind="checked: legend.visible" />
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-					    </div>
+						</div>
 					</div>
-				</div>
+					<!-- <div class="tab-pane" id="categoryAxes"></div> -->
+					<div class="tab-pane" id="valueAxis">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Value Axis</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Max</label>
+										<div class="col-sm-4">
+											<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.max, enabled: $parent.boolValueOf('outsider.valueAxisUseMaxMode') }" style="width: 200px;" />
+										</div>
+										<label class="col-sm-2 control-label">Use Max</label>
+										<div class="col-sm-4">
+											<input class="fotm-control input-sm" type="checkbox" data-bind="checked: outsider.valueAxisUseMaxMode" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Min</label>
+										<div class="col-sm-4">
+											<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.min, enabled: $parent.boolValueOf('outsider.valueAxisUseMinMode') }" style="width: 200px;" />
+										</div>
+										<label class="col-sm-2 control-label">Use Min</label>
+										<div class="col-sm-4">
+											<input class="fotm-control input-sm" type="checkbox" data-bind="checked: outsider.valueAxisUseMinMode" />
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Line</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Visible</label>
+										<div class="col-sm-10">
+											<input class="fotm-control input-sm" type="checkbox" data-bind="checked: valueAxis.line.visible" />
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Minor Grid Lines</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Visible</label>
+										<div class="col-sm-10">
+											<input class="fotm-control input-sm" type="checkbox" data-bind="checked: valueAxis.minorGridLines.visible" />
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Labels</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Rotation</label>
+										<div class="col-sm-10">
+											<input data-bind="kendoNumericTextBox: { format: '#', value: valueAxis.labels.rotation }" style="width: 200px;" />
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+					</div>
+					<!-- <div class="tab-pane" id="valueAxes"></div> -->
+					<div class="tab-pane" id="tooltip">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Tooltip</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Visible</label>
+										<div class="col-sm-10">
+											<input class="fotm-control input-sm" type="checkbox" data-bind="checked: tooltip.visible" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Template</label>
+										<div class="col-sm-10">
+											<input class="form-control input-sm" data-bind="value: tooltip.template" placeholder="Type template here ..." style="width: 200px;" />
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="legend">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Legend</h1>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Visible</label>
+										<div class="col-sm-10">
+											<input class="fotm-control input-sm" type="checkbox" data-bind="checked: legend.visible" />
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+			    </div>
 			</div>
 		</div>
 	</div>
+</div>
 
-	<!-- Content Menu Right -->
-	<div class="content-menu-right" id="menu-right" style="right:-250px;">
-		<div class="list-menu-right">
-			<div class="menu-right-nest">
-				<div class="menu-title">Server Statistic</div>
-				<div class="content-menu-right"></div>
-			</div>
-			<div class="menu-right-nest">
-				<div class="menu-title">Database Request</div>
-				<div class="content-menu-right"></div>
-			</div>
-			<div class="menu-right-nest">
-				<div class="menu-title">Server Response</div>
-				<div class="content-menu-right"></div>
-			</div>
-		</div>
-	</div>
-	<!-- End Content Menu Right -->
-
-    <div class="modal fade modal-chart-preview" tabindex="-1" role="dialog">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title" data-bind="text: viewModel.chart.config.chartArea.title() + ' Preview'"></h4>
-	            </div>
-	            <div class="modal-body">
-	                <div class="chart-preview"></div>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-sm btn-warning" data-dismiss="modal">Close</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-
-	<!-- Content Chat -->
-	<div class="notif">
-		<div class="media-body">
-			<div class="header-notif">
-				<a class="btn btn-sm"><i class="fa fa-circle-o status" style="margin-right: 5px !important;"></i> Notification</a>
-			</div>
-			<div class="content-notif">
-			</div>
-		</div>
-	</div>
-	<!-- End Content Chat -->
-
-	<script type="text/javascript">
-	    ko.applyBindings(viewModel);
-	</script>
-
-	<script src="/static/asset/js/load.js"></script>
-	<script src="/static/asset/js/main.js"></script>
-	<script src="/static/asset/js/overlay.js"></script>
-</body>
-</html>
+<!-- modal preview -->
+<div class="modal fade modal-chart-preview" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" data-bind="text: viewModel.chart.config.chartArea.title() + ' Preview'"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="chart-preview"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-warning" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
