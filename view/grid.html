@@ -88,7 +88,10 @@
 			<td data-bind="text:field"></td>
 			<td data-bind="text:title"></td>
 			<td></td>
-			<td><button class="btn btn-danger btn-sm" data-bind="click:viewModel.grid.removeColumn"><span class="glyphicon glyphicon-trash"></span></button></td>
+			<td>
+				<button class="btn btn-danger btn-sm" data-bind="click:viewModel.grid.removeColumn"><span class="glyphicon glyphicon-trash"></span></button>
+				<button class="btn btn-sm btn-success" data-bind="click:function(){viewModel.grid.editColumn($index())}"><span class="glyphicon glyphicon-pencil"></span></button>
+			</td>
 		</tr>
 	</script>
 </head>
@@ -148,7 +151,7 @@
 						<span class="col-md-3">Widget Grid</span>
 						<div class="col-md-9">
 							<button class="btn btn-sm btn-primary" data-bind="click:AddNew">
-								<span class="glyphicon glyphicon-plus"></span> Add
+								<span class="glyphicon glyphicon-plus"></span> Add New Grid
 							</button>
 						</div>
 					</div>
@@ -201,6 +204,12 @@
 									<div class="panel-body form-panel">
 										<div class="row">
 											<div class="col-md-6">
+									            <label class="col-md-3 filter-label">Title</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:outsider.title" />
+									            </div>
+									        </div>
+											<div class="col-md-6">
 									            <label class="col-md-3 filter-label">Page Size</label>
 									            <div class="col-md-8">
 									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:pageSize" />
@@ -251,7 +260,7 @@
 											<div class="form-group">
 												<label class="col-sm-2 control-label">Data Source</label>
 												<div class="col-sm-10">
-													<select data-bind="kendoDropDownList: { data: viewModel.grid.dataSources, select: viewModel.grid.selectDataSource, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: $parent.dataSourceKey }" style="width: 200px;"></select>
+													<select class="data-source-selector" data-bind="kendoDropDownList: { data: viewModel.grid.dataSources, select: viewModel.grid.selectDataSource, dataTextField: 'title', dataValueField: '_id', optionLabel: 'Select one', value: $parent.outsider.dataSourceKey }" style="width: 200px;"></select>
 												</div>
 											</div>
 										</form>
@@ -290,6 +299,7 @@
 									        </div>
 									        <div class="col-md-12">
 									        	<button class="btn btn-sm btn-primary" data-bind="click:viewModel.grid.addColumn"><span class="glyphicon glyphicon-plus"></span>Add Column</button>
+									        	<button class="btn btn-sm btn-warning" data-bind="click:viewModel.grid.clearColumn"><span class="glyphicon glyphicon-erase"></span> Clear Column</button>
 									        </div>
 									        <div class="col-md-11">
 									        	<table class="table table-hover">
