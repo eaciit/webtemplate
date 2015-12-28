@@ -484,24 +484,77 @@ func (t *TemplateController) SaveJsonGrid(r *knot.WebContext) interface{} {
 		fmt.Println(err)
 	}
 	mapgrid[0].Seq = mapgrid[0].Seq + 1
+	datagrid := m.Grid{}
+	r.GetPayload(&datagrid)
+
 	datamapgrid := m.DataMapGrid{}
-	datamapgrid.Name = "grid example"
-	datamapgrid.Value = "grid" + strconv.Itoa(mapgrid[0].Seq) + ".json"
-	mapgrid[0].Data = append(mapgrid[0].Data, datamapgrid)
+	datamapgrid.Name = datagrid.Outsider.Title
+	if datagrid.Outsider.IdGrid == "" {
+		datagrid.Outsider.IdGrid = "grid" + strconv.Itoa(mapgrid[0].Seq)
+		datamapgrid.Value = "grid" + strconv.Itoa(mapgrid[0].Seq) + ".json"
+		mapgrid[0].Data = append(mapgrid[0].Data, datamapgrid)
+	}
 	b, err := json.Marshal(mapgrid)
 	f, err = os.Create(filename)
 	n, err := io.WriteString(f, string(b))
 
-	datagrid := m.Grid{}
-	r.GetPayload(&datagrid)
-	f, err = os.Create(t.appViewsPath + "data/grid/grid1.json")
+	f, err = os.Create(t.appViewsPath + "data/grid/" + datagrid.Outsider.IdGrid + ".json")
 	b, err = json.Marshal(datagrid)
-	n, err = io.WriteString(f, string(b))
+	n, err = io.WriteString(f, "["+string(b)+"]")
 	if err != nil {
 		fmt.Println(n, err)
 	}
 	defer f.Close()
 	return datagrid
+}
+
+func (t *TemplateController) DeleteGrid(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+
+	filename := t.appViewsPath + "data/mapgrid.json"
+	f, err := os.Open(filename)
+	mapgrid := []m.MapGrid{}
+	jsonParser := json.NewDecoder(f)
+	if err = jsonParser.Decode(&mapgrid); err != nil {
+		fmt.Println(err)
+	}
+	newGrid := []m.DataMapGrid{}
+	for _, eachRaw := range mapgrid[0].Data {
+		if eachRaw.Value != payload["recordid"] {
+			newGrid = append(newGrid, eachRaw)
+		}
+	}
+	mapgrid[0].Data = newGrid
+	b, err := json.Marshal(mapgrid)
+	f, err = os.Create(filename)
+	io.WriteString(f, string(b))
+	os.Remove(t.appViewsPath + "data/grid/" + payload["recordid"])
+	defer f.Close()
+	return payload["recordid"]
+}
+
+func (t *TemplateController) GetDetailGrid(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+
+	connection, err := helper.LoadConfig(t.appViewsPath + "data/grid/" + payload["recordid"])
+	helper.HandleError(err)
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
+	helper.HandleError(err)
+	if cursor == nil {
+		fmt.Printf("Cursor not initialized")
+	}
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	helper.HandleError(err)
+
+	return dataSource.Data
 }
 
 func main() {

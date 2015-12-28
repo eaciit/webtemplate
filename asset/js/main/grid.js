@@ -1,7 +1,11 @@
 // var tempData = [{firstname: 'arfian', lastname: 'bagus', jk: 'L'},{firstname:'bagus', lastname: 'arfian', jk: 'L'}];
 viewModel.grid.template = {
 	config: {
-		dataSourceKey: '',
+		outsider: {
+			idGrid: '',
+			title: '',
+			dataSourceKey: '',
+		},
 		dataSource:{data:[]},
 		pageSize:10,
 		groupable: true,
@@ -32,6 +36,7 @@ viewModel.grid.template = {
 viewModel.grid.dataSources = ko.observableArray([]);
 viewModel.grid.dataGrid = ko.observableArray([]);
 viewModel.grid.status = ko.observable("");
+viewModel.grid.indexColumn = ko.observable(-1);
 viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
 viewModel.grid.showDataGrid = function(){
@@ -54,22 +59,43 @@ viewModel.grid.showDataGrid = function(){
             columns: [
             	{field: "name", title: "Name Grid", headerAttributes: { style: 'text-align: center; font-weight: bold;' }, template:"<a style=\"cursor:pointer\" onclick=\"viewModel.grid.selectGrid(this)\" recordid=\"#: value#\">#:name#</a>"},
             	{field: "value", title: "Filename", headerAttributes: {style: 'text-align: center; font-weight: bold;'}},
-            	{template:"<button class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-trash'></span></button>"}
+            	{template:"<button class='btn btn-sm btn-danger' recordid=\"#: value#\" onclick=\"viewModel.grid.deleteGrid(this)\"><span class='glyphicon glyphicon-trash'></span></button> <button class='btn btn-sm btn-success' recordid=\"#: value#\" onclick=\"viewModel.grid.selectGrid(this)\" ><span class='glyphicon glyphicon-pencil'></span></button>"}
             ]
 		});
     });
 }
+viewModel.grid.deleteGrid = function(obj){
+	var result = confirm("Want to delete?");
+	if (result) {
+		viewModel.ajaxPost("/template/deletegrid", {recordid: $(obj).attr('recordid')}, function (res) {
+			viewModel.grid.showDataGrid();
+		});
+	}
+}
 viewModel.grid.selectGrid = function(obj){
-	viewModel.mode("grid");
-	viewModel.grid.status("Update");
+	$("ul#tabsgrid li").removeClass("active");
+	$("ul#tabsgrid li").eq(0).addClass("active");
+	viewModel.ajaxPost("/template/getdetailgrid", {recordid: $(obj).attr('recordid')}, function (res) {
+		viewModel.mode("grid");
+		viewModel.grid.status("Update");
+		ko.mapping.fromJS(res[0], viewModel.grid.config);
+		viewModel.grid.config.columns(ko.toJS(viewModel.grid.config.columns));
+		setTimeout(function () {
+			$("select.data-source-selector").data("kendoDropDownList").trigger("select");
+		}, 1000);
+	});
+
 }
 viewModel.grid.backGridData = function(){
 	viewModel.mode("viewgrid");
 	viewModel.grid.status("");
 }
 viewModel.grid.AddNew = function(){
+	$("ul#tabsgrid li").removeClass("active");
+	$("ul#tabsgrid li").eq(0).addClass("active");
 	viewModel.mode("grid");
 	viewModel.grid.status("Save");
+	ko.mapping.fromJS(viewModel.grid.template.config, viewModel.grid.config);
 }
 viewModel.grid.createGrid = function () {
 	var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]);
@@ -82,6 +108,7 @@ viewModel.grid.createGrid = function () {
 		newColumns.push(column);
 	}
 	viewModel.grid.config.columns(newColumns());
+	$(".grid-preview").replaceWith("<div class='grid-preview'></div>");
 	$(".grid-preview").kendoGrid(ko.mapping.toJS(viewModel.grid.config));
 };
 viewModel.grid.save = function(){
@@ -102,12 +129,25 @@ viewModel.grid.preview = function (){
 	$(".modal-grid-preview").modal("show");
 }
 viewModel.grid.addColumn = function(){
-	var griddata = viewModel.grid.config, column = {};
-	griddata.columns.push(ko.toJS(viewModel.grid.column));
-	ko.mapping.fromJS(viewModel.grid.template.column, viewModel.grid.column);
+	if (viewModel.grid.indexColumn() == -1)
+		viewModel.grid.config.columns.push(ko.toJS(viewModel.grid.column));
+	else {
+		viewModel.grid.config.columns()[viewModel.grid.indexColumn()] = ko.toJS(viewModel.grid.column);
+		viewModel.grid.config.columns(viewModel.grid.config.columns());
+	}
+	
+	viewModel.grid.clearColumn();
 }
 viewModel.grid.removeColumn = function(){
 	viewModel.grid.config.columns.remove(this);
+}
+viewModel.grid.editColumn = function(index){
+	viewModel.grid.indexColumn(index);
+	ko.mapping.fromJS(viewModel.grid.config.columns()[index], viewModel.grid.column);
+}
+viewModel.grid.clearColumn = function(){
+	viewModel.grid.indexColumn(-1);
+	ko.mapping.fromJS(viewModel.grid.template.column, viewModel.grid.column);
 }
 viewModel.grid.fetchDataSource = function () {
 	viewModel.ajaxPost("/template/getdatasources", {}, function (res) {

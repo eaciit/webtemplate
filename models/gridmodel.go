@@ -1,14 +1,20 @@
 package models
 
 type Grid struct {
-	DataSourceKey string `json:"dataSourceKey"`
 	// DataSource    DataSource `json:"dataSource"`
+	Outsider   Outsider `json:"outsider"`
 	PageSize   int      `json:"pageSize"`
 	Groupable  bool     `json:"groupable"`
 	Sortable   bool     `json:"sortable"`
 	Filterable bool     `json:"filterable"`
 	Pageable   Pageable `json:"pageable"`
 	Columns    []Column `json:"columns"`
+}
+
+type Outsider struct {
+	IdGrid        string `json:"idGrid"`
+	Title         string `json:"title"`
+	DataSourceKey string `json:"dataSourceKey"`
 }
 
 type DataSource struct {
