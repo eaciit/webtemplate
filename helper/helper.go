@@ -7,7 +7,9 @@ import (
 	_ "github.com/eaciit/dbox/dbc/json"
 	_ "github.com/eaciit/dbox/dbc/mongo"
 	"github.com/eaciit/knot/knot.v1"
+	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"time"
@@ -125,4 +127,21 @@ func FetchDataSource(_id string, dsType string, path string) []map[string]interf
 	}
 
 	return []map[string]interface{}{}
+}
+
+func FetchThenSaveFile(r *http.Request, sourceFileName string, destinationFileName string) (multipart.File, *multipart.FileHeader, error) {
+	file, handler, err := r.FormFile(sourceFileName)
+	if !HandleError(err) {
+		return nil, nil, err
+	}
+	defer file.Close()
+
+	f, err := os.OpenFile(destinationFileName, os.O_WRONLY|os.O_CREATE, 0666)
+	if !HandleError(err) {
+		return nil, nil, err
+	}
+	defer f.Close()
+	io.Copy(f, file)
+
+	return file, handler, nil
 }

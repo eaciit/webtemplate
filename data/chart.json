@@ -1,1 +1,12 @@
-[{"_id":"c1450864731672","file":"chart-c1450864731672.json","title":"Chart T"},{"_id":"c1450870968338","file":"chart-c1450870968338.json","title":"My Chart"}]
+[
+  {
+    "_id": "c1451297499719",
+    "file": "chart-c1451297499719.json",
+    "title": "Chart 1"
+  },
+  {
+    "_id": "c1451297572942",
+    "file": "chart-c1451297572942.json",
+    "title": "Chart Test"
+  }
+]

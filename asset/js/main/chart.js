@@ -86,6 +86,7 @@ viewModel.chart.options = {
 };
 viewModel.chart.id = ko.observable('');
 viewModel.chart.config = ko.mapping.fromJS(viewModel.chart.template.config);
+viewModel.chart.selectDataSourceCallback = function () {};
 viewModel.chart.selectDataSource = function (e) {
 	if (e == undefined) {
 		viewModel.chart.config.dataSource.data([]);
@@ -116,6 +117,8 @@ viewModel.chart.selectDataSource = function (e) {
 		viewModel.chart.options.dataSourceFields(Lazy(fields).sort(function (e) {
 			return e.title
 		}).toArray());
+
+		viewModel.chart.selectDataSourceCallback();
     });
 };
 viewModel.chart.percentageHandler = function (mode) {
@@ -291,6 +294,7 @@ viewModel.chart.back = function () {
 };
 viewModel.chart.addChart = function () {
 	viewModel.mode('editor');
+	$('.chart-config-tabs a[href="#general"]').tab('show');
 	viewModel.chart.id('');
 	ko.mapping.fromJS(viewModel.chart.template.config, viewModel.chart.config);
 	viewModel.chart.addSeries();
@@ -302,8 +306,15 @@ viewModel.chart.editChart = function (_id) {
 	};
 	viewModel.ajaxPost("/template/getchartconfig", param, function (res) {
 		viewModel.mode('editor');
+		$('.chart-config-tabs a[href="#general"]').tab('show');
 		viewModel.chart.id(_id);
 		ko.mapping.fromJS(res, viewModel.chart.config);
+
+		viewModel.chart.selectDataSourceCallback = function () {
+			ko.mapping.fromJS(viewModel.chart.template.config, viewModel.chart.config);
+			ko.mapping.fromJS(res, viewModel.chart.config);
+			viewModel.chart.selectDataSourceCallback = function () {};
+		};
 
 		setTimeout(function () {
 			$("select.data-source-selector").data("kendoDropDownList").trigger("select");
