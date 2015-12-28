@@ -73,6 +73,8 @@ viewModel.grid.deleteGrid = function(obj){
 	}
 }
 viewModel.grid.selectGrid = function(obj){
+	$("ul#tabsgrid li").removeClass("active");
+	$("ul#tabsgrid li").eq(0).addClass("active");
 	viewModel.ajaxPost("/template/getdetailgrid", {recordid: $(obj).attr('recordid')}, function (res) {
 		viewModel.mode("grid");
 		viewModel.grid.status("Update");
@@ -89,6 +91,8 @@ viewModel.grid.backGridData = function(){
 	viewModel.grid.status("");
 }
 viewModel.grid.AddNew = function(){
+	$("ul#tabsgrid li").removeClass("active");
+	$("ul#tabsgrid li").eq(0).addClass("active");
 	viewModel.mode("grid");
 	viewModel.grid.status("Save");
 	ko.mapping.fromJS(viewModel.grid.template.config, viewModel.grid.config);
