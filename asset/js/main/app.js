@@ -322,7 +322,7 @@ viewModel.methodsHeader = {
 };
 
 viewModel.ajaxPost = function (url, data, callbackSuccess, callbackError) {
-    $.ajax({
+    var config = {
         url: url,
         type: 'post',
         dataType: 'json',
@@ -333,7 +333,16 @@ viewModel.ajaxPost = function (url, data, callbackSuccess, callbackError) {
                 callbackError();
             }
         }
-    });
+    };
+
+    if (data instanceof FormData) {
+        config.async = false;
+        config.cache = false;
+        config.contentType = false;
+        config.processData = false;
+    }
+    
+    $.ajax(config);
 };
 
 viewModel.fixSideMenuHeight = function () {
@@ -350,6 +359,7 @@ viewModel.dataSource = {};
 viewModel.panel = {};
 viewModel.chart = {};
 viewModel.grid = {};
+viewModel.dataSource = {};
 
 viewModel.camelToCapitalize = function (s) {
     return s.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
