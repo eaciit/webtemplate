@@ -1,4 +1,3 @@
-// var tempData = [{firstname: 'arfian', lastname: 'bagus', jk: 'L'},{firstname:'bagus', lastname: 'arfian', jk: 'L'}];
 viewModel.grid.template = {
 	config: {
 		outsider: {
@@ -8,7 +7,7 @@ viewModel.grid.template = {
 			visiblePDF: false,
 			visibleExcel: false,
 		},
-		dataSource:{data:[]},
+		dataSource:{data:[], aggregate: []},
 		pageSize:10,
 		groupable: true,
 		sortable: true,
@@ -34,6 +33,7 @@ viewModel.grid.template = {
 		template:'',
 		field:'',
 		title:'',
+		menu: true,
 		format:'',
 		width:'',
 		headerTemplate:'',
@@ -43,15 +43,22 @@ viewModel.grid.template = {
 		},
 		footerTemplate:'',
 	},
+	aggregate: {
+		field:'',
+		aggregate:'',
+	},
+	aggregateColumn: ko.observableArray(["max","min","count"]),
 	toolbars: ko.observableArray(["pdf","excel"]),
 	dataSourceFields: ko.observableArray([]),
+	indexColumn: ko.observable(-1),
+	indexAggregate: ko.observable(-1),
 }
 viewModel.grid.dataSources = ko.observableArray([]);
 viewModel.grid.dataGrid = ko.observableArray([]);
 viewModel.grid.status = ko.observable("");
-viewModel.grid.indexColumn = ko.observable(-1);
 viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
+viewModel.grid.aggregate = ko.mapping.fromJS(viewModel.grid.template.aggregate);
 // viewModel.grid.toolbar = ko.mapping.fromJS(viewModel.grid.template.toolbar);
 viewModel.grid.visiblePDF = function(){
 	var conf = viewModel.grid.config;
@@ -105,8 +112,7 @@ viewModel.grid.deleteGrid = function(obj){
 	}
 }
 viewModel.grid.selectGrid = function(obj){
-	$("ul#tabsgrid li").removeClass("active");
-	$("ul#tabsgrid li").eq(0).addClass("active");
+	viewModel.grid.ActiveTab();
 	viewModel.ajaxPost("/grid/getdetailgrid", {recordid: $(obj).attr('recordid')}, function (res) {
 		viewModel.mode("grid");
 		viewModel.grid.status("Update");
@@ -123,23 +129,18 @@ viewModel.grid.backGridData = function(){
 	viewModel.grid.status("");
 }
 viewModel.grid.AddNew = function(){
-	$("ul#tabsgrid li").removeClass("active");
-	$("ul#tabsgrid li").eq(0).addClass("active");
+	viewModel.grid.ActiveTab();
 	viewModel.mode("grid");
 	viewModel.grid.status("Save");
 	ko.mapping.fromJS(viewModel.grid.template.config, viewModel.grid.config);
 }
+viewModel.grid.ActiveTab = function(){
+	$("ul#tabsgrid li").removeClass("active");
+	$("ul#tabsgrid li").eq(0).addClass("active");
+	$("#chart-tab-content .tab-pane").removeClass("active");
+	$("#chart-tab-content .tab-pane").eq(0).addClass("active");
+}
 viewModel.grid.createGrid = function () {
-	// var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]), confRun = viewModel.grid.config;
-	// for (var key in columns){
-	// 	var column = {};
-	// 	$.each( columns[key], function( key, value ) {
-	// 		if(value !== '')
-	// 			column[key] = value;
-	// 	});
-	// 	newColumns.push(column);
-	// }
-	// confRun.columns(newColumns());
 	var confRun = ko.mapping.toJS(viewModel.grid.config), columns = confRun.columns, newColumns = new Array();
 	for (var key in columns){
 		var column = {};
@@ -172,10 +173,10 @@ viewModel.grid.preview = function (){
 	$(".modal-grid-preview").modal("show");
 }
 viewModel.grid.addColumn = function(){
-	if (viewModel.grid.indexColumn() == -1)
+	if (viewModel.grid.template.indexColumn() == -1)
 		viewModel.grid.config.columns.push(ko.toJS(viewModel.grid.column));
 	else {
-		viewModel.grid.config.columns()[viewModel.grid.indexColumn()] = ko.toJS(viewModel.grid.column);
+		viewModel.grid.config.columns()[viewModel.grid.template.indexColumn()] = ko.toJS(viewModel.grid.column);
 		viewModel.grid.config.columns(viewModel.grid.config.columns());
 	}
 	
@@ -185,11 +186,11 @@ viewModel.grid.removeColumn = function(){
 	viewModel.grid.config.columns.remove(this);
 }
 viewModel.grid.editColumn = function(index){
-	viewModel.grid.indexColumn(index);
+	viewModel.grid.template.indexColumn(index);
 	ko.mapping.fromJS(viewModel.grid.config.columns()[index], viewModel.grid.column);
 }
 viewModel.grid.clearColumn = function(){
-	viewModel.grid.indexColumn(-1);
+	viewModel.grid.template.indexColumn(-1);
 	ko.mapping.fromJS(viewModel.grid.template.column, viewModel.grid.column);
 }
 viewModel.grid.fetchDataSource = function () {
@@ -197,6 +198,27 @@ viewModel.grid.fetchDataSource = function () {
 		viewModel.grid.dataSources(res);
     });
 };
+viewModel.grid.addAggregate = function(){
+	if (viewModel.grid.template.indexAggregate() == -1)
+		viewModel.grid.config.dataSource.aggregate.push(ko.toJS(viewModel.grid.aggregate));
+	else {
+		viewModel.grid.config.dataSource.aggregate()[viewModel.grid.template.indexAggregate()] = ko.toJS(viewModel.grid.aggregate);
+		viewModel.grid.config.dataSource.aggregate(viewModel.grid.config.dataSource.aggregate());
+	}
+	
+	viewModel.grid.clearAggregate();
+}
+viewModel.grid.clearAggregate = function(){
+	viewModel.grid.template.indexAggregate(-1);
+	ko.mapping.fromJS(viewModel.grid.template.aggregate, viewModel.grid.aggregate);
+}
+viewModel.grid.removeAggregate = function(){
+	viewModel.grid.config.dataSource.aggregate.remove(this);
+}
+viewModel.grid.editAggregate = function(index){
+	viewModel.grid.template.indexAggregate(index);
+	ko.mapping.fromJS(viewModel.grid.config.dataSource.aggregate()[index], viewModel.grid.aggregate);
+}
 viewModel.grid.selectDataSource = function(e){
 	if (e == undefined) {
 		viewModel.grid.config.general.dataSource.data([]);
