@@ -3,17 +3,21 @@ package controller
 import (
 	"fmt"
 	"github.com/eaciit/knot/knot.v1"
+	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
 )
 
 type TemplateController struct {
 	AppViewsPath string
+	Server       *knot.Server
+	LayoutFile   string
+	IncludeFiles []string
 }
 
 func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.AppViewsPath + "config/routes.json")
+	connection, err := helper.LoadConfig(t.AppViewsPath + "data/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
@@ -31,7 +35,7 @@ func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.AppViewsPath + "config/left-menu.json")
+	connection, err := helper.LoadConfig(t.AppViewsPath + "data/left-menu.json")
 	helper.HandleError(err)
 	defer connection.Close()
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
@@ -49,7 +53,7 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 func (t *TemplateController) GetHeader(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	connection, err := helper.LoadConfig(t.AppViewsPath + "config/header-app.json")
+	connection, err := helper.LoadConfig(t.AppViewsPath + "data/header-app.json")
 	helper.HandleError(err)
 	defer connection.Close()
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
@@ -106,4 +110,56 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 	}
 
 	return breadcrumbs
+}
+
+func (t *TemplateController) RegisterRoutes() {
+	routes := t.GetRoutes(helper.FakeWebContext()).([]interface{})
+
+	helper.Recursiver(routes, func(each interface{}) []interface{} {
+		return each.(map[string]interface{})["submenu"].([]interface{})
+	}, func(each interface{}) {
+		eachMap := each.(map[string]interface{})
+		title := eachMap["title"].(string)
+		href := eachMap["href"].(string)
+
+		if href != "" && href != "#" && href != "/index" {
+			t.Server.Route(href, func(r *knot.WebContext) interface{} {
+				r.Config.ViewName = t.LayoutFile
+				return toolkit.M{"title": title, "href": href}
+			})
+		}
+	})
+
+	// route the / and /index
+	for _, route := range []string{"/", "/index"} {
+		t.Server.Route(route, func(r *knot.WebContext) interface{} {
+			r.Config.ViewName = t.LayoutFile
+			return toolkit.M{"title": "Dashboard", "href": route}
+		})
+	}
+
+	t.Server.Route("/chart", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.LayoutFile
+		r.Config.IncludeFiles = t.IncludeFiles
+		r.Config.ViewName = "view/chart.html"
+		return toolkit.M{"title": "Chart Widget Admin", "href": "/chart"}
+	})
+	t.Server.Route("/grid", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.LayoutFile
+		r.Config.IncludeFiles = t.IncludeFiles
+		r.Config.ViewName = "view/grid.html"
+		return toolkit.M{"title": "Grid Widget Admin", "href": "/grid"}
+	})
+	t.Server.Route("/datasource", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.LayoutFile
+		r.Config.IncludeFiles = t.IncludeFiles
+		r.Config.ViewName = "view/datasource.html"
+		return toolkit.M{"title": "Data Source Admin", "href": "/datasource"}
+	})
+	t.Server.Route("/page", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.LayoutFile
+		r.Config.IncludeFiles = t.IncludeFiles
+		r.Config.ViewName = "view/page.html"
+		return toolkit.M{"title": "Page Admin", "href": "/page"}
+	})
 }
