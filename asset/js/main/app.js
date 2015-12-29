@@ -14,10 +14,23 @@ viewModel.methodsMenu = {
                 $subParent.appendTo($child);
 
                 each.submenu.forEach(function (sub) {
-                    putSubMenu(sub, $subParent);
+                    console.log($subParent);
+                    putSubMenuSub(sub, $subParent);
                 });
             }
         };
+
+        var putSubMenuSub = function(each, $parent){
+            var $child = $("<li class='dropdown-submenu'><a href='" + each.href + "' class='dropdown dropdown-toggle' data-toggle='dropdown' style='cursor: pointer;'>" + each.title + "</a></li>");
+            $child.appendTo($parent);
+
+            var $subParent = $("<ul class='dropdown-menu' rola='menu'></ul>");
+            $subParent.appendTo($child);
+
+            each.submenu.forEach(function (sub) {
+                putSubMenuSub(sub, $subParent);
+            });
+        }
 
         item.forEach(function (each) {
             console.log(each);
