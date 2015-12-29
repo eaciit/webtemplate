@@ -313,6 +313,7 @@ viewModel.chart = {};
 viewModel.grid = {};
 viewModel.dataSource = {};
 viewModel.page = {};
+viewModel.designer = {};
 
 viewModel.camelToCapitalize = function (s) {
     return s.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
@@ -347,13 +348,12 @@ $(function () {
                     icon:'fa fa-gear',
                     number: {visible: false},
                     dropdown:{
-                        visible:true, header: 'Configure Widget', footer: 'See all Configuration', 
+                        visible:true, header: 'Admin Menu', footer: '&nbsp;', 
                         data:[
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Panel', detail:'', onclick: 'viewModel.mode("panel")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'viewModel.mode("data-source")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Chart', detail:'', onclick: 'viewModel.mode("chart")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:'', onclick: 'viewModel.mode("grid")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Selection', detail:''}
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Page', detail:'', onclick: 'location.href = "/page"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'location.href = "/datasource"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Chart Widget', detail:'', onclick: 'location.href = "/chart"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Grid Widget', detail:'', onclick: 'location.href = "/grid"'}
                         ]
                     },
                     href: '#'
