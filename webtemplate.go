@@ -20,6 +20,7 @@ type (
 		dataSourceController *controller.DataSourceController
 		gridController       *controller.GridController
 		pageController       *controller.PageController
+		designerController   *controller.DesignerController
 	}
 )
 
@@ -41,6 +42,7 @@ func InitWebTemplate() *WebTemplate {
 	yo.dataSourceController = &controller.DataSourceController{yo.appViewsPath}
 	yo.gridController = &controller.GridController{yo.appViewsPath}
 	yo.pageController = &controller.PageController{yo.appViewsPath}
+	yo.designerController = &controller.DesignerController{yo.appViewsPath}
 
 	// initiate server
 	yo.Server.Address = "localhost:3000"
@@ -51,6 +53,7 @@ func InitWebTemplate() *WebTemplate {
 	yo.Server.Register(yo.dataSourceController, "")
 	yo.Server.Register(yo.gridController, "")
 	yo.Server.Register(yo.pageController, "")
+	yo.Server.Register(yo.designerController, "")
 
 	return yo
 }

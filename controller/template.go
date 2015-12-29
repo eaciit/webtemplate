@@ -162,4 +162,10 @@ func (t *TemplateController) RegisterRoutes() {
 		r.Config.ViewName = "view/page.html"
 		return toolkit.M{"title": "Page Admin", "href": "/page"}
 	})
+	t.Server.Route("/designer", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.LayoutFile
+		r.Config.IncludeFiles = t.IncludeFiles
+		r.Config.ViewName = "view/page.html"
+		return toolkit.M{"title": "Page Desginer", "href": "/designer"}
+	})
 }
