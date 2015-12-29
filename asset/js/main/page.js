@@ -55,10 +55,18 @@ viewModel.page.refresh = function () {
 };
 viewModel.page.add = function () {
     viewModel.mode('editor');
+    $("select.parent-selector").data("kendoDropDownList").enable(true);
     ko.mapping.fromJS(viewModel.page.template.config, viewModel.page.config);
 };
 viewModel.page.back = function () {
     viewModel.mode('');
+};
+viewModel.page.edit = function (_id) {
+    viewModel.ajaxPost("/page/getroute", { _id: _id }, function (res) {
+        viewModel.mode('editor');
+        $("select.parent-selector").data("kendoDropDownList").enable(false);
+        ko.mapping.fromJS(res, viewModel.page.config);
+    });
 };
 viewModel.page.save = function () {
     var $validator = $(".page-form").data("kendoValidator");
