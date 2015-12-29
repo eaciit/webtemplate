@@ -5,6 +5,8 @@ viewModel.grid.template = {
 			idGrid: '',
 			title: '',
 			dataSourceKey: '',
+			visiblePDF: false,
+			visibleExcel: false,
 		},
 		dataSource:{data:[]},
 		pageSize:10,
@@ -17,22 +19,8 @@ viewModel.grid.template = {
 			buttonCount: 5
 		},
 		columns:[],
+		columnMenu: false,
 		toolbar:[],
-	},
-	column: {
-		template:'',
-		field:'',
-		title:'',
-		format:'',
-		// width:'',
-		// headerTemplate:'',
-		// headerAttributes:{
-		// 	class:'',
-		// 	style:'',
-		// },
-		// footerTemplate:'',
-	},
-	toolbar: {
 		pdf: {
 			allPages: true,
 			fileName: "",
@@ -42,6 +30,20 @@ viewModel.grid.template = {
 			fileName: "",
 		}
 	},
+	column: {
+		template:'',
+		field:'',
+		title:'',
+		format:'',
+		width:'',
+		headerTemplate:'',
+		headerAttributes:{
+			class:'',
+			style:'',
+		},
+		footerTemplate:'',
+	},
+	toolbars: ko.observableArray(["pdf","excel"]),
 	dataSourceFields: ko.observableArray([]),
 }
 viewModel.grid.dataSources = ko.observableArray([]);
@@ -50,7 +52,25 @@ viewModel.grid.status = ko.observable("");
 viewModel.grid.indexColumn = ko.observable(-1);
 viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
-viewModel.grid.toolbar = ko.mapping.fromJS(viewModel.grid.template.toolbar);
+// viewModel.grid.toolbar = ko.mapping.fromJS(viewModel.grid.template.toolbar);
+viewModel.grid.visiblePDF = function(){
+	var conf = viewModel.grid.config;
+	if (viewModel.grid.config.outsider.visiblePDF()){
+		conf.toolbar.push("pdf");
+	} else {
+		conf.toolbar.remove( function (item) { return item === 'pdf'; } )
+	}
+	return true;
+}
+viewModel.grid.visibleExcel = function(){
+	var conf = viewModel.grid.config;
+	if (viewModel.grid.config.outsider.visibleExcel()){
+		conf.toolbar.push("excel");
+	} else {
+		conf.toolbar.remove( function (item) { return item === 'excel'; } )
+	}
+	return true;
+}
 viewModel.grid.showDataGrid = function(){
 	viewModel.mode("viewgrid");
 	viewModel.ajaxPost("/grid/getgriddata", {}, function (res) {
@@ -110,7 +130,17 @@ viewModel.grid.AddNew = function(){
 	ko.mapping.fromJS(viewModel.grid.template.config, viewModel.grid.config);
 }
 viewModel.grid.createGrid = function () {
-	var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]);
+	// var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]), confRun = viewModel.grid.config;
+	// for (var key in columns){
+	// 	var column = {};
+	// 	$.each( columns[key], function( key, value ) {
+	// 		if(value !== '')
+	// 			column[key] = value;
+	// 	});
+	// 	newColumns.push(column);
+	// }
+	// confRun.columns(newColumns());
+	var confRun = ko.mapping.toJS(viewModel.grid.config), columns = confRun.columns, newColumns = new Array();
 	for (var key in columns){
 		var column = {};
 		$.each( columns[key], function( key, value ) {
@@ -119,9 +149,10 @@ viewModel.grid.createGrid = function () {
 		});
 		newColumns.push(column);
 	}
-	viewModel.grid.config.columns(newColumns());
+	confRun.columns = newColumns;
+	console.log(confRun);
 	$(".grid-preview").replaceWith("<div class='grid-preview'></div>");
-	$(".grid-preview").kendoGrid(ko.mapping.toJS(viewModel.grid.config));
+	$(".grid-preview").kendoGrid(confRun);
 };
 viewModel.grid.save = function(){
 	$.ajax({

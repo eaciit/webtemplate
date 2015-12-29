@@ -2,19 +2,30 @@ package models
 
 type Grid struct {
 	// DataSource    DataSource `json:"dataSource"`
-	Outsider   Outsider `json:"outsider"`
-	PageSize   int      `json:"pageSize"`
-	Groupable  bool     `json:"groupable"`
-	Sortable   bool     `json:"sortable"`
-	Filterable bool     `json:"filterable"`
-	Pageable   Pageable `json:"pageable"`
-	Columns    []Column `json:"columns"`
+	Outsider   Outsider   `json:"outsider"`
+	PageSize   int        `json:"pageSize"`
+	Groupable  bool       `json:"groupable"`
+	Sortable   bool       `json:"sortable"`
+	Filterable bool       `json:"filterable"`
+	Pageable   Pageable   `json:"pageable"`
+	Columns    []Column   `json:"columns"`
+	ColumnMenu bool       `json:"columnMenu"`
+	Toolbar    []string   `json:"toolbar"`
+	Pdf        ExportGrid `json:"pdf"`
+	Excel      ExportGrid `json:"excel"`
 }
 
 type Outsider struct {
 	IdGrid        string `json:"idGrid"`
 	Title         string `json:"title"`
 	DataSourceKey string `json:"dataSourceKey"`
+	VisiblePDF    bool   `json:"visiblePDF"`
+	VisibleExcel  bool   `json:"visibleExcel"`
+}
+
+type ExportGrid struct {
+	AllPages string `json:"allPages"`
+	FileName string `json:"fileName"`
 }
 
 type DataSource struct {
@@ -32,6 +43,7 @@ type Column struct {
 	Field    string `json:"field"`
 	Title    string `json:"title"`
 	Format   string `json:"format"`
+	Width    string `json:"width"`
 }
 
 type MapGrid struct {
