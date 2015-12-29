@@ -21,6 +21,7 @@ type (
 		chartController      *controller.ChartController
 		dataSourceController *controller.DataSourceController
 		gridController       *controller.GridController
+		pageController       *controller.PageController
 	}
 )
 
@@ -32,6 +33,7 @@ func InitWebTemplate() *WebTemplate {
 	yo.appViewsPath = v + "/"
 	yo.layoutFile = "view/layout.html"
 	yo.includeFiles = []string{"view/_head.html"}
+	yo.Server = new(knot.Server)
 
 	knot.DefaultOutputType = knot.OutputTemplate
 
@@ -40,12 +42,12 @@ func InitWebTemplate() *WebTemplate {
 	yo.chartController = &controller.ChartController{yo.appViewsPath}
 	yo.dataSourceController = &controller.DataSourceController{yo.appViewsPath}
 	yo.gridController = &controller.GridController{yo.appViewsPath}
+	yo.pageController = &controller.PageController{yo.appViewsPath, yo.Server}
 
 	// initiate server
-	yo.Server = new(knot.Server)
 	yo.Server.Address = "localhost:3000"
 	yo.Server.RouteStatic("static", yo.appViewsPath)
-	yo.RegisterRoutes()
+	// yo.RegisterRoutes()
 	yo.Server.Register(yo.templateController, "")
 	yo.Server.Register(yo.chartController, "")
 	yo.Server.Register(yo.dataSourceController, "")
