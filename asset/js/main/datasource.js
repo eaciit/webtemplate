@@ -40,7 +40,7 @@ viewModel.dataSource.save = function () {
 		data.append("file", $('[name="file"]')[0].files[0]);
 	}
 
-	viewModel.ajaxPost("/template/savedatasource", data, function (res) {
+	viewModel.ajaxPost("/datasource/savedatasource", data, function (res) {
 		viewModel.mode('');
 		viewModel.dataSource.refresh();
 		viewModel.dataSource.isSaved(true);
@@ -66,7 +66,7 @@ viewModel.dataSource.preview = function (_id, type, path, title) {
 		title = viewModel.dataSource.config.title();
 	}
 
-	viewModel.ajaxPost("/template/getdatasource", { _id: _id, type: type, path: path }, function (res) {
+	viewModel.ajaxPost("/datasource/getdatasource", { _id: _id, type: type, path: path }, function (res) {
 		var holder = [];
 		var columns = [];
 
@@ -102,7 +102,7 @@ viewModel.dataSource.edit = function (_id) {
 	viewModel.mode('editor');
 	viewModel.dataSource.isSaved(true);
 
-	viewModel.ajaxPost("/template/getdatasourcemetadata", { _id: _id }, function (res) {
+	viewModel.ajaxPost("/datasource/getdatasourcemetadata", { _id: _id }, function (res) {
 		ko.mapping.fromJS(res, viewModel.dataSource.config);
 		$(".datasource-form").data("kendoValidator").validate();
 	});
@@ -111,7 +111,7 @@ viewModel.dataSource.remove = function (_id, type, path, title) {
 	var y = confirm("Are you sure want to delete data source " + title + " ?");
 
 	if (y == true) {
-		viewModel.ajaxPost("/template/removedatasource", { _id: _id, type: type, path: path }, function (res) {
+		viewModel.ajaxPost("/datasource/removedatasource", { _id: _id, type: type, path: path }, function (res) {
 			viewModel.dataSource.refresh();
 		});
     }
@@ -148,7 +148,7 @@ viewModel.dataSource.grid = {
         type: 'json',
         pageSize: 20,
         transport: {
-            read: '/template/getdatasources'
+            read: '/datasource/getdatasources'
         },
         schema: {
             data: function (data) {

@@ -96,7 +96,7 @@ viewModel.chart.selectDataSource = function (e) {
 	var row = JSON.parse(kendo.stringify(this.dataItem(e.item)));
 	console.log("fetching " + row.path);
 
-	viewModel.ajaxPost("/template/getdatasource", row, function (res) {
+	viewModel.ajaxPost("/datasource/getdatasource", row, function (res) {
 		viewModel.chart.config.dataSource.data(res);
 
 		var columnsHolder = [];
@@ -149,7 +149,7 @@ viewModel.chart.boolValueOf = function (which) {
 	}, viewModel);
 };
 viewModel.chart.fetchDataSource = function () {
-	viewModel.ajaxPost("/template/getdatasources", {}, function (res) {
+	viewModel.ajaxPost("/datasource/getdatasources", {}, function (res) {
 		viewModel.chart.dataSources(res);
     });
 };
@@ -222,7 +222,7 @@ viewModel.chart.save = function () {
 		_id: viewModel.chart.id()
 	};
 
-	viewModel.ajaxPost("/template/savechartconfig", param, function (res) {
+	viewModel.ajaxPost("/chart/savechartconfig", param, function (res) {
 		viewModel.chart.id(res);
     });
 };
@@ -278,7 +278,7 @@ viewModel.chart.grid = {
         type: 'json',
         pageSize: 20,
         transport: {
-            read: '/template/getchartconfigs'
+            read: '/chart/getchartconfigs'
         },
         schema: {
             data: function (data) {
@@ -304,7 +304,7 @@ viewModel.chart.editChart = function (_id) {
 		isWithDataSource: true,
 		_id: _id
 	};
-	viewModel.ajaxPost("/template/getchartconfig", param, function (res) {
+	viewModel.ajaxPost("/chart/getchartconfig", param, function (res) {
 		viewModel.mode('editor');
 		$('.chart-config-tabs a[href="#general"]').tab('show');
 		viewModel.chart.id(_id);
@@ -325,7 +325,7 @@ viewModel.chart.removeChart = function (_id, title) {
 	var y = confirm("Are you sure want to delete chart " + title + " ?");
 
 	if (y == true) {
-		viewModel.ajaxPost("/template/removechartconfig", { _id: _id }, function (res) {
+		viewModel.ajaxPost("/chart/removechartconfig", { _id: _id }, function (res) {
 			viewModel.chart.refresh();
 	    });
     }
@@ -338,7 +338,7 @@ viewModel.chart.previewChart = function (_id) {
 		_id: _id
 	};
 
-	viewModel.ajaxPost("/template/getchartconfig", param, function (res) {
+	viewModel.ajaxPost("/chart/getchartconfig", param, function (res) {
 		viewModel.chart.id(_id);
 		ko.mapping.fromJS(res, viewModel.chart.config);
 		viewModel.chart.preview();
