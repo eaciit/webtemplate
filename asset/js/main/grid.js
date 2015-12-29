@@ -137,8 +137,8 @@ viewModel.grid.AddNew = function(){
 viewModel.grid.ActiveTab = function(){
 	$("ul#tabsgrid li").removeClass("active");
 	$("ul#tabsgrid li").eq(0).addClass("active");
-	$("#chart-tab-content .tab-pane").removeClass("active");
-	$("#chart-tab-content .tab-pane").eq(0).addClass("active");
+	$("#chart-tab-content>.tab-pane").removeClass("active");
+	$("#chart-tab-content>.tab-pane").eq(0).addClass("active");
 }
 viewModel.grid.createGrid = function () {
 	var confRun = ko.mapping.toJS(viewModel.grid.config), columns = confRun.columns, newColumns = new Array();
