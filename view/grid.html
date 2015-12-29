@@ -8,7 +8,6 @@
 
 <script type="text/html" id="template-column">
 	<tr>
-		<td></td>
 		<td data-bind="text:field"></td>
 		<td data-bind="text:title"></td>
 		<td></td>
@@ -69,7 +68,7 @@
 				<ul id="tabsgrid" class="nav nav-tabs" data-tabs="tabs">
 					<li class="active"><a href="#general" data-toggle="tab">General Setting</a></li>
 					<li><a href="#column" data-toggle="tab">Columns Setting</a></li>
-					<li><a href="#export" data-toggle="tab">Export Grid</li>
+					<li><a href="#export" data-toggle="tab">Export Grid</a></li>
 			    </ul>
 			    <div id="chart-tab-content" class="tab-content">
 					<div class="tab-pane active" id="general">
@@ -118,6 +117,15 @@
 											</select>
 							            </div>
 							        </div>
+							        <div class="col-md-6">
+							            <label class="col-md-3 filter-label">Column Menu</label>
+							            <div class="col-md-8">
+							                <select class="form-control" data-bind="booleanValue:columnMenu">
+												<option value="true">true</option>
+												<option value="false">false</option>
+											</select>
+							            </div>
+							        </div>
 								</div>
 							</div>
 						</div>
@@ -148,31 +156,70 @@
 								<h1 class="panel-title">Column</h1>
 							</div>
 							<div class="panel-body form-panel">
+								<ul id="tabscolumn" class="nav nav-tabs" data-tabs="tabs">
+									<li class="active"><a href="#generalcolumn" data-toggle="tab">General Setting</a></li>
+									<li><a href="#headerfooter" data-toggle="tab">Header & Footer</a></li>
+							    </ul>
+							    <div id="column-tab-content" class="tab-content">
+							    	<div class="tab-pane active" id="generalcolumn">
+							    		<div class="row">
+								    		<div class="col-md-6">
+									            <label class="col-md-3 filter-label">Template</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:template" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Field</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="kendoDropDownList: { data: viewModel.grid.template.dataSourceFields, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: viewModel.grid.column.field }" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Title</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:title" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Format</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:format" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-3 filter-label">Width</label>
+									            <div class="col-md-8">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:width" />
+									            </div>
+									        </div>
+									    </div>
+							    	</div>
+							    	<div class="tab-pane" id="headerfooter">
+							    		<div class="row">
+							    			<div class="col-md-6">
+									            <label class="col-md-4 filter-label">Header Template</label>
+									            <div class="col-md-7">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:headerTemplate" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-4 filter-label">Footer Template</label>
+									            <div class="col-md-7">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:footerTemplate" />
+									            </div>
+									        </div>
+									        <div class="col-md-6">
+									            <label class="col-md-4 filter-label">Header Style</label>
+									            <div class="col-md-7">
+									                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:headerAttributes.style" />
+									            </div>
+									        </div>
+							    		</div>
+							    	</div>
+							    </div>
+							    <hr class="line-hr"/>
 								<div class="row">
-									<div class="col-md-6">
-							            <label class="col-md-3 filter-label">Template</label>
-							            <div class="col-md-8">
-							                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:template" />
-							            </div>
-							        </div>
-							        <div class="col-md-6">
-							            <label class="col-md-3 filter-label">Field</label>
-							            <div class="col-md-8">
-							                <input name="txtPage" class="form-input form-control" type="text" data-bind="kendoDropDownList: { data: viewModel.grid.template.dataSourceFields, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: viewModel.grid.column.field }" />
-							            </div>
-							        </div>
-							        <div class="col-md-6">
-							            <label class="col-md-3 filter-label">Title</label>
-							            <div class="col-md-8">
-							                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:title" />
-							            </div>
-							        </div>
-							        <div class="col-md-6">
-							            <label class="col-md-3 filter-label">Format</label>
-							            <div class="col-md-8">
-							                <input name="txtPage" class="form-input form-control" type="text" data-bind="value:format" />
-							            </div>
-							        </div>
 							        <div class="col-md-12">
 							        	<button class="btn btn-sm btn-primary" data-bind="click:viewModel.grid.addColumn"><span class="glyphicon glyphicon-plus"></span>Add Column</button>
 							        	<button class="btn btn-sm btn-warning" data-bind="click:viewModel.grid.clearColumn"><span class="glyphicon glyphicon-erase"></span> Clear Column</button>
@@ -181,7 +228,6 @@
 							        	<table class="table table-hover">
 							        		<thead>
 							        			<tr>
-							        				<th>Template</th>
 							        				<th>Field</th>
 							        				<th>Title</th>
 							        				<th>Format</th>
@@ -198,14 +244,63 @@
 					<div class="tab-pane" id="export">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h1 class="panel-title">Pdf</h1>
+								<h1 class="panel-title">PDF</h1>
 							</div>
 							<div class="panel-body form-panel">
 								<div class="row">
 									<div class="col-md-6">
 							            <label class="col-md-3 filter-label">Visible</label>
 							            <div class="col-md-8">
-							                <!-- <input type="checkbox" data-bind="checked: " /> -->
+							                <input type="checkbox" id="ckcpdf" data-bind="checked: outsider.visiblePDF, click: viewModel.grid.visiblePDF" />
+							            </div>
+							        </div>
+								</div>
+								<div class="row" data-bind="visible:outsider.visiblePDF() === true">
+									<div class="col-md-6">
+							            <label class="col-md-3 filter-label">All Pages</label>
+							            <div class="col-md-8">
+							                <select class="form-control" data-bind="booleanValue:pdf.allPages">
+												<option value="true">true</option>
+												<option value="false">false</option>
+											</select>
+							            </div>
+							        </div>
+							        <div class="col-md-6">
+							            <label class="col-md-3 filter-label">File Name</label>
+							            <div class="col-md-8">
+							                <input name="txtNamePdf" class="form-input form-control" type="text" data-bind="value:pdf.fileName" />
+							            </div>
+							        </div>
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Excel</h1>
+							</div>
+							<div class="panel-body form-panel">
+								<div class="row">
+									<div class="col-md-6">
+							            <label class="col-md-3 filter-label">Visible</label>
+							            <div class="col-md-8">
+							                <input type="checkbox" data-bind="checked: outsider.visibleExcel, click: viewModel.grid.visibleExcel" />
+							            </div>
+							        </div>
+								</div>
+								<div class="row" data-bind="visible:outsider.visibleExcel() === true">
+									<div class="col-md-6">
+							            <label class="col-md-3 filter-label">All Pages</label>
+							            <div class="col-md-8">
+							                <select class="form-control" data-bind="booleanValue:excel.allPages">
+												<option value="true">true</option>
+												<option value="false">false</option>
+											</select>
+							            </div>
+							        </div>
+							        <div class="col-md-6">
+							            <label class="col-md-3 filter-label">File Name</label>
+							            <div class="col-md-8">
+							                <input name="txtNamePdf" class="form-input form-control" type="text" data-bind="value:excel.fileName" />
 							            </div>
 							        </div>
 								</div>

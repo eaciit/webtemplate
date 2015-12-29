@@ -52,6 +52,10 @@ body {
 	margin-top:10px;
 }
 
+.line-hr {
+	border: 1px solid #C4C4C4;
+}
+
 
 /*Content Header*/
 #page-header { 
