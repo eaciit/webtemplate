@@ -360,6 +360,7 @@ viewModel.panel = {};
 viewModel.chart = {};
 viewModel.grid = {};
 viewModel.dataSource = {};
+viewModel.page = {};
 
 viewModel.camelToCapitalize = function (s) {
     return s.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
