@@ -87,6 +87,8 @@ func (t *WebTemplate) RegisterRoutes() {
 		return toolkit.M{"title": "Chart Builder", "href": "/chartbuilder"}
 	})
 	t.Server.Route("/grid", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.layoutFile
+		r.Config.IncludeFiles = t.includeFiles
 		r.Config.ViewName = "view/grid.html"
 		return toolkit.M{"title": "Grid", "href": "/grid"}
 	})
