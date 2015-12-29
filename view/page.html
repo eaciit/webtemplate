@@ -1,0 +1,82 @@
+<!-- widget -->
+<script src="/static/asset/js/main/page.js"></script>
+
+<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: page">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Page</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-success" data-bind="click: refresh">
+						<span class="glyphicon glyphicon-refresh"></span> Refresh
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: add">
+						<span class="glyphicon glyphicon-plus"></span> Add New Page
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-body" data-overlay-page-wrap>
+		<div class="row">
+			<div class="page-grid grid" data-bind="kendoGrid: viewModel.page.grid" style="height: 400px; width: 100%;"></div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'editor'), with: page">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Page Builder</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-warning" data-bind="click: back">
+						<span class="glyphicon glyphicon-chevron-left"></span> Back
+					</button>
+					<button class="btn btn-sm btn-success" data-bind="click: save">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-body" data-overlay-page-wrap data-bind="with: config">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h1 class="panel-title">Create New Page</h1>
+			</div>
+			<div class="panel-body">
+				<form class="form-horizontal page-form">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Parent Menu</label>
+						<div class="col-sm-10">
+							<select class="parent-selector" data-bind="kendoDropDownList: { data: viewModel.page.dataAsParent, dataValueField: '_id', dataTextField: 'title', value: parentID, optionLabel: 'Select one' }"></select>
+						</div>
+					</div>
+					<div class="form-group" data-bind="visible: _id() != ''">
+						<label class="col-sm-2 control-label">ID</label>
+						<div class="col-sm-10">
+							<input disabled readonly type="text" class="form-control input-sm" data-bind="value: _id().split('|').reverse()[0]" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Title</label>
+						<div class="col-sm-10">
+							<input required data-required-msg="Title cannot be empty" name="title" type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: title" />
+							<span class="k-invalid-msg" data-for="title"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">URL</label>
+						<div class="col-sm-10">
+							<input required data-required-msg="URL cannot be empty" name="href" type="text" class="form-control input-sm" placeholder="Type href here ..." data-bind="value: href" />
+							<span class="k-invalid-msg" data-for="href"></span>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
