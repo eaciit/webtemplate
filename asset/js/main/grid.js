@@ -17,6 +17,7 @@ viewModel.grid.template = {
 			buttonCount: 5
 		},
 		columns:[],
+		toolbar:[],
 	},
 	column: {
 		template:'',
@@ -31,6 +32,16 @@ viewModel.grid.template = {
 		// },
 		// footerTemplate:'',
 	},
+	toolbar: {
+		pdf: {
+			allPages: true,
+			fileName: "",
+		}, 
+		excel: {
+			allPages: true,
+			fileName: "",
+		}
+	},
 	dataSourceFields: ko.observableArray([]),
 }
 viewModel.grid.dataSources = ko.observableArray([]);
@@ -39,6 +50,7 @@ viewModel.grid.status = ko.observable("");
 viewModel.grid.indexColumn = ko.observable(-1);
 viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
+viewModel.grid.toolbar = ko.mapping.fromJS(viewModel.grid.template.toolbar);
 viewModel.grid.showDataGrid = function(){
 	viewModel.mode("viewgrid");
 	viewModel.ajaxPost("/grid/getgriddata", {}, function (res) {
@@ -206,4 +218,5 @@ $(function () {
 	var c = viewModel.grid;
 	c.fetchDataSource();
 	c.showDataGrid();
+    viewModel.mode("viewgrid");
 });
