@@ -34,6 +34,7 @@ viewModel.grid.template = {
 		template:'',
 		field:'',
 		title:'',
+		menu: true,
 		format:'',
 		width:'',
 		headerTemplate:'',
@@ -130,16 +131,6 @@ viewModel.grid.AddNew = function(){
 	ko.mapping.fromJS(viewModel.grid.template.config, viewModel.grid.config);
 }
 viewModel.grid.createGrid = function () {
-	// var columns = viewModel.grid.config.columns(), newColumns = ko.observableArray([]), confRun = viewModel.grid.config;
-	// for (var key in columns){
-	// 	var column = {};
-	// 	$.each( columns[key], function( key, value ) {
-	// 		if(value !== '')
-	// 			column[key] = value;
-	// 	});
-	// 	newColumns.push(column);
-	// }
-	// confRun.columns(newColumns());
 	var confRun = ko.mapping.toJS(viewModel.grid.config), columns = confRun.columns, newColumns = new Array();
 	for (var key in columns){
 		var column = {};

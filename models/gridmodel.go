@@ -39,11 +39,20 @@ type Pageable struct {
 }
 
 type Column struct {
-	Template string `json:"template"`
-	Field    string `json:"field"`
-	Title    string `json:"title"`
-	Format   string `json:"format"`
-	Width    string `json:"width"`
+	Template         string           `json:"template"`
+	Field            string           `json:"field"`
+	Title            string           `json:"title"`
+	Format           string           `json:"format"`
+	Width            string           `json:"width"`
+	Menu             bool             `json:"menu"`
+	HeaderTemplate   string           `json:"headerTemplate"`
+	HeaderAttributes HeaderAttributes `json:"headerAttributes"`
+	FooterTemplate   string           `json:"footerTemplate"`
+}
+
+type HeaderAttributes struct {
+	Class string `json:"class"`
+	Style string `json:"style"`
 }
 
 type MapGrid struct {
