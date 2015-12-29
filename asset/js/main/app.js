@@ -1,79 +1,31 @@
 viewModel.methodsMenu = {
     top: function(item){
-        var $o = this, $ulnavbar, $linavbar, $linknavbar;
-        for (var key in item){
-            $ulnavbar = jQuery('<ul />');
-            $ulnavbar.addClass('nav navbar-nav');
-            $ulnavbar.appendTo($o);
+        var $self = this, $ulnavbar, $linavbar, $linknavbar;
 
-            if(item[key].submenu.length === 0){
-                $linavbar = jQuery('<li />');
-                if(item[key].selected)
-                    $linavbar.addClass('selected');
-                $linavbar.appendTo($ulnavbar);
-
-                $linknavbar = jQuery('<a />');
-                $linknavbar.attr('href',item[key].href);
-                $linknavbar.html(item[key].title);
-                $linknavbar.appendTo($linavbar);
+        var putSubMenu = function (each, $parent) {
+            if (each.submenu.length == 0) {
+                var $child = $("<li><a href='" + each.href + "'>" + each.title + "</a></li>");
+                $child.appendTo($parent);
             } else {
-                $linavbar = jQuery('<li />');
-                if(item[key].selected)
-                    $linavbar.addClass('selected dropdown');
-                else
-                    $linavbar.addClass('dropdown');
-                $linavbar.appendTo($ulnavbar);
+                var $child = $("<li><a href='" + each.href + "' class='dropdown dropdown-toggle' data-toggle='dropdown' style='cursor: pointer;'>" + each.title + "</a></li>");
+                $child.appendTo($parent);
 
-                $linknavbar = jQuery('<a />');
-                $linknavbar.css('cursor','pointer');
-                $linknavbar.addClass('dropdown-toggle');
-                $linknavbar.attr('data-toggle','dropdown');
-                $linknavbar.html(item[key].title);
-                $linknavbar.appendTo($linavbar);
+                var $subParent = $("<ul class='dropdown-menu' rola='menu'></ul>");
+                $subParent.appendTo($child);
 
-                var navbarTemplateSub = function (item,parentsub){
-                    var $ulnavbar, $linavbar, $linknavbar;
-                    $ulnavbar = jQuery('<ul />');
-                    $ulnavbar.addClass('dropdown-menu');
-                    $ulnavbar.attr('role','menu');
-                    $ulnavbar.appendTo(parentsub);
-
-                    if(item.submenu.length === 0){
-                        $linavbar = jQuery('<li />');
-                        if(item.selected)
-                            $linavbar.addClass('selected');
-                        $linavbar.appendTo($ulnavbar);
-
-                        $linknavbar = jQuery('<a />');
-                        $linknavbar.attr('href',item.href);
-                        $linknavbar.html(item.title);
-                        $linknavbar.appendTo($linavbar);
-                    } else {
-                        $linavbar = jQuery('<li />');
-                        if(item.selected)
-                            $linavbar.addClass('selected dropdown');
-                        else
-                            $linavbar.addClass('dropdown');
-                        $linavbar.appendTo($ulnavbar);
-
-                        $linknavbar = jQuery('<a />');
-                        $linknavbar.css('cursor','pointer');
-                        $linknavbar.addClass('dropdown-toggle');
-                        $linknavbar.attr('data-toggle','dropdown');
-                        $linknavbar.html(item.title);
-                        $linknavbar.appendTo($linavbar);
-
-                        for(var key in item.submenu){
-                            navbarTemplateSub(item.submenu[key],$linavbar);
-                        }
-                    }
-                }
-
-                for(var key2 in item[key].submenu){
-                    navbarTemplateSub(item[key].submenu[key2],$linavbar);
-                }
+                each.submenu.forEach(function (sub) {
+                    putSubMenu(sub, $subParent);
+                });
             }
-        }
+        };
+
+        item.forEach(function (each) {
+            console.log(each);
+            var $parent = $("<ul class='nav navbar-nav'></ul>");
+            $parent.appendTo($self);
+
+            putSubMenu(each, $parent);
+        });
     },
     right: function(){
         console.log('right');

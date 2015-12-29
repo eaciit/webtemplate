@@ -55,10 +55,6 @@ func InitWebTemplate() *WebTemplate {
 	return yo
 }
 
-func (t *WebTemplate) Listen() {
-	t.Server.Listen()
-}
-
 func (t *WebTemplate) Open() {
 	time.AfterFunc(time.Second, func() {
 		exec.Command("open", "http://"+t.Server.Address).Run()
@@ -69,5 +65,5 @@ func main() {
 	yo := InitWebTemplate()
 	yo.Server.Address = "localhost:7878"
 	// yo.Open()
-	yo.Listen()
+	yo.Server.Listen()
 }
