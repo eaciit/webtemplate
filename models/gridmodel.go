@@ -1,7 +1,7 @@
 package models
 
 type Grid struct {
-	// DataSource    DataSource `json:"dataSource"`
+	DataSource DataSource `json:"dataSource"`
 	Outsider   Outsider   `json:"outsider"`
 	PageSize   int        `json:"pageSize"`
 	Groupable  bool       `json:"groupable"`
@@ -29,7 +29,13 @@ type ExportGrid struct {
 }
 
 type DataSource struct {
-	Data map[string]interface{} `json:"data"`
+	// Data map[string]interface{} `json:"data"`
+	Aggregate []AggregateColumn `json:"aggregate"`
+}
+
+type AggregateColumn struct {
+	Field     string `json:"field"`
+	Aggregate string `json:"aggregate"`
 }
 
 type Pageable struct {

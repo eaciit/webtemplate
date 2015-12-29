@@ -12,6 +12,16 @@
 		</td>
 	</tr>
 </script>
+<script type="text/html" id="template-aggregate">
+	<tr>
+		<td data-bind="text:field"></td>
+		<td data-bind="text:aggregate"></td>
+		<td>
+			<button class="btn btn-danger btn-sm" data-bind="click:viewModel.grid.removeAggregate"><span class="glyphicon glyphicon-trash"></span></button>
+			<button class="btn btn-sm btn-success" data-bind="click:function(){viewModel.grid.editAggregate($index())}"><span class="glyphicon glyphicon-pencil"></span></button>
+		</td>
+	</tr>
+</script>
 <!-- Content Conf Grid -->
 <div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'viewgrid'), with: grid">
 	<div class="content-header">
@@ -239,6 +249,44 @@
 							        			</tr>
 							        		</thead>
 							        		<tbody data-bind="template:{name:'template-column', foreach:viewModel.grid.config.columns()}"></tbody>
+										</table>
+							        </div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h1 class="panel-title">Aggregate</h1>
+							</div>
+							<div class="panel-body form-panel" data-bind="with:viewModel.grid.aggregate">
+								<div class="row">
+									<div class="col-md-6">
+							            <label class="col-md-3 filter-label">Field</label>
+							            <div class="col-md-8">
+							            	<input name="txtPage" class="form-input form-control" type="text" data-bind="kendoDropDownList: { data: viewModel.grid.template.dataSourceFields, dataTextField: 'title', dataValueField: 'value', optionLabel: 'Select one', value: field }" />
+							            </div>
+							        </div>
+							        <div class="col-md-6">
+							            <label class="col-md-3 filter-label">Aggregate</label>
+							            <div class="col-md-8">
+							            	<input name="txtPage" class="form-input form-control" type="text" data-bind="kendoDropDownList: { data: viewModel.grid.template.aggregateColumn, optionLabel: 'Select one', value: aggregate }" />
+							            </div>
+							        </div>
+							        <div class="col-md-12">
+							        	<button class="btn btn-sm btn-primary" data-bind="click:viewModel.grid.addAggregate"><span class="glyphicon glyphicon-plus"></span>Add Aggregate</button>
+							        	<button class="btn btn-sm btn-warning" data-bind="click:viewModel.grid.clearAggregate"><span class="glyphicon glyphicon-erase"></span> Clear Aggregate</button>
+							        </div>
+							        <div class="col-md-11">
+							        	<table class="table table-hover">
+							        		<thead>
+							        			<tr>
+							        				<th>Field</th>
+							        				<th>Aggregate</th>
+							        				<th>Action</th>
+							        			</tr>
+							        		</thead>
+							        		<tbody data-bind="template:{name:'template-aggregate', foreach:viewModel.grid.config.dataSource.aggregate()}"></tbody>
 										</table>
 							        </div>
 								</div>
