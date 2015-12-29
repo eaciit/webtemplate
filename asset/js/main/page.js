@@ -15,8 +15,8 @@ viewModel.page.grid = {
             return allTitle.join(" / ");
         } },
         { field: "href", title: "URL", width: 100 },
-		{ title: "", width: 150, attributes: { style: "text-align: center;" }, template: function (dataItem) {
-            return '<button class="btn btn-xs btn-primary" onclick="viewModel.page.edit(\'' + dataItem._id + '\')"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.page.remove(\'' + dataItem._id + '\', \'' + dataItem.title + '\', ' + dataItem.has_child + ')"> <span class="glyphicon glyphicon-remove"></span> Remove</button>';
+		{ title: "", width: 250, attributes: { style: "text-align: center;" }, template: function (dataItem) {
+            return '<button class="btn btn-xs btn-success" onclick="location.href=\'/designer?id=' + dataItem._id.replace(/\|/g, "-") + '\'"> <span class="glyphicon glyphicon-pencil"></span> Page Designer</button>&nbsp;<button class="btn btn-xs btn-primary" onclick="viewModel.page.edit(\'' + dataItem._id + '\')"> <span class="glyphicon glyphicon-edit"></span> Edit</button>&nbsp;<button class="btn btn-xs btn-danger" onclick="viewModel.page.remove(\'' + dataItem._id + '\', \'' + dataItem.title + '\', ' + dataItem.has_child + ')"> <span class="glyphicon glyphicon-remove"></span> Remove</button>';
         } },
 	],
 	data: [],

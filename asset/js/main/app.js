@@ -1,79 +1,31 @@
 viewModel.methodsMenu = {
     top: function(item){
-        var $o = this, $ulnavbar, $linavbar, $linknavbar;
-        for (var key in item){
-            $ulnavbar = jQuery('<ul />');
-            $ulnavbar.addClass('nav navbar-nav');
-            $ulnavbar.appendTo($o);
+        var $self = this, $ulnavbar, $linavbar, $linknavbar;
 
-            if(item[key].submenu.length === 0){
-                $linavbar = jQuery('<li />');
-                if(item[key].selected)
-                    $linavbar.addClass('selected');
-                $linavbar.appendTo($ulnavbar);
-
-                $linknavbar = jQuery('<a />');
-                $linknavbar.attr('href',item[key].href);
-                $linknavbar.html(item[key].title);
-                $linknavbar.appendTo($linavbar);
+        var putSubMenu = function (each, $parent) {
+            if (each.submenu.length == 0) {
+                var $child = $("<li><a href='" + each.href + "'>" + each.title + "</a></li>");
+                $child.appendTo($parent);
             } else {
-                $linavbar = jQuery('<li />');
-                if(item[key].selected)
-                    $linavbar.addClass('selected dropdown');
-                else
-                    $linavbar.addClass('dropdown');
-                $linavbar.appendTo($ulnavbar);
+                var $child = $("<li><a href='" + each.href + "' class='dropdown dropdown-toggle' data-toggle='dropdown' style='cursor: pointer;'>" + each.title + "</a></li>");
+                $child.appendTo($parent);
 
-                $linknavbar = jQuery('<a />');
-                $linknavbar.css('cursor','pointer');
-                $linknavbar.addClass('dropdown-toggle');
-                $linknavbar.attr('data-toggle','dropdown');
-                $linknavbar.html(item[key].title);
-                $linknavbar.appendTo($linavbar);
+                var $subParent = $("<ul class='dropdown-menu' rola='menu'></ul>");
+                $subParent.appendTo($child);
 
-                var navbarTemplateSub = function (item,parentsub){
-                    var $ulnavbar, $linavbar, $linknavbar;
-                    $ulnavbar = jQuery('<ul />');
-                    $ulnavbar.addClass('dropdown-menu');
-                    $ulnavbar.attr('role','menu');
-                    $ulnavbar.appendTo(parentsub);
-
-                    if(item.submenu.length === 0){
-                        $linavbar = jQuery('<li />');
-                        if(item.selected)
-                            $linavbar.addClass('selected');
-                        $linavbar.appendTo($ulnavbar);
-
-                        $linknavbar = jQuery('<a />');
-                        $linknavbar.attr('href',item.href);
-                        $linknavbar.html(item.title);
-                        $linknavbar.appendTo($linavbar);
-                    } else {
-                        $linavbar = jQuery('<li />');
-                        if(item.selected)
-                            $linavbar.addClass('selected dropdown');
-                        else
-                            $linavbar.addClass('dropdown');
-                        $linavbar.appendTo($ulnavbar);
-
-                        $linknavbar = jQuery('<a />');
-                        $linknavbar.css('cursor','pointer');
-                        $linknavbar.addClass('dropdown-toggle');
-                        $linknavbar.attr('data-toggle','dropdown');
-                        $linknavbar.html(item.title);
-                        $linknavbar.appendTo($linavbar);
-
-                        for(var key in item.submenu){
-                            navbarTemplateSub(item.submenu[key],$linavbar);
-                        }
-                    }
-                }
-
-                for(var key2 in item[key].submenu){
-                    navbarTemplateSub(item[key].submenu[key2],$linavbar);
-                }
+                each.submenu.forEach(function (sub) {
+                    putSubMenu(sub, $subParent);
+                });
             }
-        }
+        };
+
+        item.forEach(function (each) {
+            console.log(each);
+            var $parent = $("<ul class='nav navbar-nav'></ul>");
+            $parent.appendTo($self);
+
+            putSubMenu(each, $parent);
+        });
     },
     right: function(){
         console.log('right');
@@ -361,6 +313,7 @@ viewModel.chart = {};
 viewModel.grid = {};
 viewModel.dataSource = {};
 viewModel.page = {};
+viewModel.designer = {};
 
 viewModel.camelToCapitalize = function (s) {
     return s.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
@@ -395,13 +348,12 @@ $(function () {
                     icon:'fa fa-gear',
                     number: {visible: false},
                     dropdown:{
-                        visible:true, header: 'Configure Widget', footer: 'See all Configuration', 
+                        visible:true, header: 'Admin Menu', footer: '&nbsp;', 
                         data:[
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Panel', detail:'', onclick: 'viewModel.mode("panel")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'viewModel.mode("data-source")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Chart', detail:'', onclick: 'viewModel.mode("chart")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Grid', detail:'', onclick: 'viewModel.mode("grid")'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Widget Selection', detail:''}
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Page', detail:'', onclick: 'location.href = "/page"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'location.href = "/datasource"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Chart Widget', detail:'', onclick: 'location.href = "/chart"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Grid Widget', detail:'', onclick: 'location.href = "/grid"'}
                         ]
                     },
                     href: '#'
