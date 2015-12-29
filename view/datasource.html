@@ -1,248 +1,112 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>EACIIT Web Template</title>
-	<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- widget -->
+<script>viewModel.header = { title: "Data Source Builder", href: "/datasource" }</script>
+<script src="/static/asset/js/main/datasource.js"></script>
 
-    <link rel="shortcut icon" href="/static/asset/img/logo.png" type="image/x-icon" />
-    <link rel="icon" href="/static/asset/img/logo.png" type="image/x-icon" />
+<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: dataSource">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Data Source</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-success" data-bind="click: refresh">
+						<span class="glyphicon glyphicon-refresh"></span> Refresh
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: add">
+						<span class="glyphicon glyphicon-plus"></span> Add New Data Source
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<!-- header -->
-    <script>
-    	var viewModel = {};
-    	viewModel.header = { title: '{{.title}}', href: '{{.href}}' };
-    </script>
+	<div class="content-body" data-overlay-page-wrap>
+		<div class="row">
+			<div class="datasource-grid grid" data-bind="kendoGrid: viewModel.dataSource.grid" style="height: 400px; width: 100%;"></div>
+		</div>
+	</div>
+</div>
 
-	<!-- jquery -->
-    <script src="/static/asset/jquery/jquery-2.1.0.min.js"></script>
-    <script src="/static/asset/jquery/jquery-ui.min.js"></script>
-	
-	<!-- bootstrap -->
-    <script src="/static/asset/bootstrap/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/static/asset/bootstrap/bootstrap.min.css" />
-	
-	<!-- font-awesome -->
-    <link rel="stylesheet" href="/static/asset/font-awesome/css/font-awesome.min.css" />
+<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'editor'), with: dataSource">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Chart Editor</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-warning" data-bind="click: back">
+						<span class="glyphicon glyphicon-chevron-left"></span> Back
+					</button>
+					<button class="btn btn-sm btn-success" data-bind="click: save">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: preview, visible: viewModel.dataSource.isSaved">
+						<span class="glyphicon glyphicon-eye-open"></span> Preview
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<!-- knockout -->
-    <script src="/static/asset/knockout/knockout-3.4.0.js"></script>
-    <script src="/static/asset/knockout/knockout.mapping-latest.js"></script>
-	
-	<!-- kendo-ui -->
-    <link href="/static/asset/kendo-ui/styles/kendo.common.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.rtl.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.default.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.min.css" rel="stylesheet">
-    <link href="/static/asset/kendo-ui/styles/kendo.dataviz.default.min.css" rel="stylesheet">
-    <script src="/static/asset/kendo-ui/js/kendo.all.min.js"></script>
-
-	<!-- knockout-kendo -->
-    <script src="/static/asset/knockout-kendo/knockout-kendo.min.js"></script>
-
-    <!-- lazy -->
-    <script src="/static/asset/lazyjs/lazy.min.js"></script>
-
-	<!-- main -->
-	<script src="/static/asset/js/main/app.js"></script>
-
-	<!-- widget -->
-	<script src="/static/asset/js/main/datasource.js"></script>
-
-	<!-- others -->
-	<script src="/static/asset/touch-punch/jquery.touch-punch.min.js"></script>
-	<script src="/static/asset/shapeshift/jquery.shapeshift.js"></script>
-	
-    <link rel="stylesheet" href="/static/asset/css/site.css" />
-    <link rel="stylesheet" href="/static/asset/css/overlay.css"/>
-    <link rel="stylesheet" href="/static/asset/css/customred.css" />
-    <link rel="stylesheet" href="/static/asset/css/animation.css" />
-    <!-- <link rel="stylesheet" href="/static/asset/css/customred.css" id="customlayout" /> -->
-    <!-- <link rel="stylesheet" type="text/css" href="/res//static/asset/iconpack/flaticon.css"> -->
-	
-	<script type='text/html' id='template-data-source-not-selected'>
-		<div class="panel panel-danger panel-notif" data-bind="visible: (viewModel.chart.config.outsider.dataSourceKey() == '')">
+	<div class="content-body" data-overlay-page-wrap data-bind="with: config">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h1 class="panel-title">Create New Data Source</h1>
+			</div>
 			<div class="panel-body">
-				<form class="form-horizontal">
-					<p class="bg-notif bg-danger">
-						<span class="glyphicon glyphicon-warning-sign"></span>
-						You havent select any data source. Please select one first.
-					</p>
+				<form class="form-horizontal datasource-form" enctype="multipart/form-data">
+					<div class="form-group" data-bind="visible: _id() != ''">
+						<label class="col-sm-2 control-label">ID</label>
+						<div class="col-sm-10">
+							<input disabled readonly type="text" class="form-control input-sm" data-bind="value: _id" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Title</label>
+						<div class="col-sm-10">
+							<input required data-required-msg="Title cannot be empty" name="title" type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: title" />
+							<span class="k-invalid-msg" data-for="title"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Type</label>
+						<div class="col-sm-10">
+							<select required data-required-msg="Type cannot be empty" name="type" style="width: 100%" data-bind="kendoDropDownList: { data: viewModel.dataSource.options.types, value: type, dataTextField: 'title', dataValueField: 'value' }"></select>
+							<span class="k-invalid-msg" data-for="type"></span>
+						</div>
+					</div>
+					<div class="form-group" data-bind="visible: type() == 'url'">
+						<label class="col-sm-2 control-label">URL</label>
+						<div class="col-sm-10">
+							<input required data-required-msg="URL cannot be empty" name="path" type="text" class="form-control input-sm" placeholder="Type URL here ..." data-bind="value: path" />
+							<span class="k-invalid-msg" data-for="path"></span>
+						</div>
+					</div>
+					<div class="form-group" data-bind="visible: type() == 'file'">
+						<label class="col-sm-2 control-label">File</label>
+						<div class="col-sm-10">
+							<input required data-required-msg="File cannot be empty" name="file" type="file" class="form-control input-sm" />
+							<span class="k-invalid-msg" data-for="file"></span>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
-	</script>
-</head>
-<body data-bind="with: viewModel">
-	<!-- Navbar Header -->
-	<div class="header">
-		<header id="page-header"></header>
-		<nav class="navbar">
-			<div id="navbar" class="collapse navbar-collapse"></div>
-		</nav>
 	</div>
-	<!-- End Header Nabar -->
+</div>
 
-	<!-- Content Menu Left -->
-	<div id="menu-left">
-		<div class="toogle-left">
-			<span class="glyphicon glyphicon-align-justify" id="toggle-left"></span>
-		</div>
-		<div class="list-group" id="listmenuleft">
-			
-		</div>
-	</div>
-	<!-- End Content Menu Left -->
-
-	<!-- Content -->
-	<div class="wrap-fluid content-all" style="margin-left: 250px;">
-		<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: dataSource">
-			<div class="content-header">
-				<div class="row">
-					<div class="col-md-12 title-content">
-						<span class="col-md-3">Data Source</span>
-						<div class="col-md-9">
-							<button class="btn btn-sm btn-success" data-bind="click: refresh">
-								<span class="glyphicon glyphicon-refresh"></span> Refresh
-							</button>
-							<button class="btn btn-sm btn-primary" data-bind="click: add">
-								<span class="glyphicon glyphicon-plus"></span> Add New Data Source
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="content-body" data-overlay-page-wrap>
-				<div class="row">
-					<div class="datasource-grid grid" data-bind="kendoGrid: viewModel.dataSource.grid" style="height: 400px; width: 100%;"></div>
-				</div>
-			</div>
-		</div>
-
-		<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'editor'), with: dataSource">
-			<div class="content-header">
-				<div class="row">
-					<div class="col-md-12 title-content">
-						<span class="col-md-3">Chart Editor</span>
-						<div class="col-md-9">
-							<button class="btn btn-sm btn-warning" data-bind="click: back">
-								<span class="glyphicon glyphicon-chevron-left"></span> Back
-							</button>
-							<button class="btn btn-sm btn-success" data-bind="click: save">
-								<span class="glyphicon glyphicon-save"></span> Save
-							</button>
-							<button class="btn btn-sm btn-primary" data-bind="click: preview, visible: viewModel.dataSource.isSaved">
-								<span class="glyphicon glyphicon-eye-open"></span> Preview
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="content-body" data-overlay-page-wrap data-bind="with: config">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h1 class="panel-title">Create New Data Source</h1>
-					</div>
-					<div class="panel-body">
-						<form class="form-horizontal datasource-form" enctype="multipart/form-data">
-							<div class="form-group" data-bind="visible: _id() != ''">
-								<label class="col-sm-2 control-label">ID</label>
-								<div class="col-sm-10">
-									<input disabled readonly type="text" class="form-control input-sm" data-bind="value: _id" />
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label">Title</label>
-								<div class="col-sm-10">
-									<input required data-required-msg="Title cannot be empty" name="title" type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: title" />
-									<span class="k-invalid-msg" data-for="title"></span>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label">Type</label>
-								<div class="col-sm-10">
-									<select required data-required-msg="Type cannot be empty" name="type" style="width: 100%" data-bind="kendoDropDownList: { data: viewModel.dataSource.options.types, value: type, dataTextField: 'title', dataValueField: 'value' }"></select>
-									<span class="k-invalid-msg" data-for="type"></span>
-								</div>
-							</div>
-							<div class="form-group" data-bind="visible: type() == 'url'">
-								<label class="col-sm-2 control-label">URL</label>
-								<div class="col-sm-10">
-									<input required data-required-msg="URL cannot be empty" name="path" type="text" class="form-control input-sm" placeholder="Type URL here ..." data-bind="value: path" />
-									<span class="k-invalid-msg" data-for="path"></span>
-								</div>
-							</div>
-							<div class="form-group" data-bind="visible: type() == 'file'">
-								<label class="col-sm-2 control-label">File</label>
-								<div class="col-sm-10">
-									<input required data-required-msg="File cannot be empty" name="file" type="file" class="form-control input-sm" />
-									<span class="k-invalid-msg" data-for="file"></span>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade modal-datasource-preview" tabindex="-1" role="dialog">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title"></h4>
-	            </div>
-	            <div class="modal-body">
-	                <div class="datasource-preview"></div>
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-sm btn-warning" data-dismiss="modal">Close</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-
-	<!-- Content Menu Right -->
-	<div class="content-menu-right" id="menu-right" style="right:-250px;">
-		<div class="list-menu-right">
-			<div class="menu-right-nest">
-				<div class="menu-title">Server Statistic</div>
-				<div class="content-menu-right"></div>
-			</div>
-			<div class="menu-right-nest">
-				<div class="menu-title">Database Request</div>
-				<div class="content-menu-right"></div>
-			</div>
-			<div class="menu-right-nest">
-				<div class="menu-title">Server Response</div>
-				<div class="content-menu-right"></div>
-			</div>
-		</div>
-	</div>
-	<!-- End Content Menu Right -->
-
-	<!-- Content Chat -->
-	<div class="notif">
-		<div class="media-body">
-			<div class="header-notif">
-				<a class="btn btn-sm"><i class="fa fa-circle-o status" style="margin-right: 5px !important;"></i> Notification</a>
-			</div>
-			<div class="content-notif">
-			</div>
-		</div>
-	</div>
-	<!-- End Content Chat -->
-
-	<script type="text/javascript">
-	    ko.applyBindings(viewModel);
-	</script>
-
-	<script src="/static/asset/js/load.js"></script>
-	<script src="/static/asset/js/main.js"></script>
-	<script src="/static/asset/js/overlay.js"></script>
-</body>
-</html>
+<!-- modal preview -->
+<div class="modal fade modal-datasource-preview" tabindex="-1" role="dialog">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+            <div class="datasource-preview"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-warning" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>

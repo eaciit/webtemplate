@@ -41,7 +41,7 @@ viewModel.grid.config = ko.mapping.fromJS(viewModel.grid.template.config);
 viewModel.grid.column = ko.mapping.fromJS(viewModel.grid.template.column);
 viewModel.grid.showDataGrid = function(){
 	viewModel.mode("viewgrid");
-	viewModel.ajaxPost("/template/getgriddata", {}, function (res) {
+	viewModel.ajaxPost("/grid/getgriddata", {}, function (res) {
 		viewModel.grid.dataGrid(res);
 		$("#grid-data").kendoGrid({
 			dataSource : {
@@ -67,7 +67,7 @@ viewModel.grid.showDataGrid = function(){
 viewModel.grid.deleteGrid = function(obj){
 	var result = confirm("Want to delete?");
 	if (result) {
-		viewModel.ajaxPost("/template/deletegrid", {recordid: $(obj).attr('recordid')}, function (res) {
+		viewModel.ajaxPost("/grid/deletegrid", {recordid: $(obj).attr('recordid')}, function (res) {
 			viewModel.grid.showDataGrid();
 		});
 	}
@@ -75,7 +75,7 @@ viewModel.grid.deleteGrid = function(obj){
 viewModel.grid.selectGrid = function(obj){
 	$("ul#tabsgrid li").removeClass("active");
 	$("ul#tabsgrid li").eq(0).addClass("active");
-	viewModel.ajaxPost("/template/getdetailgrid", {recordid: $(obj).attr('recordid')}, function (res) {
+	viewModel.ajaxPost("/grid/getdetailgrid", {recordid: $(obj).attr('recordid')}, function (res) {
 		viewModel.mode("grid");
 		viewModel.grid.status("Update");
 		ko.mapping.fromJS(res[0], viewModel.grid.config);
@@ -113,7 +113,7 @@ viewModel.grid.createGrid = function () {
 };
 viewModel.grid.save = function(){
 	$.ajax({
-        url: "/template/savejsongrid",
+        url: "/grid/savejsongrid",
         type: 'post',
         // dataType: 'json',
         contentType: "application/json; charset=utf-8",
@@ -150,7 +150,7 @@ viewModel.grid.clearColumn = function(){
 	ko.mapping.fromJS(viewModel.grid.template.column, viewModel.grid.column);
 }
 viewModel.grid.fetchDataSource = function () {
-	viewModel.ajaxPost("/template/getdatasources", {}, function (res) {
+	viewModel.ajaxPost("/datasource/getdatasources", {}, function (res) {
 		viewModel.grid.dataSources(res);
     });
 };
@@ -164,7 +164,7 @@ viewModel.grid.selectDataSource = function(e){
 	console.log("fetching " + row.path);
 	console.log(row);
 
-	viewModel.ajaxPost("/template/getdatasource", row, function (res) {
+	viewModel.ajaxPost("/datasource/getdatasource", row, function (res) {
 		viewModel.grid.config.dataSource.data(res);
 
 		var columnsHolder = [];
