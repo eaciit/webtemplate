@@ -12,14 +12,14 @@ header#page-header {
     background: #CC3D3D;
 }
 /*Change Color Seleted Top Menu*/
+.navbar .navbar-nav li.open a{
+    background: #CC3D3D;
+}
 .navbar .navbar-nav li.selected a { 
     color: #ffffff; 
     background: #A60F0F;
 }
 /*Change Color hover top menu*/
-.navbar .navbar-nav li.open a{
-    background: #CC3D3D;
-}
 .navbar .navbar-nav li a:hover, .navbar .navbar-nav li.active a:hover { 
     color: #ffffff; 
     background: #A60F0F;

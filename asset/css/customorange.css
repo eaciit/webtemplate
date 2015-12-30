@@ -12,6 +12,9 @@ header#page-header {
     background: #EB861A;
 }
 /*Change Color Seleted Top Menu*/
+.navbar .navbar-nav li.open a{
+    background: #EB861A;
+}
 .navbar .navbar-nav li.selected a { 
     color: #ffffff; 
     background: #B56510;
