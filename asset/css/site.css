@@ -915,3 +915,9 @@ ul.topnav li a {
 .popover-content .btn-danger {
 	margin: 9px 0px 14px;
 }
+.panel-heading span.clickable {
+	margin-left:8px;
+}
+.panel-heading .panel-title {
+	margin-right: 65px;
+}
