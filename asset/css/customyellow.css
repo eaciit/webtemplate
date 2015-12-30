@@ -12,6 +12,9 @@ header#page-header {
     background: #A1AB3A;
 }
 /*Change Color Seleted Top Menu*/
+.navbar .navbar-nav li.open a{
+    background: #A1AB3A;
+}
 .navbar .navbar-nav li.selected a { 
     color: #ffffff; 
     background: #6F730D;
@@ -88,3 +91,13 @@ ul.topnav ul li a:hover {
     .notif .content-notif i {
         color:#C2BC15;
     }
+
+/*Panel color*/
+.panel-custom {
+    border-color: #A1AB3A;
+}
+.panel-custom>.panel-heading {
+    color: #ffffff;
+    background-color: #A1AB3A;
+    border-color: #A1AB3A;
+}

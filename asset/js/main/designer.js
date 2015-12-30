@@ -20,7 +20,7 @@ viewModel.designer.config = function (o) {
 
 };
 viewModel.designer.hideShow = function(e){
-	var x_panel = $(e).closest('div.panel-primary'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
+	var x_panel = $(e).closest('div.panel-custom'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
     content.slideToggle(200);
 	button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
 	if(button.hasClass('fa-chevron-up')){
