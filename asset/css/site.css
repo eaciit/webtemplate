@@ -888,6 +888,9 @@ ul.topnav li a {
 	font-size: 15px;
 	cursor: pointer;
 }
+.content-panel .grid-container .grid-item .panel .panel-body {
+	position: relative;
+}
 
 .content-panel .grid-container > div[data-ss-colspan="1"] { width: 10%; }
 .content-panel .grid-container > div[data-ss-colspan="2"] { width: 20%; }
@@ -899,3 +902,16 @@ ul.topnav li a {
 .content-panel .grid-container > div[data-ss-colspan="8"] { width: 80%; }
 .content-panel .grid-container > div[data-ss-colspan="9"] { width: 90%; }
 .content-panel .grid-container > div[data-ss-colspan="10"] { width: 100%; }
+
+.popover-content {
+	font-size: 12px;
+}
+.popover-content ul {
+	list-style: none;
+	margin: 0px;
+    padding: 0px;
+    padding-left: 10px;
+}
+.popover-content .btn-danger {
+	margin: 9px 0px 14px;
+}

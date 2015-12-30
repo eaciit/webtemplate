@@ -238,22 +238,6 @@ viewModel.chart.putNotifyToSelectDataSource = function () {
 		$($("#template-data-source-not-selected").html()).prependTo($(e));
 	});
 };
-viewModel.chart.parseConfig = function (config) {
-	config = $.extend(true, {}, config);
-	
-	if (config.categoryAxis.template == "")
-		delete config.categoryAxis.template;
-	
-	if (!config.outsider.valueAxisUseMaxMode)
-		delete config.valueAxis.max;
-	
-	if (!config.outsider.valueAxisUseMinMode)
-		delete config.valueAxis.min;
-
-	console.log("config", config);
-
-	return config;
-}
 viewModel.chart.preview = function () {
 	if (viewModel.mode() == 'editor')
 		viewModel.chart.saveSeries();

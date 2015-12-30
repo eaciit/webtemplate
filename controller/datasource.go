@@ -105,6 +105,12 @@ func (t *DataSourceController) GetDataSource(r *knot.WebContext) interface{} {
 	dsType := payload["type"]
 	path := payload["path"]
 
+	if _, ok := payload["type"]; !ok {
+		var data = t.GetDataSourceMetaData(r).(map[string]interface{})
+		dsType = data["type"].(string)
+		path = data["path"].(string)
+	}
+
 	return helper.FetchDataSource(_id, dsType, path)
 }
 

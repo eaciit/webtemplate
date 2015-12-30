@@ -6,6 +6,12 @@
     "type": "url"
   },
   {
+    "_id": "ds1451296180157",
+    "path": "https://gist.githubusercontent.com/novalagung/61bfc8357ad7254e5ec5/raw/735d3ba80db1f0e63fccad8b8803b9050e1374ad/data-source-sample.json",
+    "title": "Data Source Test URL 2",
+    "type": "url"
+  },
+  {
     "_id": "ds1451296226501",
     "path": "datasource-ds1451296226501.json",
     "title": "Data Source Test File Changed",
