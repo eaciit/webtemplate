@@ -869,3 +869,33 @@ ul.topnav li a {
 .modal-chart-preview .modal-dialog {
 	width: 800px;
 }
+.content-panel {
+	padding: 0px;
+	margin-top: 15px;
+}
+.content-panel .grid-container {
+    position: relative;
+}
+.content-panel .grid-container .grid-item {
+	position: absolute;
+	padding: 10px;
+}
+.content-panel .grid-container .grid-item .panel {
+	margin-bottom: 0px;
+}
+.content-panel .grid-container .grid-item .panel .panel-heading span {
+	margin-top: -20px;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.content-panel .grid-container > div[data-ss-colspan="1"] { width: 10%; }
+.content-panel .grid-container > div[data-ss-colspan="2"] { width: 20%; }
+.content-panel .grid-container > div[data-ss-colspan="3"] { width: 30%; }
+.content-panel .grid-container > div[data-ss-colspan="4"] { width: 40%; }
+.content-panel .grid-container > div[data-ss-colspan="5"] { width: 50%; }
+.content-panel .grid-container > div[data-ss-colspan="6"] { width: 60%; }
+.content-panel .grid-container > div[data-ss-colspan="7"] { width: 70%; }
+.content-panel .grid-container > div[data-ss-colspan="8"] { width: 80%; }
+.content-panel .grid-container > div[data-ss-colspan="9"] { width: 90%; }
+.content-panel .grid-container > div[data-ss-colspan="10"] { width: 100%; }
