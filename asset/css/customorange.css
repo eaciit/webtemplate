@@ -92,3 +92,13 @@ ul.topnav ul li a:hover {
 	.notif .content-notif i {
 		color:#E6841C;
 	}
+
+/*Panel color*/
+.panel-custom {
+    border-color: #EB861A;
+}
+.panel-custom>.panel-heading {
+    color: #ffffff;
+    background-color: #EB861A;
+    border-color: #EB861A;
+}
