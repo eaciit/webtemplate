@@ -17,6 +17,9 @@ header#page-header {
     background: #A60F0F;
 }
 /*Change Color hover top menu*/
+.navbar .navbar-nav li.open a{
+    background: #CC3D3D;
+}
 .navbar .navbar-nav li a:hover, .navbar .navbar-nav li.active a:hover { 
     color: #ffffff; 
     background: #A60F0F;
@@ -35,7 +38,7 @@ header#page-header {
     background: #CC3D3D;
 }
 .navbar .dropdown .dropdown-menu li a { 
-    color: #ffffff 
+    color: #ffffff;
 }
 .navbar .dropdown .dropdown-menu li a:hover { 
     background: #A60F0F;
