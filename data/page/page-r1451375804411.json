@@ -1,0 +1,34 @@
+{
+    "datasources": ["ds1451296180357", "ds1451296226501"],
+    "content": [{ 
+		"panelID": "p01230121", 
+		"title": "Panel 1",
+		"width": 4,
+		"content": "Welcome" 
+	}, { 
+		"panelID": "p01230122", 
+		"title": "Panel 2",
+		"width": 6,
+		"content": [{
+			"type": "chart",
+			"title": "Trend Chart",
+			"widgetID": "c1451297499719",
+			"dataSource": "ds1451296226501"
+		}]
+	}, { 
+		"panelID": "p01230123", 
+		"title": "Panel 3",
+		"width": 10,
+		"content": [{
+			"type": "chart",
+			"title": "Trend Chart",
+			"widgetID": "c1451297499719",
+			"dataSource": "ds1451296226501"
+		}, {
+			"type": "chart",
+			"title": "Weekly Report Chart",
+			"widgetID": "c1451297572942",
+			"dataSource": "ds1451296180357"
+		}] 
+	}]
+}

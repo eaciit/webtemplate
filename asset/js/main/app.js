@@ -14,7 +14,6 @@ viewModel.methodsMenu = {
                 $subParent.appendTo($child);
 
                 each.submenu.forEach(function (sub) {
-                    console.log($subParent);
                     putSubMenuSub(sub, $subParent);
                 });
             }
@@ -33,7 +32,6 @@ viewModel.methodsMenu = {
         }
 
         item.forEach(function (each) {
-            console.log(each);
             var $parent = $("<ul class='nav navbar-nav'></ul>");
             $parent.appendTo($self);
 
@@ -418,3 +416,23 @@ $(function () {
         console.log($(this).val());
     });
 });
+viewModel.chart.parseConfig = function (config, isProduction) {
+    config = $.extend(true, {}, config);
+    
+    if (config.categoryAxis.template == "")
+        delete config.categoryAxis.template;
+    
+    if (!config.outsider.valueAxisUseMaxMode)
+        delete config.valueAxis.max;
+    
+    if (!config.outsider.valueAxisUseMinMode)
+        delete config.valueAxis.min;
+
+    if (isProduction == true) {
+        delete config.chartArea.width;
+    }
+
+    console.log("config", config);
+
+    return config;
+};

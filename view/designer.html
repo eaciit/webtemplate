@@ -2,7 +2,7 @@
 <script src="/static/asset/js/main/designer.js"></script>
 <script>viewModel.header.PageID = "{{.pageID}}"</script>
 
-<script type="text/template" id="template-panel">
+<script type="text/html" id="template-panel">
 	<div class="grid-item" data-ss-colspan="10">
 		<div class="panel panel-custom">
 			<div class="panel-heading">
@@ -22,6 +22,14 @@
 	</div>
 </script>
 
+<script type="text/html" id="template-popover-datasource">
+	<div class="popover popover-datasource" role="tooltip" style="width: 300px;">
+		<div class="arrow"></div>
+		<h3 class="popover-title"></h3>
+		<div class="popover-content"></div>
+	</div>
+</script>
+
 <div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: designer">
 	<div class="content-header">
 		<div class="row">
@@ -29,12 +37,12 @@
 				<span class="col-md-3">Page Designer</span>
 				<div class="col-md-9">
 					<div class="btn-group btn-sm">
-						<button class="btn btn-sm btn-success">
+						<button class="btn btn-sm btn-success btn-datasource" data-bind="click: showPopoverDataSource">
 							<span class="fa fa-database"></span> Set Data Source
 						</button>
 					</div>
 					<div class="btn-group btn-sm">
-						<button class="btn btn-sm btn-primary" >
+						<button class="btn btn-sm btn-primary" data-bind="click: addPanel">
 							<span class="glyphicon glyphicon-plus"></span> Add Panel
 						</button>
 						<button class="btn btn-sm btn-primary" >
