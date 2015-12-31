@@ -146,7 +146,7 @@ viewModel.designer.drawContent = function () {
 						res[0].dataSource.data = res2;
 						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res[0].dataSource));
 					}
-					$(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px')
+					$(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
 				});
 			});
 		});
@@ -212,6 +212,7 @@ viewModel.designer.hideShow = function(e){
     setTimeout(function () {
         x_panel.resize();
         viewModel.designer.packery.layout();
+        $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 100 + 'px');
     }, 50);
 }
 
