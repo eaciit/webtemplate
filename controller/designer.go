@@ -63,6 +63,19 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 		helper.HandleError(err)
 
 		return data
+	} else if payload["type"] == "grid" {
+		connection, err := helper.LoadConfig(t.AppViewsPath + "data/grid/" + payload["widgetID"] + ".json")
+		helper.HandleError(err)
+		defer connection.Close()
+
+		cursor, err := connection.NewQuery().Select("*").Cursor(nil)
+		helper.HandleError(err)
+		defer cursor.Close()
+
+		dataSource, err := cursor.Fetch(nil, 0, false)
+		helper.HandleError(err)
+
+		return dataSource.Data
 	}
 
 	return map[string]interface{}{}
