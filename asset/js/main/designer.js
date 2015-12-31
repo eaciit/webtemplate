@@ -129,17 +129,24 @@ viewModel.designer.drawContent = function () {
 			viewModel.ajaxPost("/designer/getwidget", f, function (res) {
 				if (f.type == "chart") {
 					viewModel.designer.drawChart(f, res, $content);
+				} else {
+					viewModel.designer.drawGrid(f, res, $content);
 				}
 
 				$panel.height($panel.find(".panel").height());
 				viewModel.designer.packery.layout();
 
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
+					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
 					if (f.type == "chart") {
-						$("[data-widget-id='" + f.widgetID + "'] .widget-content").data("kendoChart").setDataSource(new kendo.data.DataSource({
+						$contentWidget.data("kendoChart").setDataSource(new kendo.data.DataSource({
 							data: res2
 						}));
+					} else {
+						res[0].dataSource.data = res2;
+						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res[0].dataSource));
 					}
+					$(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px')
 				});
 			});
 		});
@@ -163,25 +170,48 @@ viewModel.designer.drawChart = function (f, res, $content) {
 viewModel.designer.closePopover = function (selector) {
 	$(selector).trigger("click");
 };
+viewModel.designer.drawGrid = function(f, res, $content) {
+	var $wrapper = $("<div />");
+	$wrapper.attr("data-widget-id", f.widgetID);
+	$wrapper.addClass('widget widget-chart');
+	$wrapper.css("width", '100%');
+	$wrapper.appendTo($content);
+
+	var $grid = $("<div />").addClass('widget-content');
+	$grid.appendTo($wrapper);
+
+	var confRun = res[0], columns = confRun.columns, newColumns = new Array();
+	for (var key in columns){
+		var column = {};
+		$.each( columns[key], function( key, value ) {
+			if(value !== '')
+				column[key] = value;
+		});
+		newColumns.push(column);
+	}
+	confRun.columns = newColumns;
+	console.log(confRun);
+	$grid.kendoGrid(confRun);
+
+	return confRun;
+}
 viewModel.designer.showPopoverDataSource = function (vm, o) {
 	$(o.currentTarget).popover();
 };
 viewModel.designer.hideShow = function(e){
-	var x_panel = $(e).closest('div.panel-custom'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
+	var x_panel = $(e).closest('div.grid-item'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
     content.slideToggle(200);
 	button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
 	if(button.hasClass('fa-chevron-up')){
-        $(x_panel).animate({height:parseInt($(x_panel).attr('heightContent'))},200, function() {
-            $(".grid-container").trigger("ss-rearrange");
-        });
+		$(x_panel).css('height',$(x_panel).attr('heightContent') + 'px');
     } else {
-        $(x_panel).animate({height:40},200, function() {
-            $(".grid-container").trigger("ss-rearrange");
-        });
+		$(x_panel).attr('heightContent',$(x_panel).height() + 20);
+		$(x_panel).css('height','50px');
     }
 	x_panel.toggle
     setTimeout(function () {
         x_panel.resize();
+        viewModel.designer.packery.layout();
     }, 50);
 }
 
