@@ -5,8 +5,13 @@ viewModel.designer.template = {
 	}
 };
 
+viewModel.designer.packery = {};
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.prepare = function () {
+	viewModel.designer.packery = new Packery($(".grid-container")[0], {
+		itemSelector: '.grid-item',
+		gutter: 0
+	});
 	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
 		ko.mapping.fromJS(res, viewModel.designer.config);
 		viewModel.designer.drawContent();
@@ -70,23 +75,25 @@ viewModel.designer.changeSelectedDatasource = function (o) {
 viewModel.designer.addPanel = function (id, title, widthRatio, height) {
 	var content = $("#template-panel").html();
 	var $panel = $(content);
-	$panel.appendTo($(".grid-container"));
 	$panel.find(".panel-title").html(title);
 	$panel.find(".panel-body").html("Loading content ...");
 	$panel.attr("data-panel-id", id);
 	$panel.attr("data-ss-colspan", String(widthRatio));
-	if (height != undefined)
+	if (height != undefined) {
 		$panel.height(height);
+	}
+	$panel.appendTo($(".grid-container"));
 
-	$(".grid-container").shapeshift({
-		gutterX: 0
-	});
+	viewModel.designer.packery.appended($panel.attr("style", "")[0]);
+	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
+	viewModel.designer.packery.layout();
 
 	return $panel;
 };
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
-	ko.mapping.toJS(viewModel.designer.config).content.slice(0,2).forEach(function (e) {
+
+	ko.mapping.toJS(viewModel.designer.config).content.forEach(function (e) {
 		var $panel = viewModel.designer.addPanel(e.panelID, e.title, e.width);
 		e.target = $panel[0];
 		var $content = $panel.find(".panel-body");
@@ -104,6 +111,9 @@ viewModel.designer.drawContent = function () {
 					viewModel.designer.drawChart(f, res, $content);
 				}
 
+				$panel.height($panel.find(".panel").height());
+				viewModel.designer.packery.layout();
+
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
 					if (f.type == "chart") {
 						$("[data-widget-id='" + f.widgetID + "'] .widget-content").data("kendoChart").setDataSource(new kendo.data.DataSource({
@@ -120,7 +130,6 @@ viewModel.designer.drawChart = function (f, res, $content) {
 	$wrapper.attr("data-widget-id", f.widgetID);
 	$wrapper.addClass('widget widget-chart');
 	$wrapper.css("width", '100%');
-	$wrapper.css("height", '400px');
 	$wrapper.appendTo($content);
 
 	var $chart = $("<div />").addClass('widget-content');
@@ -128,10 +137,6 @@ viewModel.designer.drawChart = function (f, res, $content) {
 
 	var config = viewModel.chart.parseConfig(res, true);
 	$chart.kendoChart(config);
-
-	$(".grid-container").shapeshift({
-		gutterX: 0
-	});
 
 	return config;
 };
@@ -162,7 +167,4 @@ viewModel.designer.hideShow = function(e){
 
 $(function () {
 	viewModel.designer.prepare();
-	// viewModel.designer.addPanel("Panel 1", 4);
-	// viewModel.designer.addPanel("Panel 2", 6);
-	// viewModel.designer.addPanel("Panel 3", 10);
 });
