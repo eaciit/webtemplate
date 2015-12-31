@@ -25,7 +25,7 @@ $(document).ready(function() {
 			$('#menu-left .list-group').css('margin-top','45px');
 		}
 		if ($('.grid-container > .grid-item').length > 0)
-			$(".grid-container").shapeshift();
+			viewModel.designer.packery.layout();
 		return false;
 	});
 	
@@ -47,7 +47,7 @@ $(document).ready(function() {
 			$(this).addClass('glyphicon-align-right');
 		}
 		if ($('.grid-container > .grid-item').length > 0)
-			$(".grid-container").shapeshift();
+			viewModel.designer.packery.layout();
 		return false;
 	});
 
