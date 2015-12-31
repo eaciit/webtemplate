@@ -24,8 +24,8 @@ $(document).ready(function() {
 			$('.list-group').css({"visibility":"visible"});
 			$('#menu-left .list-group').css('margin-top','45px');
 		}
-		// if ($('.column-eaciit > .panel-eaciit').length > 0)
-		// 	$(".column-eaciit").shapeshift();
+		if ($('.grid-container > .grid-item').length > 0)
+			viewModel.designer.packery.layout();
 		return false;
 	});
 	
@@ -46,8 +46,8 @@ $(document).ready(function() {
 			$(this).removeClass('glyphicon-align-left');
 			$(this).addClass('glyphicon-align-right');
 		}
-		if ($('.column-eaciit > .panel-eaciit').length > 0)
-			$(".column-eaciit").shapeshift();
+		if ($('.grid-container > .grid-item').length > 0)
+			viewModel.designer.packery.layout();
 		return false;
 	});
 

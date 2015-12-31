@@ -35,5 +35,15 @@
 			"widgetID": "c1451297499719",
 			"dataSource": "ds1451296226501"
 		}] 
+	},{
+		"panelID": "p01230124", 
+		"title": "Panel 4",
+		"width": 7,
+		"content": [{
+			"type": "grid",
+			"title": "Grid Example",
+			"widgetID": "grid23",
+			"dataSource": "ds1451296226501"
+		}]	
 	}]
 }
