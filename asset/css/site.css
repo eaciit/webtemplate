@@ -912,7 +912,7 @@ ul.topnav li a {
     padding: 0px;
     padding-left: 10px;
 }
-.popover-content .btn-danger {
+.popover-content .pull-right {
 	margin: 9px 0px 14px;
 }
 .panel-heading span.clickable {

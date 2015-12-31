@@ -2,11 +2,17 @@ viewModel.designer.template = {
 	config: {
 		_id: "",
 		datasources: []
+	},
+	panelConfig: {
+		_id: "",
+		title: "",
+		width: 4
 	}
 };
 
 viewModel.designer.packery = {};
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
+viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
 viewModel.designer.prepare = function () {
 	viewModel.designer.packery = new Packery($(".grid-container")[0], {
 		itemSelector: '.grid-item',
@@ -16,20 +22,34 @@ viewModel.designer.prepare = function () {
 		ko.mapping.fromJS(res, viewModel.designer.config);
 		viewModel.designer.drawContent();
 	});
-	$('.btn-datasource').popover({
+
+	var $popoverTemplate = $($("#template-popover").html());
+
+	$('.btn-add-panel').popover({
+		title: "Add new panel",
+		width: 200,
+		placement: "bottom",
+		html: true,
+		template: $popoverTemplate.clone().addClass("popover-panel")[0].outerHTML,
+		content: $($("#template-content-popover-panel").html())[0].outerHTML
+	});
+	$(".btn-add-panel").on("shown.bs.popover", function (e) {
+		var $popover = $(".popover-panel");
+
+		ko.applyBindings(viewModel, $popover.find("form")[0]);
+		ko.mapping.toJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
+	});
+
+	$('.btn-set-datasource').popover({
 		title: "Choose datasources",
 		width: 200,
 		placement: "bottom",
 		html: true,
-		template: $("#template-popover-datasource").html(),
+		template: $popoverTemplate.clone().addClass("popover-datasource")[0].outerHTML,
 		content: '<span class="loader">Loading data ...</span>'
 	});
-	$(".btn-datasource").on("shown.bs.popover", function (e) {
+	$(".btn-set-datasource").on("shown.bs.popover", function (e) {
 		var $popover = $(".popover-datasource");
-
-		if ($popover.hasClass("bindings-applied")) {
-			return;
-		}
 
 		viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
 			setTimeout(function () {
@@ -49,13 +69,13 @@ viewModel.designer.prepare = function () {
 					$each.appendTo($container);
 				});
 
-				$("<div class='pull-right'><button onclick='viewModel.designer.closePopoverDatasource()' class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-remove'></span> Close</button></div>").appendTo($container.parent());
+				$("<div class='pull-right'><button onclick='viewModel.designer.closePopover(\".btn-set-datasource\")' class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-remove'></span> Close</button></div>").appendTo($container.parent());
 			}, 200);
 		});
 	});
 };
-viewModel.designer.addPanel = function () {
-
+viewModel.designer.addPanelConfig = function () {
+	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
 };
 viewModel.designer.changeSelectedDatasource = function (o) {
 	var selectedDatasources = [];
@@ -140,8 +160,8 @@ viewModel.designer.drawChart = function (f, res, $content) {
 
 	return config;
 };
-viewModel.designer.closePopoverDatasource = function () {
-	$(".btn-datasource").trigger("click");
+viewModel.designer.closePopover = function (selector) {
+	$(selector).trigger("click");
 };
 viewModel.designer.showPopoverDataSource = function (vm, o) {
 	$(o.currentTarget).popover();
