@@ -129,7 +129,7 @@ func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
 	for i, eachRaw := range content {
 		each := eachRaw.(map[string]interface{})
 		if each["panelID"] == payload["panelID"] {
-			each["content"] = append([]interface{}{contentNew}, each["content"].([]interface{}))
+			each["content"] = append([]interface{}{contentNew}, each["content"].([]interface{})...)
 		}
 
 		config["content"].([]interface{})[i] = each
