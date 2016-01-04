@@ -1,15 +1,16 @@
 viewModel.designer.template = {
 	config: {
 		_id: "",
-		datasources: []
+		datasources: [],
+		content: []
 	},
 	panelConfig: {
 		_id: "",
 		title: "",
-		width: 4
+		width: 10
 	},
 	widgetConfig: {
-		_id: "",
+		panelID: "",
 		title: "",
 		type: "chart",
 		widgetID: "",
@@ -28,16 +29,32 @@ viewModel.designer.optionWidgetType = ko.observableArray([
 ]);
 viewModel.designer.optionWidgetID = ko.observableArray([]);
 viewModel.designer.optionDataSources = ko.observableArray([]);
+viewModel.designer.optionPanelID = ko.computed(function () {
+	return Lazy(ko.mapping.toJS(viewModel.designer.config).content.slice()).map(function (e) {
+		return {
+			title: e.title + " (" + e.panelID + ")",
+			value: e.panelID
+		};
+	}).toArray();
+});
+viewModel.designer.emptyContainer = function () {
+	$(".grid-container .grid-item").each(function (i, e) { 
+	    viewModel.designer.packery.remove(e);
+	});
+};
+viewModel.designer.fillContainer = function () {
+	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
+		ko.mapping.fromJS(res, viewModel.designer.config);
+		viewModel.designer.drawContent();
+	});
+};
 viewModel.designer.prepare = function () {
 	viewModel.designer.packery = new Packery($(".grid-container")[0], {
 		itemSelector: '.grid-item',
 		gutter: 0
 	});
-	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
-		ko.mapping.fromJS(res, viewModel.designer.config);
-		viewModel.designer.drawContent();
-	});
 
+	viewModel.designer.fillContainer();
 	var $popoverTemplate = $($("#template-popover").html());
 
 	$('.btn-add-panel').popover({
@@ -82,50 +99,46 @@ viewModel.designer.prepare = function () {
 						}
 					});
 
-					var $each = $('<li> <input onclick="viewModel.designer.changeSelectedDatasource(this)" type="checkbox" name="' + e._id + '" ' + checked + ' /> <span>' + e.title + '</span> </li>');
+					var $each = $('<li> <input onclick="viewModel.designer.changeSelectedDatasource(this)" type="checkbox" name="' + e._id + '" ' + checked + ' /> <span>' + e.title + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e._id + ')</span> </li>');
 					$each.appendTo($container);
 				});
 			}, 200);
 		});
 	});
 
-	$('.btn-add-widget').popover({
-		title: "Add new widget",
-		width: 400,
-		placement: "bottom",
-		html: true,
-		template: $popoverTemplate.clone().addClass("popover-widget")[0].outerHTML,
-		content: $($("#template-content-popover-widget").html())[0].outerHTML
-	});
-	$(".btn-add-widget").on("shown.bs.popover", function (e) {
-		var $popover = $(".popover-widget");
-
-		viewModel.designer.optionDataSources([]);
-		viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
-			setTimeout(function () {
-				res.forEach(function (e) {
-					viewModel.designer.optionDataSources.push({
-						value: e._id,
-						title: e.title + " (" + e._id + ")"
-					});
-				});
-			}, 200);
-		});
-
-		ko.applyBindings(viewModel, $popover.find("form")[0]);
-		ko.mapping.toJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
-
-		$popover.find('[name=type]').data("kendoDropDownList").trigger("change");
-		$popover.find("[name=title]").focus();
-	});
-
-	$(".btn-popover").on("show.bs.popover", function (e) {
+	$("body").on("show.bs.popover", ".btn-popover", function (e) {
 		$("body .popover-overlay").remove();
 		$("<div class='popover-overlay'></div>").appendTo($("body"));
 	});
 	$("body").on("click", ".popover-overlay", function () {
 		viewModel.designer.closePopover();
 	});
+};
+viewModel.designer.showAddWidgetModal = function (id) {
+	viewModel.designer.widgetConfig.panelID(id);
+	viewModel.designer.closePopover();
+	$(".modal-add-widget").modal("show");
+
+	var $modal = $(".modal-add-widget");
+
+	viewModel.designer.optionDataSources([]);
+	viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+		setTimeout(function () {
+			Lazy(res).where(function (e) {
+				return viewModel.designer.config.datasources().indexOf(e._id) > -1;
+			}).toArray().forEach(function (e) {
+				viewModel.designer.optionDataSources.push({
+					value: e._id,
+					title: e.title + " (" + e._id + ")"
+				});
+			});
+		}, 200);
+	});
+
+	ko.mapping.toJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
+
+	$modal.find('[name=type]').data("kendoDropDownList").trigger("change");
+	$modal.find("[name=title]").focus();
 };
 viewModel.designer.createPanel = function () {
 	var $validator = $(".popover-panel").find("form").kendoValidator().data("kendoValidator");
@@ -149,10 +162,19 @@ viewModel.designer.createPanel = function () {
 	viewModel.designer.closePopover();
 };
 viewModel.designer.createWidget = function () {
-	var $validator = $(".popover-widget").find("form").kendoValidator().data("kendoValidator");
+	var $validator = $(".modal-add-widget").find("form").kendoValidator().data("kendoValidator");
 	if (!$validator.validate()) {
 		return;
 	}
+
+	var config = ko.mapping.toJS(viewModel.designer.widgetConfig);
+	config._id = viewModel.header.PageID;
+
+	viewModel.ajaxPost("/designer/addwidget", config, function (res) {
+		$(".modal-add-widget").modal("hide");
+		viewModel.designer.emptyContainer();
+		viewModel.designer.fillContainer();
+	});
 };
 viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 	var type = this.value();
@@ -205,12 +227,21 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 		$panel.prependTo($(".grid-container"));
 		viewModel.designer.packery.prepended($panel.attr("style", "")[0]);
 	}
-	console.log(id);
-	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
-	// viewModel.designer.packery.layout();
-	$(".grid-container").shapeshift({
-		gutterX: 0
+
+	$panel.find('.fa-gear').popover({
+		title: "Configure panel",
+		width: 200,
+		placement: "bottom",
+		html: true,
+		template: $($("#template-popover").html()).clone().addClass("popover-configure-panel")[0].outerHTML,
+		content: [
+			'<button style="width: 100%;" class="btn btn-sm btn-primary" onclick="viewModel.designer.showAddWidgetModal(\'' + id + '\')">Add Widget</button>'
+		].join('')
 	});
+
+	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
+	viewModel.designer.packery.layout();
+
 	return $panel;
 };
 viewModel.designer.drawContent = function () {
@@ -324,11 +355,8 @@ viewModel.designer.hideShow = function(e){
 		$(x_panel).css('height','50px');
     }
 	x_panel.toggle
-    setTimeout(function () {
-        x_panel.resize();
-        viewModel.designer.packery.layout();
-        $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 100 + 'px');
-    }, 50);
+    x_panel.resize();
+    viewModel.designer.packery.layout();
 }
 
 $(function () {

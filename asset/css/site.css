@@ -926,6 +926,10 @@ ul.topnav li a {
     font-weight: normal;
     font-style: italic;
 }
+.panel-heading .popover-title {
+	color: #666666;
+	text-align: center;
+}
 .popover-overlay {
     position: fixed;
     left: 0;
