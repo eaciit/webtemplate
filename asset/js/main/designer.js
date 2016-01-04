@@ -38,6 +38,8 @@ viewModel.designer.prepare = function () {
 
 		ko.applyBindings(viewModel, $popover.find("form")[0]);
 		ko.mapping.toJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
+
+		$popover.find("[name=title]").focus();
 	});
 
 	$('.btn-set-datasource').popover({
@@ -68,14 +70,32 @@ viewModel.designer.prepare = function () {
 					var $each = $('<li> <input onclick="viewModel.designer.changeSelectedDatasource(this)" type="checkbox" name="' + e._id + '" ' + checked + ' /> <span>' + e.title + '</span> </li>');
 					$each.appendTo($container);
 				});
-
-				$("<div class='pull-right'><button onclick='viewModel.designer.closePopover(\".btn-set-datasource\")' class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-remove'></span> Close</button></div>").appendTo($container.parent());
 			}, 200);
 		});
+	});
+	$(".btn-add-panel,.btn-set-datasource").on("show.bs.popover", function (e) {
+		$("body .popover-overlay").remove();
+		$("<div class='popover-overlay'></div>").appendTo($("body"));
+	});
+	$("body").on("click", ".popover-overlay", function () {
+		viewModel.designer.closePopover();
 	});
 };
 viewModel.designer.addPanelConfig = function () {
 	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
+
+	// save the panel, NOT YET WORKED!
+	viewModel.ajaxPost("/designer/addpanel", config, function (res) {
+		var panelID = res;
+		// id of panel comes from back end
+	});
+
+	var $panel = viewModel.designer.addPanel("", config.title, config.width, "prepend");
+	$panel.height($panel.find(".panel").height());
+	viewModel.designer.packery.layout();
+
+	ko.mapping.fromJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
+	viewModel.designer.closePopover();
 };
 viewModel.designer.changeSelectedDatasource = function (o) {
 	var selectedDatasources = [];
@@ -92,19 +112,24 @@ viewModel.designer.changeSelectedDatasource = function (o) {
 
 	});
 };
-viewModel.designer.addPanel = function (id, title, widthRatio, height) {
+viewModel.designer.addPanel = function (id, title, widthRatio, mode) {
+	mode = (mode == undefined ? "append" : mode);
+
 	var content = $("#template-panel").html();
 	var $panel = $(content);
 	$panel.find(".panel-title").html(title);
 	$panel.find(".panel-body").html("Loading content ...");
 	$panel.attr("data-panel-id", id);
 	$panel.attr("data-ss-colspan", String(widthRatio));
-	if (height != undefined) {
-		$panel.height(height);
-	}
-	$panel.appendTo($(".grid-container"));
 
-	viewModel.designer.packery.appended($panel.attr("style", "")[0]);
+	if (mode == "append") {
+		$panel.appendTo($(".grid-container"));
+		viewModel.designer.packery.appended($panel.attr("style", "")[0]);
+	} else {
+		$panel.prependTo($(".grid-container"));
+		viewModel.designer.packery.prepended($panel.attr("style", "")[0]);
+	}
+
 	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
 	viewModel.designer.packery.layout();
 
@@ -167,8 +192,9 @@ viewModel.designer.drawChart = function (f, res, $content) {
 
 	return config;
 };
-viewModel.designer.closePopover = function (selector) {
-	$(selector).trigger("click");
+viewModel.designer.closePopover = function () {
+	$("[id^=popover]").prev().trigger("click");
+	$(".popover-overlay").remove();
 };
 viewModel.designer.drawGrid = function(f, res, $content) {
 	var $wrapper = $("<div />");
@@ -195,9 +221,6 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 
 	return confRun;
 }
-viewModel.designer.showPopoverDataSource = function (vm, o) {
-	$(o.currentTarget).popover();
-};
 viewModel.designer.hideShow = function(e){
 	var x_panel = $(e).closest('div.grid-item'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
     content.slideToggle(200);
