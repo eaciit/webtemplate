@@ -331,13 +331,14 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 	return confRun;
 }
 viewModel.designer.removePanel = function (o) {
-	var $panel = $(o).closest(".grid-item");
-	var title = $panel.find(".panel-title").text();
-	var _id = $panel.data("panel-id");
-
 	var yes = confirm("Are you sure want to delete panel " + title);
 	if (yes) {
-		viewModel.ajaxPost("designer/removepanel", { _id: _id }, function (res) {
+		var $panel = $(o).closest(".grid-item");
+		var title = $panel.find(".panel-title").text();
+		var _id = $panel.data("panel-id");
+		var param = { _id: viewModel.header.PageID, panelID: _id };
+
+		viewModel.ajaxPost("designer/removepanel", param, function (res) {
 			viewModel.designer.packery.remove($panel[0]);
 			$panel.remove();
 			viewModel.designer.packery.layout();

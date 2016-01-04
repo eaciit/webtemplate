@@ -181,13 +181,14 @@ func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {
 	helper.HandleError(err)
 
 	_id := payload["_id"]
+	panelID := payload["panelID"]
 
 	config := t.GetConfig(r).(map[string]interface{})
 	contentOld := config["content"].([]interface{})
 	contentNew := []interface{}{}
 
 	for _, each := range contentOld {
-		if each.(map[string]interface{})["panelID"] == _id {
+		if each.(map[string]interface{})["panelID"] == panelID {
 			continue
 		}
 
