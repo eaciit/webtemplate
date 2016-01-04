@@ -9,7 +9,6 @@ viewModel.designer.template = {
 		width: 4
 	}
 };
-
 viewModel.designer.packery = {};
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
@@ -129,14 +128,15 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 		$panel.prependTo($(".grid-container"));
 		viewModel.designer.packery.prepended($panel.attr("style", "")[0]);
 	}
-	console.log(id);
-	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
-	// viewModel.designer.packery.layout();
-	$(".grid-container").shapeshift({
-		gutterX: 0
+	viewModel.designer.packery.bindDraggabillyEvents($panel);
+	viewModel.designer.packery.bindUIDraggableEvents($panel.draggable());
+	$panel.on('dragstop', function(){
+		console.log('ddddd');
+		viewModel.designer.packery.layout();
 	});
 	return $panel;
 };
+
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
@@ -159,10 +159,6 @@ viewModel.designer.drawContent = function () {
 				} else {
 					viewModel.designer.drawGrid(f, res, $content);
 				}
-
-				$panel.height($panel.find(".panel").height());
-				viewModel.designer.packery.layout();
-
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
 					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
 					if (f.type == "chart") {
@@ -173,7 +169,9 @@ viewModel.designer.drawContent = function () {
 						res[0].dataSource.data = res2;
 						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res[0].dataSource));
 					}
-					$(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
+					$panel.height($panel.find(".panel").height());
+					// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
+					viewModel.designer.packery.layout();
 				});
 			});
 		});
@@ -237,7 +235,7 @@ viewModel.designer.hideShow = function(e){
     setTimeout(function () {
         x_panel.resize();
         viewModel.designer.packery.layout();
-        $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 100 + 'px');
+        // $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 100 + 'px');
     }, 50);
 }
 
