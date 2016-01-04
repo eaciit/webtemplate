@@ -130,8 +130,10 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 	}
 	viewModel.designer.packery.bindDraggabillyEvents($panel);
 	viewModel.designer.packery.bindUIDraggableEvents($panel.draggable());
+	// $(".grid-container").shapeshift({
+	// 	gutterX: 0
+	// });
 	$panel.on('dragstop', function(){
-		console.log('ddddd');
 		viewModel.designer.packery.layout();
 	});
 	return $panel;
