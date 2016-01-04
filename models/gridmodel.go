@@ -67,6 +67,7 @@ type MapGrid struct {
 }
 
 type DataMapGrid struct {
+	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Value string `json:"value"`
 }
