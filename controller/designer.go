@@ -138,3 +138,34 @@ func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
 
 	return panelID
 }
+
+func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	_id := payload["_id"]
+
+	config := t.GetConfig(r).(map[string]interface{})
+	contentOld := config["content"].([]interface{})
+	contentNew := []interface{}{}
+
+	for _, each := range contentOld {
+		if each.(map[string]interface{})["panelID"] == _id {
+			continue
+		}
+
+		contentNew = append(contentNew, each)
+	}
+
+	config["content"] = contentNew
+
+	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
+	bytes, err := json.Marshal(config)
+	helper.HandleError(err)
+	ioutil.WriteFile(filename, bytes, 0644)
+
+	return true
+}

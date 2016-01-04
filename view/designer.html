@@ -7,14 +7,14 @@
 		<div class="panel panel-custom">
 			<div class="panel-heading">
 				<h3 class="panel-title">Panel 1</h3>
-				<span class="pull-right clickable">
+				<span class="pull-right clickable" onclick="viewModel.designer.removePanel(this)">
 					<i class="fa fa-close"></i>
 				</span>
 				<span class="pull-right clickable">
 					<i class="fa fa-gear"></i>
 				</span>
-				<span class="pull-right clickable">
-					<i class="fa fa-chevron-up hideshow" onClick="viewModel.designer.hideShow(this)"></i>
+				<span class="pull-right clickable" onclick="viewModel.designer.hideShow(this)">
+					<i class="fa fa-chevron-up hideshow"></i>
 				</span>
 			</div>
 			<div class="panel-body">Panel content</div>
