@@ -361,6 +361,7 @@ viewModel.designer.hideShow = function(e){
 };
 viewModel.designer.production = function () {
 	if (!viewModel.header.production) {
+		$(".page-title").html("Page Designer");
 		return;
 	}
 
