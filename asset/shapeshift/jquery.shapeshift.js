@@ -10,7 +10,7 @@
       enableCrossDrop: true,
       enableResize: true,
       enableTrash: false,
-      align: "center",
+      align: "left",
       colWidth: null,
       columns: null,
       minColumns: 12,
