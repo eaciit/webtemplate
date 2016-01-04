@@ -17,7 +17,6 @@ viewModel.designer.template = {
 		dataSource: ""
 	}
 };
-
 viewModel.designer.packery = {};
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
@@ -46,6 +45,7 @@ viewModel.designer.fillContainer = function () {
 	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
 		ko.mapping.fromJS(res, viewModel.designer.config);
 		viewModel.designer.drawContent();
+		viewModel.designer.production();
 	});
 };
 viewModel.designer.prepare = function () {
@@ -358,8 +358,22 @@ viewModel.designer.hideShow = function(e){
 	x_panel.toggle
     x_panel.resize();
     viewModel.designer.packery.layout();
-}
+};
+viewModel.designer.production = function () {
+	if (!viewModel.header.production) {
+		return;
+	}
+
+	$(".fa-gear").parent().remove();
+	$(".fa-close").parent().remove();
+	$(".content-header .btn-popover").remove();
+	$(".panel-title").each(function (i, e) {
+		$(e).html($(e).text().split(" - ")[0]);
+	});
+	$(".page-title").html(viewModel.header.title);
+};
 
 $(function () {
 	viewModel.designer.prepare();
+	viewModel.designer.production();
 });

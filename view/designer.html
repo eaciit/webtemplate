@@ -1,6 +1,11 @@
 <!-- widget -->
+<script>
+	viewModel.header.PageID = "{{.pageID}}";
+    viewModel.header.title = "{{.title}}";
+    viewModel.header.href = "{{.href}}";
+    viewModel.header.production = {{.production}};
+</script>
 <script src="/static/asset/js/main/designer.js"></script>
-<script>viewModel.header.PageID = "{{.pageID}}"</script>
 
 <script type="text/template" id="template-panel">
 	<div class="grid-item" data-ss-colspan="10">
@@ -94,7 +99,7 @@
 	<div class="content-header">
 		<div class="row">
 			<div class="col-md-12 title-content">
-				<span class="col-md-3">Page Designer</span>
+				<span class="col-md-3 page-title">Page Designer</span>
 				<div class="col-md-9">
 					<div class="btn-group btn-sm">
 						<button class="btn btn-sm btn-success btn-popover btn-set-datasource">
