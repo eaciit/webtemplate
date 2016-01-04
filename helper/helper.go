@@ -15,6 +15,10 @@ import (
 	"time"
 )
 
+func Printf(format string, a ...interface{}) (n int, err error) {
+	return fmt.Printf(format, a)
+}
+
 func HandleError(err error, optionalArgs ...interface{}) bool {
 	if err != nil {
 		fmt.Printf("error occured: %s", err.Error())

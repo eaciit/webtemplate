@@ -80,3 +80,33 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 
 	return map[string]interface{}{}
 }
+
+func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]interface{}{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	_id := payload["_id"].(string)
+	title := payload["title"].(string)
+	var width int = int(payload["width"].(float64))
+	panelID := helper.RandomIDWithPrefix("p")
+
+	config := t.GetConfig(r).(map[string]interface{})
+	contentOld := config["content"].([]interface{})
+	contentNew := map[string]interface{}{
+		"panelID": _id,
+		"title":   title,
+		"width":   width,
+		"content": []interface{}{},
+	}
+	config["content"] = append([]interface{}{contentNew}, contentOld...)
+
+	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
+	bytes, err := json.Marshal(config)
+	helper.HandleError(err)
+	ioutil.WriteFile(filename, bytes, 0644)
+
+	return panelID
+}

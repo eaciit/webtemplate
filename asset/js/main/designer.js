@@ -81,18 +81,18 @@ viewModel.designer.prepare = function () {
 		viewModel.designer.closePopover();
 	});
 };
-viewModel.designer.addPanelConfig = function () {
+viewModel.designer.createPanel = function () {
 	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
+	var param = $.extend(true, {}, config);
+	param._id = viewModel.header.PageID;
 
-	// save the panel, NOT YET WORKED!
-	viewModel.ajaxPost("/designer/addpanel", config, function (res) {
+	viewModel.ajaxPost("/designer/addpanel", param, function (res) {
 		var panelID = res;
-		// id of panel comes from back end
+		var $panel = viewModel.designer.putPanel(panelID, config.title, config.width, "prepend");
+		$panel.height($panel.find(".panel").height());
+		$panel.find(".panel-body").html('');
+		viewModel.designer.packery.layout();
 	});
-
-	var $panel = viewModel.designer.addPanel("", config.title, config.width, "prepend");
-	$panel.height($panel.find(".panel").height());
-	viewModel.designer.packery.layout();
 
 	ko.mapping.fromJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
 	viewModel.designer.closePopover();
@@ -112,7 +112,7 @@ viewModel.designer.changeSelectedDatasource = function (o) {
 
 	});
 };
-viewModel.designer.addPanel = function (id, title, widthRatio, mode) {
+viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 	mode = (mode == undefined ? "append" : mode);
 
 	var content = $("#template-panel").html();
@@ -139,7 +139,7 @@ viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
 	ko.mapping.toJS(viewModel.designer.config).content.forEach(function (e) {
-		var $panel = viewModel.designer.addPanel(e.panelID, e.title, e.width);
+		var $panel = viewModel.designer.putPanel(e.panelID, e.title, e.width);
 		e.target = $panel[0];
 		var $content = $panel.find(".panel-body");
 
