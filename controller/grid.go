@@ -44,16 +44,26 @@ func (t *GridController) SaveJsonGrid(r *knot.WebContext) interface{} {
 	if err = jsonParser.Decode(&mapgrid); err != nil {
 		fmt.Println(err)
 	}
-	mapgrid[0].Seq = mapgrid[0].Seq + 1
 	datagrid := m.Grid{}
 	r.GetPayload(&datagrid)
 
 	datamapgrid := m.DataMapGrid{}
 	datamapgrid.Name = datagrid.Outsider.Title
 	if datagrid.Outsider.IdGrid == "" {
+		mapgrid[0].Seq = mapgrid[0].Seq + 1
 		datagrid.Outsider.IdGrid = "grid" + strconv.Itoa(mapgrid[0].Seq)
 		datamapgrid.Value = "grid" + strconv.Itoa(mapgrid[0].Seq) + ".json"
+		datamapgrid.ID = "grid" + strconv.Itoa(mapgrid[0].Seq)
 		mapgrid[0].Data = append(mapgrid[0].Data, datamapgrid)
+	} else {
+		newGrid := []m.DataMapGrid{}
+		for _, eachRaw := range mapgrid[0].Data {
+			if eachRaw.Value == datagrid.Outsider.IdGrid+".json" {
+				eachRaw.Name = datamapgrid.Name
+			}
+			newGrid = append(newGrid, eachRaw)
+		}
+		mapgrid[0].Data = newGrid
 	}
 	b, err := json.Marshal(mapgrid)
 	f, err = os.Create(filename)

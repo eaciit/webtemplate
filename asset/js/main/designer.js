@@ -205,10 +205,12 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 		$panel.prependTo($(".grid-container"));
 		viewModel.designer.packery.prepended($panel.attr("style", "")[0]);
 	}
-
+	console.log(id);
 	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
-	viewModel.designer.packery.layout();
-
+	// viewModel.designer.packery.layout();
+	$(".grid-container").shapeshift({
+		gutterX: 0
+	});
 	return $panel;
 };
 viewModel.designer.drawContent = function () {
