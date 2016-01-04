@@ -7,12 +7,27 @@ viewModel.designer.template = {
 		_id: "",
 		title: "",
 		width: 4
+	},
+	widgetConfig: {
+		_id: "",
+		title: "",
+		type: "chart",
+		widgetID: "",
+		dataSource: ""
 	}
 };
 
 viewModel.designer.packery = {};
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
+viewModel.designer.widgetConfig = ko.mapping.fromJS(viewModel.designer.template.widgetConfig);
+viewModel.designer.optionPanelWidth = ko.observableArray([4, 5, 6, 7, 8, 9, 10]);
+viewModel.designer.optionWidgetType = ko.observableArray([
+	{ title: "Chart", value: "chart"},
+	{ title: "Grid", value: "grid"},
+]);
+viewModel.designer.optionWidgetID = ko.observableArray([]);
+viewModel.designer.optionDataSources = ko.observableArray([]);
 viewModel.designer.prepare = function () {
 	viewModel.designer.packery = new Packery($(".grid-container")[0], {
 		itemSelector: '.grid-item',
@@ -73,7 +88,38 @@ viewModel.designer.prepare = function () {
 			}, 200);
 		});
 	});
-	$(".btn-add-panel,.btn-set-datasource").on("show.bs.popover", function (e) {
+
+	$('.btn-add-widget').popover({
+		title: "Add new widget",
+		width: 400,
+		placement: "bottom",
+		html: true,
+		template: $popoverTemplate.clone().addClass("popover-widget")[0].outerHTML,
+		content: $($("#template-content-popover-widget").html())[0].outerHTML
+	});
+	$(".btn-add-widget").on("shown.bs.popover", function (e) {
+		var $popover = $(".popover-widget");
+
+		viewModel.designer.optionDataSources([]);
+		viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+			setTimeout(function () {
+				res.forEach(function (e) {
+					viewModel.designer.optionDataSources.push({
+						value: e._id,
+						title: e.title + " (" + e._id + ")"
+					});
+				});
+			}, 200);
+		});
+
+		ko.applyBindings(viewModel, $popover.find("form")[0]);
+		ko.mapping.toJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
+
+		$popover.find('[name=type]').data("kendoDropDownList").trigger("change");
+		$popover.find("[name=title]").focus();
+	});
+
+	$(".btn-popover").on("show.bs.popover", function (e) {
 		$("body .popover-overlay").remove();
 		$("<div class='popover-overlay'></div>").appendTo($("body"));
 	});
@@ -82,6 +128,11 @@ viewModel.designer.prepare = function () {
 	});
 };
 viewModel.designer.createPanel = function () {
+	var $validator = $(".popover-panel").find("form").kendoValidator().data("kendoValidator");
+	if (!$validator.validate()) {
+		return;
+	}
+
 	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
 	var param = $.extend(true, {}, config);
 	param._id = viewModel.header.PageID;
@@ -96,6 +147,31 @@ viewModel.designer.createPanel = function () {
 
 	ko.mapping.fromJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
 	viewModel.designer.closePopover();
+};
+viewModel.designer.createWidget = function () {
+	var $validator = $(".popover-widget").find("form").kendoValidator().data("kendoValidator");
+	if (!$validator.validate()) {
+		return;
+	}
+};
+viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
+	var type = this.value();
+	viewModel.designer.optionWidgetID([]);
+	viewModel.ajaxPost("/designer/getwidgets", { type: type }, function (res) {
+		res.forEach(function (e) {
+			if (type == "chart") {
+				viewModel.designer.optionWidgetID.push({
+					value: e._id,
+					title: e.title + " (" + e._id + ")"
+				});
+			} else if (type == "grid") {
+				viewModel.designer.optionWidgetID.push({
+					value: e.value,
+					title: e.name + " (" + e.value + ")"
+				});
+			}
+		});
+	});
 };
 viewModel.designer.changeSelectedDatasource = function (o) {
 	var selectedDatasources = [];
@@ -117,7 +193,7 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 
 	var content = $("#template-panel").html();
 	var $panel = $(content);
-	$panel.find(".panel-title").html(title);
+	$panel.find(".panel-title").html(title + " - <span>" + id + "</span>");
 	$panel.find(".panel-body").html("Loading content ...");
 	$panel.attr("data-panel-id", id);
 	$panel.attr("data-ss-colspan", String(widthRatio));

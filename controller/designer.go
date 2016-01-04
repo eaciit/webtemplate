@@ -48,6 +48,34 @@ func (t *DesignerController) SetDataSource(r *knot.WebContext) interface{} {
 	return true
 }
 
+func (t *DesignerController) GetWidgets(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	helper.HandleError(err)
+
+	if payload["type"] == "chart" {
+		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart.json")
+		helper.HandleError(err)
+		data := []map[string]interface{}{}
+		err = json.Unmarshal(bytes, &data)
+		helper.HandleError(err)
+
+		return data
+	} else if payload["type"] == "grid" {
+		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/mapgrid.json")
+		helper.HandleError(err)
+		data := []map[string]interface{}{}
+		err = json.Unmarshal(bytes, &data)
+		helper.HandleError(err)
+
+		return data[0]["data"]
+	}
+
+	return true
+}
+
 func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
@@ -96,7 +124,7 @@ func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
 	config := t.GetConfig(r).(map[string]interface{})
 	contentOld := config["content"].([]interface{})
 	contentNew := map[string]interface{}{
-		"panelID": _id,
+		"panelID": panelID,
 		"title":   title,
 		"width":   width,
 		"content": []interface{}{},
