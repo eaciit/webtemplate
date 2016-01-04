@@ -1,20 +1,25 @@
 <!-- widget -->
+<script>
+	viewModel.header.PageID = "{{.pageID}}";
+    viewModel.header.title = "{{.title}}";
+    viewModel.header.href = "{{.href}}";
+    viewModel.header.production = {{.production}};
+</script>
 <script src="/static/asset/js/main/designer.js"></script>
-<script>viewModel.header.PageID = "{{.pageID}}"</script>
 
 <script type="text/template" id="template-panel">
 	<div class="grid-item" data-ss-colspan="10">
 		<div class="panel panel-custom">
 			<div class="panel-heading">
 				<h3 class="panel-title">Panel 1</h3>
-				<span class="pull-right clickable">
+				<span class="pull-right clickable" onclick="viewModel.designer.removePanel(this)">
 					<i class="fa fa-close"></i>
 				</span>
 				<span class="pull-right clickable">
-					<i class="fa fa-gear"></i>
+					<i class="fa fa-gear btn-popover"></i>
 				</span>
-				<span class="pull-right clickable">
-					<i class="fa fa-chevron-up hideshow" onClick="viewModel.designer.hideShow(this)"></i>
+				<span class="pull-right clickable" onclick="viewModel.designer.hideShow(this)">
+					<i class="fa fa-chevron-up hideshow"></i>
 				</span>
 			</div>
 			<div class="panel-body">Panel content</div>
@@ -30,24 +35,61 @@
 	</div>
 </script>
 
-<script type="text/html" id="template-content-popover-panel">
+<script type="text/template" id="template-content-popover-panel">
 	<form class="form-horizontal page-form" data-bind="with: viewModel.designer.panelConfig">
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Title</label>
 			<div class="col-sm-10">
-				<input name="title" type="text" class="form-control input-sm" data-bind="value: title" />
-				<span class="k-invalid-msg" data-for="title"></span>
+				<input required name="Title" type="text" class="form-control input-sm" data-bind="value: title" />
+				<span class="k-invalid-msg" data-for="Title"></span>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-2 control-label">Width</label>
 			<div class="col-sm-10">
-				<select style="width: 100%;" data-bind="kendoDropDownList: { data: [4, 5, 6, 7, 8, 9, 10], value: width }"></select>
+				<select style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionPanelWidth, value: width }"></select>
 			</div>
 		</div>
 		<div class='pull-right' style="margin-top: 0px;">
 			<button data-bind="click: viewModel.designer.createPanel" class='btn btn-sm btn-success'>
-				<span class='glyphicon glyphicon-save'></span> Add
+				<span class='glyphicon glyphicon-save'></span> Save
+			</button>
+		</div>
+	</form>
+</script>
+
+<script type="text/template" id="template-content-popover-widget">
+	<form class="form-horizontal page-form" data-bind="with: viewModel.designer.widgetConfig">
+		<div class="form-group">
+			<label class="col-sm-12 control-label" style="text-align: left;">Title:</label>
+			<div class="col-sm-12">
+				<input required name="Title" type="text" class="form-control input-sm" data-bind="value: title" />
+				<span class="k-invalid-msg" data-for="Title"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-12 control-label" style="text-align: left;">Type:</label>
+			<div class="col-sm-12">
+				<select name="type" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionWidgetType, value: type, dataValueField: 'value', dataTextField: 'title', change: viewModel.designer.changePopupWidgetSelectedTypeValue }"></select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-12 control-label" style="text-align: left;">Widget:</label>
+			<div class="col-sm-12">
+				<select name="widget" required data-required-msg="Select widget" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionWidgetID, value: widgetID, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+                <span class="k-invalid-msg" data-for="widget"></span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-12 control-label" style="text-align: left;">Data Source:</label>
+			<div class="col-sm-12">
+				<select name="datasource" required data-required-msg="Select data source" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+                <span class="k-invalid-msg" data-for="datasource"></span>
+			</div>
+		</div>
+		<div class='pull-right' style="margin-top: 0px;">
+			<button data-bind="click: viewModel.designer.createWidget" class='btn btn-sm btn-success'>
+				<span class='glyphicon glyphicon-save'></span> Save
 			</button>
 		</div>
 	</form>
@@ -57,19 +99,16 @@
 	<div class="content-header">
 		<div class="row">
 			<div class="col-md-12 title-content">
-				<span class="col-md-3">Page Designer</span>
+				<span class="col-md-3 page-title"></span>
 				<div class="col-md-9">
 					<div class="btn-group btn-sm">
-						<button class="btn btn-sm btn-success btn-set-datasource">
+						<button class="btn btn-sm btn-success btn-popover btn-set-datasource">
 							<span class="fa fa-database"></span> Set Data Source
 						</button>
 					</div>
 					<div class="btn-group btn-sm">
-						<button class="btn btn-sm btn-primary btn-add-panel">
+						<button class="btn btn-sm btn-primary btn-popover btn-add-panel">
 							<span class="glyphicon glyphicon-plus"></span> Add Panel
-						</button>
-						<button class="btn btn-sm btn-primary" >
-							<span class="glyphicon glyphicon-plus"></span> Add Widget
 						</button>
 					</div>
 				</div>
@@ -79,5 +118,69 @@
 
 	<div class="content-body content-panel" data-overlay-page-wrap>
 		<div class="grid-container"></div>
+	</div>
+
+	<div class="modal fade modal-add-widget" tabindex="-1" role="dialog">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                	<span aria-hidden="true">&times;</span>
+	            	</button>
+	                <h4 class="modal-title">Add new widget</h4>
+	            </div>
+	            <div class="modal-body">
+	                <form class="form-horizontal page-form" data-bind="with: viewModel.designer.widgetConfig">
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Panel :</label>
+							<div class="col-sm-6">
+								<select name="panel" disabled required data-required-msg="Select panel" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionPanelID, value: panelID, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+				                <span class="k-invalid-msg" data-for="panel"></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<hr />
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Title :</label>
+							<div class="col-sm-6">
+								<input required name="Title" type="text" class="form-control input-sm" data-bind="value: title" />
+								<span class="k-invalid-msg" data-for="Title"></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Type :</label>
+							<div class="col-sm-6">
+								<select name="type" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionWidgetType, value: type, dataValueField: 'value', dataTextField: 'title', change: viewModel.designer.changePopupWidgetSelectedTypeValue }"></select>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Widget :</label>
+							<div class="col-sm-6">
+								<select name="widget" required data-required-msg="Select widget" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionWidgetID, value: widgetID, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+				                <span class="k-invalid-msg" data-for="widget"></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Data Source :</label>
+							<div class="col-sm-6">
+								<select name="datasource" required data-required-msg="Select data source" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+				                <span class="k-invalid-msg" data-for="datasource"></span>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</form>
+	            </div>
+	            <div class="modal-footer">
+	                <button class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+					<button class='btn btn-sm btn-success' data-bind="click: viewModel.designer.createWidget">
+						<span class='glyphicon glyphicon-save'></span> Save
+					</button>
+	            </div>
+				
+	        </div>
+	    </div>
 	</div>
 </div>

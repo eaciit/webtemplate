@@ -121,11 +121,14 @@ func (t *TemplateController) RegisterRoutes() {
 		eachMap := each.(map[string]interface{})
 		title := eachMap["title"].(string)
 		href := eachMap["href"].(string)
+		pageID := eachMap["_id"].(string)
 
 		if href != "" && href != "#" && href != "/index" {
 			t.Server.Route(href, func(r *knot.WebContext) interface{} {
-				r.Config.ViewName = t.LayoutFile
-				return toolkit.M{"title": title, "href": href}
+				r.Config.LayoutTemplate = t.LayoutFile
+				r.Config.IncludeFiles = t.IncludeFiles
+				r.Config.ViewName = "view/designer.html"
+				return toolkit.M{"title": title, "href": href, "pageID": pageID, "production": true}
 			})
 		}
 	})
@@ -133,8 +136,10 @@ func (t *TemplateController) RegisterRoutes() {
 	// route the / and /index
 	for _, route := range []string{"/", "/index"} {
 		t.Server.Route(route, func(r *knot.WebContext) interface{} {
-			r.Config.ViewName = t.LayoutFile
-			return toolkit.M{"title": "Dashboard", "href": route}
+			r.Config.LayoutTemplate = t.LayoutFile
+			r.Config.IncludeFiles = t.IncludeFiles
+			r.Config.ViewName = "view/designer.html"
+			return toolkit.M{"title": "Dashboard", "href": route, "pageID": "-1", "production": true}
 		})
 	}
 
