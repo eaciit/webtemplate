@@ -238,12 +238,18 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 			'<button style="width: 100%;" class="btn btn-sm btn-primary" onclick="viewModel.designer.showAddWidgetModal(\'' + id + '\')">Add Widget</button>'
 		].join('')
 	});
+	viewModel.designer.packery.bindDraggabillyEvents($panel);
+	viewModel.designer.packery.bindUIDraggableEvents($panel.draggable());
+	$panel.on('dragstop', function(){
+		viewModel.designer.packery.layout();
+	});
 
 	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
 	viewModel.designer.packery.layout();
 
 	return $panel;
 };
+
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
@@ -266,10 +272,6 @@ viewModel.designer.drawContent = function () {
 				} else {
 					viewModel.designer.drawGrid(f, res, $content);
 				}
-
-				$panel.height($panel.find(".panel").height());
-				viewModel.designer.packery.layout();
-
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
 					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
 					if (f.type == "chart") {
@@ -280,7 +282,9 @@ viewModel.designer.drawContent = function () {
 						res[0].dataSource.data = res2;
 						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res[0].dataSource));
 					}
-					$(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
+					$panel.height($panel.find(".panel").height());
+					// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
+					viewModel.designer.packery.layout();
 				});
 			});
 		});
