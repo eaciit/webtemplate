@@ -1,27 +1,60 @@
 viewModel.designer.template = {
 	config: {
 		_id: "",
-		datasources: []
+		datasources: [],
+		content: []
 	},
 	panelConfig: {
 		_id: "",
 		title: "",
-		width: 4
+		width: 10
+	},
+	widgetConfig: {
+		panelID: "",
+		title: "",
+		type: "chart",
+		widgetID: "",
+		dataSource: ""
 	}
 };
 viewModel.designer.packery = {};
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
+viewModel.designer.widgetConfig = ko.mapping.fromJS(viewModel.designer.template.widgetConfig);
+viewModel.designer.optionPanelWidth = ko.observableArray([4, 5, 6, 7, 8, 9, 10]);
+viewModel.designer.optionWidgetType = ko.observableArray([
+	{ title: "Chart", value: "chart"},
+	{ title: "Grid", value: "grid"},
+]);
+viewModel.designer.optionWidgetID = ko.observableArray([]);
+viewModel.designer.optionDataSources = ko.observableArray([]);
+viewModel.designer.optionPanelID = ko.computed(function () {
+	return Lazy(ko.mapping.toJS(viewModel.designer.config).content.slice()).map(function (e) {
+		return {
+			title: e.title + " (" + e.panelID + ")",
+			value: e.panelID
+		};
+	}).toArray();
+});
+viewModel.designer.emptyContainer = function () {
+	$(".grid-container .grid-item").each(function (i, e) { 
+	    viewModel.designer.packery.remove(e);
+	});
+};
+viewModel.designer.fillContainer = function () {
+	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
+		ko.mapping.fromJS(res, viewModel.designer.config);
+		viewModel.designer.drawContent();
+		viewModel.designer.production();
+	});
+};
 viewModel.designer.prepare = function () {
 	viewModel.designer.packery = new Packery($(".grid-container")[0], {
 		itemSelector: '.grid-item',
 		gutter: 0
 	});
-	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
-		ko.mapping.fromJS(res, viewModel.designer.config);
-		viewModel.designer.drawContent();
-	});
 
+	viewModel.designer.fillContainer();
 	var $popoverTemplate = $($("#template-popover").html());
 
 	$('.btn-add-panel').popover({
@@ -66,13 +99,14 @@ viewModel.designer.prepare = function () {
 						}
 					});
 
-					var $each = $('<li> <input onclick="viewModel.designer.changeSelectedDatasource(this)" type="checkbox" name="' + e._id + '" ' + checked + ' /> <span>' + e.title + '</span> </li>');
+					var $each = $('<li> <input onclick="viewModel.designer.changeSelectedDatasource(this)" type="checkbox" name="' + e._id + '" ' + checked + ' /> <span>' + e.title + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e._id + ')</span> </li>');
 					$each.appendTo($container);
 				});
 			}, 200);
 		});
 	});
-	$(".btn-add-panel,.btn-set-datasource").on("show.bs.popover", function (e) {
+
+	$("body").on("show.bs.popover", ".btn-popover", function (e) {
 		$("body .popover-overlay").remove();
 		$("<div class='popover-overlay'></div>").appendTo($("body"));
 	});
@@ -80,7 +114,38 @@ viewModel.designer.prepare = function () {
 		viewModel.designer.closePopover();
 	});
 };
+viewModel.designer.showAddWidgetModal = function (id) {
+	viewModel.designer.widgetConfig.panelID(id);
+	viewModel.designer.closePopover();
+	$(".modal-add-widget").modal("show");
+
+	var $modal = $(".modal-add-widget");
+
+	viewModel.designer.optionDataSources([]);
+	viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+		setTimeout(function () {
+			Lazy(res).where(function (e) {
+				return viewModel.designer.config.datasources().indexOf(e._id) > -1;
+			}).toArray().forEach(function (e) {
+				viewModel.designer.optionDataSources.push({
+					value: e._id,
+					title: e.title + " (" + e._id + ")"
+				});
+			});
+		}, 200);
+	});
+
+	ko.mapping.toJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
+
+	$modal.find('[name=type]').data("kendoDropDownList").trigger("change");
+	$modal.find("[name=title]").focus();
+};
 viewModel.designer.createPanel = function () {
+	var $validator = $(".popover-panel").find("form").kendoValidator().data("kendoValidator");
+	if (!$validator.validate()) {
+		return;
+	}
+
 	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
 	var param = $.extend(true, {}, config);
 	param._id = viewModel.header.PageID;
@@ -95,6 +160,40 @@ viewModel.designer.createPanel = function () {
 
 	ko.mapping.fromJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
 	viewModel.designer.closePopover();
+};
+viewModel.designer.createWidget = function () {
+	var $validator = $(".modal-add-widget").find("form").kendoValidator().data("kendoValidator");
+	if (!$validator.validate()) {
+		return;
+	}
+
+	var config = ko.mapping.toJS(viewModel.designer.widgetConfig);
+	config._id = viewModel.header.PageID;
+
+	viewModel.ajaxPost("/designer/addwidget", config, function (res) {
+		$(".modal-add-widget").modal("hide");
+		viewModel.designer.emptyContainer();
+		viewModel.designer.fillContainer();
+	});
+};
+viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
+	var type = this.value();
+	viewModel.designer.optionWidgetID([]);
+	viewModel.ajaxPost("/designer/getwidgets", { type: type }, function (res) {
+		res.forEach(function (e) {
+			if (type == "chart") {
+				viewModel.designer.optionWidgetID.push({
+					value: e._id,
+					title: e.title + " (" + e._id + ")"
+				});
+			} else if (type == "grid") {
+				viewModel.designer.optionWidgetID.push({
+					value: e.value,
+					title: e.name + " (" + e.value + ")"
+				});
+			}
+		});
+	});
 };
 viewModel.designer.changeSelectedDatasource = function (o) {
 	var selectedDatasources = [];
@@ -116,7 +215,7 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 
 	var content = $("#template-panel").html();
 	var $panel = $(content);
-	$panel.find(".panel-title").html(title);
+	$panel.find(".panel-title").html(title + " - <span>" + id + "</span>");
 	$panel.find(".panel-body").html("Loading content ...");
 	$panel.attr("data-panel-id", id);
 	$panel.attr("data-ss-colspan", String(widthRatio));
@@ -128,12 +227,26 @@ viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
 		$panel.prependTo($(".grid-container"));
 		viewModel.designer.packery.prepended($panel.attr("style", "")[0]);
 	}
+
+	$panel.find('.fa-gear').popover({
+		title: "Configure panel",
+		width: 200,
+		placement: "bottom",
+		html: true,
+		template: $($("#template-popover").html()).clone().addClass("popover-configure-panel")[0].outerHTML,
+		content: [
+			'<button style="width: 100%;" class="btn btn-sm btn-primary" onclick="viewModel.designer.showAddWidgetModal(\'' + id + '\')">Add Widget</button>'
+		].join('')
+	});
 	viewModel.designer.packery.bindDraggabillyEvents($panel);
 	viewModel.designer.packery.bindUIDraggableEvents($panel.draggable());
 	$panel.on('dragstop', function(){
-		console.log('ddddd');
 		viewModel.designer.packery.layout();
 	});
+
+	// viewModel.designer.packery.bindDraggabillyEvents($panel.draggable()); // buggy!
+	viewModel.designer.packery.layout();
+
 	return $panel;
 };
 
@@ -221,6 +334,21 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 
 	return confRun;
 }
+viewModel.designer.removePanel = function (o) {
+	var yes = confirm("Are you sure want to delete panel " + title);
+	if (yes) {
+		var $panel = $(o).closest(".grid-item");
+		var title = $panel.find(".panel-title").text();
+		var _id = $panel.data("panel-id");
+		var param = { _id: viewModel.header.PageID, panelID: _id };
+
+		viewModel.ajaxPost("designer/removepanel", param, function (res) {
+			viewModel.designer.packery.remove($panel[0]);
+			$panel.remove();
+			viewModel.designer.packery.layout();
+		});
+	}
+};
 viewModel.designer.hideShow = function(e){
 	var x_panel = $(e).closest('div.grid-item'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
     content.slideToggle(200);
@@ -232,13 +360,25 @@ viewModel.designer.hideShow = function(e){
 		$(x_panel).css('height','50px');
     }
 	x_panel.toggle
-    setTimeout(function () {
-        x_panel.resize();
-        viewModel.designer.packery.layout();
-        // $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 100 + 'px');
-    }, 50);
-}
+    x_panel.resize();
+    viewModel.designer.packery.layout();
+};
+viewModel.designer.production = function () {
+	if (!viewModel.header.production) {
+		$(".page-title").html("Page Designer");
+		return;
+	}
+
+	$(".fa-gear").parent().remove();
+	$(".fa-close").parent().remove();
+	$(".content-header .btn-popover").remove();
+	$(".panel-title").each(function (i, e) {
+		$(e).html($(e).text().split(" - ")[0]);
+	});
+	$(".page-title").html(viewModel.header.title);
+};
 
 $(function () {
 	viewModel.designer.prepare();
+	viewModel.designer.production();
 });

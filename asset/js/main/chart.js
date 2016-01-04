@@ -7,8 +7,8 @@ viewModel.chart.template = {
 			valueAxisUseMaxMode: false,
 			valueAxisUseMinMode: false,
 		},
+		title: "My Chart",
 		chartArea: {
-			title: "My Chart",
 			height: 400,
 			width: 700,
 		},
@@ -217,7 +217,7 @@ viewModel.chart.save = function () {
 	var config = JSON.stringify(configObject);
 
 	var param = {
-		title: configObject.chartArea.title,
+		title: configObject.title,
 		config: config,
 		_id: viewModel.chart.id()
 	};
