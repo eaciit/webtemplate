@@ -200,7 +200,7 @@ func (t *DesignerController) GetWidgetMetaData(r *knot.WebContext) interface{} {
 	return helper.Result(false, nil, "")
 }
 
-func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
+func (t *DesignerController) SaveWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
 	payload := map[string]string{}
@@ -216,10 +216,11 @@ func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
 	}
 	content := config["content"].([]interface{})
 	contentNew := map[string]interface{}{
-		"dataSource": payload["dataSource"],
-		"title":      payload["title"],
-		"type":       payload["type"],
-		"widgetID":   payload["widgetID"],
+		"panelWidgetID": helper.RandomIDWithPrefix("pw"),
+		"dataSource":    payload["dataSource"],
+		"title":         payload["title"],
+		"type":          payload["type"],
+		"widgetID":      payload["widgetID"],
 	}
 
 	for i, eachRaw := range content {

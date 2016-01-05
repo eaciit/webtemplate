@@ -266,7 +266,7 @@ viewModel.designer.createWidget = function () {
 	var config = ko.mapping.toJS(viewModel.designer.widgetConfig);
 	config._id = viewModel.header.PageID;
 
-	viewModel.ajaxPost("/designer/addwidget", config, function (res) {
+	viewModel.ajaxPost("/designer/savewidget", config, function (res) {
 		if (!res.success) {
 			alert(res.message);
 			return;
