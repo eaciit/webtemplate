@@ -124,7 +124,7 @@ func (t *ChartController) GetChartConfig(r *knot.WebContext) interface{} {
 		dsID := dataSourceRelev["_id"].(string)
 		dsType := dataSourceRelev["type"].(string)
 		dsPath := dataSourceRelev["path"].(string)
-		dataSource := helper.FetchDataSource(dsID, dsType, dsPath)
+		dataSource, _ := helper.FetchDataSource(dsID, dsType, dsPath)
 		data["dataSource"] = map[string]interface{}{"data": dataSource}
 	}
 

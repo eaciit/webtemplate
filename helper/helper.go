@@ -105,32 +105,32 @@ func RandomIDWithPrefix(prefix string) string {
 	return fmt.Sprintf("%s%d", prefix, timestamp)
 }
 
-func FetchDataSource(_id string, dsType string, path string) []map[string]interface{} {
+func FetchDataSource(_id string, dsType string, path string) ([]map[string]interface{}, error) {
 	if dsType == "file" {
 		v, _ := os.Getwd()
 		filename := fmt.Sprintf("%s/data/datasource/%s", v, path)
 		content, err := ioutil.ReadFile(filename)
 		if !HandleError(err) {
-			return []map[string]interface{}{}
+			return []map[string]interface{}{}, err
 		}
 
 		data := []map[string]interface{}{}
 		err = json.Unmarshal(content, &data)
 		if !HandleError(err) {
-			return []map[string]interface{}{}
+			return []map[string]interface{}{}, err
 		}
 
-		return data
+		return data, nil
 	} else if dsType == "url" {
 		data, err := FetchJSON(path)
 		if !HandleError(err) {
-			return []map[string]interface{}{}
+			return []map[string]interface{}{}, err
 		}
 
-		return data
+		return data, nil
 	}
 
-	return []map[string]interface{}{}
+	return []map[string]interface{}{}, nil
 }
 
 func FetchThenSaveFile(r *http.Request, sourceFileName string, destinationFileName string) (multipart.File, *multipart.FileHeader, error) {
@@ -148,4 +148,12 @@ func FetchThenSaveFile(r *http.Request, sourceFileName string, destinationFileNa
 	io.Copy(f, file)
 
 	return file, handler, nil
+}
+
+func Result(success bool, data interface{}, message string) map[string]interface{} {
+	return map[string]interface{}{
+		"data":    data,
+		"success": success,
+		"message": message,
+	}
 }

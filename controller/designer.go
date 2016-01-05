@@ -12,21 +12,50 @@ type DesignerController struct {
 	AppViewsPath string
 }
 
+func (t *DesignerController) getConfig(_id string) (map[string]interface{}, error) {
+	bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/page/page-" + _id + ".json")
+	if !helper.HandleError(err) {
+		return nil, err
+	}
+
+	data := map[string]interface{}{}
+	err = json.Unmarshal(bytes, &data)
+	if !helper.HandleError(err) {
+		return nil, err
+	}
+
+	return data, nil
+}
+func (t *DesignerController) setConfig(_id string, config map[string]interface{}) error {
+	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
+	bytes, err := json.Marshal(config)
+	if !helper.HandleError(err) {
+		return err
+	}
+
+	err = ioutil.WriteFile(filename, bytes, 0644)
+	if !helper.HandleError(err) {
+		return err
+	}
+
+	return nil
+}
+
 func (t *DesignerController) GetConfig(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
-	_id := payload["_id"]
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/page/page-" + _id + ".json")
-	helper.HandleError(err)
-	data := map[string]interface{}{}
-	err = json.Unmarshal(bytes, &data)
-	helper.HandleError(err)
+	data, err := t.getConfig(payload["_id"])
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	return data
+	return helper.Result(true, data, "")
 }
 
 func (t *DesignerController) SetDataSource(r *knot.WebContext) interface{} {
@@ -34,18 +63,23 @@ func (t *DesignerController) SetDataSource(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	_id := payload["_id"]
 
-	config := t.GetConfig(r).(map[string]interface{})
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	config["datasources"] = strings.Split(payload["datasources"], ",")
 
-	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
-	bytes, err := json.Marshal(config)
-	helper.HandleError(err)
-	ioutil.WriteFile(filename, bytes, 0644)
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	return true
+	return helper.Result(true, nil, "")
 }
 
 func (t *DesignerController) GetWidgets(r *knot.WebContext) interface{} {
@@ -53,27 +87,39 @@ func (t *DesignerController) GetWidgets(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
 	if payload["type"] == "chart" {
 		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart.json")
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
 		data := []map[string]interface{}{}
 		err = json.Unmarshal(bytes, &data)
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 
-		return data
+		return helper.Result(true, data, "")
 	} else if payload["type"] == "grid" {
 		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/mapgrid.json")
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
 		data := []map[string]interface{}{}
 		err = json.Unmarshal(bytes, &data)
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 
-		return data[0]["data"]
+		return helper.Result(true, data[0]["data"], "")
 	}
 
-	return true
+	return helper.Result(true, []map[string]interface{}{}, "")
 }
 
 func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
@@ -81,32 +127,45 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
 	if payload["type"] == "chart" {
 		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart/chart-" + payload["widgetID"] + ".json")
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
 		data := map[string]interface{}{}
 		err = json.Unmarshal(bytes, &data)
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 
-		return data
+		return helper.Result(true, data, "")
 	} else if payload["type"] == "grid" {
 		connection, err := helper.LoadConfig(t.AppViewsPath + "data/grid/" + payload["widgetID"] + ".json")
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 		defer connection.Close()
 
 		cursor, err := connection.NewQuery().Select("*").Cursor(nil)
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 		defer cursor.Close()
 
 		dataSource, err := cursor.Fetch(nil, 0, false)
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 
-		return dataSource.Data
+		return helper.Result(true, dataSource.Data, "")
 	}
 
-	return map[string]interface{}{}
+	return helper.Result(true, map[string]interface{}{}, "")
 }
 
 func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
@@ -114,10 +173,15 @@ func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
-
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	_id := payload["_id"]
-	config := t.GetConfig(r).(map[string]interface{})
+
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	content := config["content"].([]interface{})
 	contentNew := map[string]interface{}{
 		"dataSource": payload["dataSource"],
@@ -135,12 +199,12 @@ func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
 		config["content"].([]interface{})[i] = each
 	}
 
-	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
-	bytes, err := json.Marshal(config)
-	helper.HandleError(err)
-	ioutil.WriteFile(filename, bytes, 0644)
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	return true
+	return helper.Result(true, nil, "")
 }
 
 func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
@@ -148,14 +212,19 @@ func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
 
 	payload := map[string]interface{}{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
 	_id := payload["_id"].(string)
 	title := payload["title"].(string)
 	var width int = int(payload["width"].(float64))
 	panelID := helper.RandomIDWithPrefix("p")
 
-	config := t.GetConfig(r).(map[string]interface{})
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	contentOld := config["content"].([]interface{})
 	contentNew := map[string]interface{}{
 		"panelID": panelID,
@@ -165,12 +234,12 @@ func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
 	}
 	config["content"] = append([]interface{}{contentNew}, contentOld...)
 
-	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
-	bytes, err := json.Marshal(config)
-	helper.HandleError(err)
-	ioutil.WriteFile(filename, bytes, 0644)
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	return panelID
+	return helper.Result(true, panelID, "")
 }
 
 func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {
@@ -178,12 +247,17 @@ func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
 	_id := payload["_id"]
 	panelID := payload["panelID"]
 
-	config := t.GetConfig(r).(map[string]interface{})
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	contentOld := config["content"].([]interface{})
 	contentNew := []interface{}{}
 
@@ -197,10 +271,10 @@ func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {
 
 	config["content"] = contentNew
 
-	filename := t.AppViewsPath + "data/page/page-" + _id + ".json"
-	bytes, err := json.Marshal(config)
-	helper.HandleError(err)
-	ioutil.WriteFile(filename, bytes, 0644)
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	return true
+	return helper.Result(true, nil, "")
 }

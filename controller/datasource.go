@@ -111,7 +111,8 @@ func (t *DataSourceController) GetDataSource(r *knot.WebContext) interface{} {
 		path = data["path"].(string)
 	}
 
-	return helper.FetchDataSource(_id, dsType, path)
+	ds, _ := helper.FetchDataSource(_id, dsType, path)
+	return ds
 }
 
 func (t *DataSourceController) RemoveDataSource(r *knot.WebContext) interface{} {
