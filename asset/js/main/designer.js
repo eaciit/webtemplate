@@ -173,14 +173,7 @@ viewModel.designer.prepare = function () {
 		viewModel.designer.closePopover();
 	});
 };
-viewModel.designer.showAddWidgetModal = function (id) {
-	ko.mapping.fromJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
-	viewModel.designer.widgetConfig.panelID(id);
-	viewModel.designer.closePopover();
-	$(".modal-add-widget").modal("show");
-
-	var $modal = $(".modal-add-widget");
-
+viewModel.designer.getDataSources = function (callback) {
 	viewModel.designer.optionDataSources([]);
 	viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
 		if (!res.success) {
@@ -197,8 +190,22 @@ viewModel.designer.showAddWidgetModal = function (id) {
 					title: e.title + " (" + e._id + ")"
 				});
 			});
+
+			if (callback != undefined) {
+				callback();
+			}
 		}, 200);
 	});
+}
+viewModel.designer.showAddWidgetModal = function (id) {
+	ko.mapping.fromJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
+	viewModel.designer.widgetConfig.panelID(id);
+	viewModel.designer.closePopover();
+	$(".modal-add-widget").modal("show");
+
+	var $modal = $(".modal-add-widget");
+
+	viewModel.designer.getDataSources();
 
 	ko.mapping.toJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
 
@@ -270,6 +277,7 @@ viewModel.designer.createWidget = function () {
 		viewModel.designer.fillContainer();
 	});
 };
+viewModel.designer.changePopupWidgetSelectedTypeValueCallback = function () {};
 viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 	var type = this.value();
 	viewModel.designer.optionWidgetID([]);
@@ -292,6 +300,9 @@ viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 				});
 			}
 		});
+
+		viewModel.designer.changePopupWidgetSelectedTypeValue();
+		viewModel.designer.changePopupWidgetSelectedTypeValue = function () {};
 	});
 };
 viewModel.designer.changeSelectedDatasource = function (o) {
@@ -380,6 +391,39 @@ viewModel.designer.showAddPanelModal = function () {
 	$(".modal-add-panel").modal("show");
 	$(".modal-add-panel").find("[name=title]").focus();
 };
+viewModel.designer.editWidget = function (panelID, widgetID) {
+	var param = { 
+		_id: viewModel.header.PageID,
+		panelID: panelID,
+		widgetID: widgetID
+	};
+	viewModel.ajaxPost("/designer/getwidgetmetadata", param, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		var data = res.data;
+		data.panelID = panelID;
+		ko.mapping.fromJS(data, viewModel.designer.widgetConfig);
+
+		setTimeout(function () {
+			$(".modal-add-widget").find("[name='widget']").data("kendoDropDownList").trigger("change");
+			viewModel.designer.changePopupWidgetSelectedTypeValue = function () {
+				ko.mapping.fromJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
+				ko.mapping.fromJS(data, viewModel.designer.widgetConfig);
+
+				viewModel.designer.getDataSources(function () {
+					ko.mapping.fromJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
+					ko.mapping.fromJS(data, viewModel.designer.widgetConfig);
+				});
+			};
+		}, 500);
+	});
+
+	$(".modal-add-widget").modal("show");
+	$(".modal-add-widget").find("[name=title]").focus();
+};
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
@@ -405,11 +449,15 @@ viewModel.designer.drawContent = function () {
 					return;
 				}
 
+				var $wrapper = null;
+
 				if (f.type == "chart") {
-					viewModel.designer.drawChart(f, res.data, $content);
+					$wrapper = viewModel.designer.drawChart(f, res.data, $content);
 				} else {
-					viewModel.designer.drawGrid(f, res.data, $content);
+					$wrapper = viewModel.designer.drawGrid(f, res.data, $content);
 				}
+
+				$wrapper.prepend("<button class='btn btn-sm btn-primary btn-edit-widget' data-widget-id='" + f.widgetID + "' onclick='viewModel.designer.editWidget(\"" + e.panelID + "\", \"" + f.widgetID + "\")'><span class='glyphicon glyphicon-edit'></span> Edit</button>");
 
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
 					if (!res2.success) {
@@ -448,7 +496,7 @@ viewModel.designer.drawChart = function (f, res, $content) {
 	var config = viewModel.chart.parseConfig(res, true);
 	$chart.kendoChart(config);
 
-	return config;
+	return $wrapper;
 };
 viewModel.designer.closePopover = function () {
 	$("[id^=popover]").prev().trigger("click");
@@ -477,7 +525,7 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 	console.log(confRun);
 	$grid.kendoGrid(confRun);
 
-	return confRun;
+	return $wrapper;
 }
 viewModel.designer.removePanel = function (o) {
 	var $panel = $(o).closest(".grid-item");
@@ -516,6 +564,7 @@ viewModel.designer.hideShow = function(e){
 viewModel.designer.production = function () {
 	if (!viewModel.header.production) {
 		$(".page-title").html("Page Designer");
+		$(".grid-container").addClass("dev-mode");
 		return;
 	}
 
@@ -526,6 +575,7 @@ viewModel.designer.production = function () {
 		$(e).html($(e).text().split(" - ")[0]);
 	});
 	$(".page-title").html(viewModel.header.title);
+	$(".btn-edit-widget").remove();
 };
 
 $(function () {
