@@ -2,7 +2,8 @@ viewModel.designer.template = {
 	config: {
 		_id: "",
 		datasources: [],
-		content: []
+		content: [],
+		hide:false,
 	},
 	panelConfig: {
 		_id: "",
@@ -51,8 +52,54 @@ viewModel.designer.fillContainer = function () {
 		ko.mapping.fromJS(res.data, viewModel.designer.config);
 		viewModel.designer.drawContent();
 		viewModel.designer.production();
+		viewModel.designer.gridHideShow();
 	});
 };
+viewModel.designer.gridHideShow = function() {
+	var $popoverTemplate = $($("#template-popover").html());
+	$('.btn-hideshow-panel').popover({
+		title: "Choose Hide Show",
+		width: 200,
+		placement: "bottom",
+		html: true,
+		template: $popoverTemplate.clone().addClass("popover-hideshow")[0].outerHTML,
+		content: '<span class="loader">Loading data ...</span>'
+	});
+	$(".btn-hideshow-panel").on("shown.bs.popover", function (e) {
+		var $popover = $(".popover-hideshow");
+
+		$popover.find(".popover-content").html("<ul></ul>");
+		var $container = $popover.find(".popover-content ul");
+
+		viewModel.designer.config.content().forEach(function (e) {
+			var checked = "";
+			if (e.hide() == true)
+				checked = "checked";
+
+			var $each = $('<li> <input onclick="viewModel.designer.changeSelectedHideShow(this)" type="checkbox" name="' + e.panelID() + '" ' + checked + ' /> <span>' + e.title() + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e.panelID() + ')</span> </li>');
+			$each.appendTo($container);
+		});
+	});
+}
+viewModel.designer.changeSelectedHideShow = function(e){
+	var selecteHideshow = [];
+
+	$(e).closest("ul").find("input[type='checkbox']:checked").each (function (i, e) {
+		selecteHideshow.push(e.name);
+	});
+
+	var param = { 
+		_id: viewModel.header.PageID, 
+		panelid: selecteHideshow.join(",") 
+	};
+	viewModel.ajaxPost("designer/sethideshow", param, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+		viewModel.designer.fillContainer();
+	});
+}
 viewModel.designer.prepare = function () {
 	viewModel.designer.packery = new Packery($(".grid-container")[0], {
 		itemSelector: '.grid-item',
@@ -299,6 +346,9 @@ viewModel.designer.drawContent = function () {
 			$content.html(e.content);
 			return;
 		}
+		if (e.hide == true) {
+			$panel.css("display", "none");
+		}
 
 		$content.empty();
 
@@ -331,7 +381,6 @@ viewModel.designer.drawContent = function () {
 						res.data[0].dataSource.data = res2.data;
 						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res.data[0].dataSource));
 					}
-
 					$panel.height($panel.find(".panel").height());
 					// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
 					viewModel.designer.packery.layout();
