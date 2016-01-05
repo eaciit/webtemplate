@@ -41,6 +41,11 @@ viewModel.dataSource.save = function () {
 	}
 
 	viewModel.ajaxPost("/datasource/savedatasource", data, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		viewModel.mode('');
 		viewModel.dataSource.refresh();
 		viewModel.dataSource.isSaved(true);
@@ -67,10 +72,15 @@ viewModel.dataSource.preview = function (_id, type, path, title) {
 	}
 
 	viewModel.ajaxPost("/datasource/getdatasource", { _id: _id, type: type, path: path }, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		var holder = [];
 		var columns = [];
 
-		res.forEach(function (e) {
+		res.data.forEach(function (e) {
 			for (var p in e) {
 				if (e.hasOwnProperty(p) && holder.indexOf(p) == -1) {
 					holder.push(p);
@@ -87,7 +97,7 @@ viewModel.dataSource.preview = function (_id, type, path, title) {
 		$(".datasource-preview").replaceWith('<div class="datasource-preview"></div>');
 		$(".datasource-preview").kendoGrid({
 			dataSource: {
-				data: res,
+				data: res.data,
 				pageSize: 15
 			},
 			columns: columns,
@@ -103,7 +113,12 @@ viewModel.dataSource.edit = function (_id) {
 	viewModel.dataSource.isSaved(true);
 
 	viewModel.ajaxPost("/datasource/getdatasourcemetadata", { _id: _id }, function (res) {
-		ko.mapping.fromJS(res, viewModel.dataSource.config);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		ko.mapping.fromJS(res.data, viewModel.dataSource.config);
 		$(".datasource-form").data("kendoValidator").validate();
 	});
 };
@@ -112,6 +127,11 @@ viewModel.dataSource.remove = function (_id, type, path, title) {
 
 	if (y == true) {
 		viewModel.ajaxPost("/datasource/removedatasource", { _id: _id, type: type, path: path }, function (res) {
+			if (!res.success) {
+				alert(res.message);
+				return;
+			}
+			
 			viewModel.dataSource.refresh();
 		});
     }
@@ -151,8 +171,13 @@ viewModel.dataSource.grid = {
             read: '/datasource/getdatasources'
         },
         schema: {
-            data: function (data) {
-            	return data;
+            parse: function (res) {
+            	if (!res.success) {
+            		alert(res.message);
+            		return [];
+            	}
+
+            	return res.data;
             }
         }
     },

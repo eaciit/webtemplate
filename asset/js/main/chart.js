@@ -97,12 +97,17 @@ viewModel.chart.selectDataSource = function (e) {
 	console.log("fetching " + row.path);
 
 	viewModel.ajaxPost("/datasource/getdatasource", row, function (res) {
-		viewModel.chart.config.dataSource.data(res);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		viewModel.chart.config.dataSource.data(res.data);
 
 		var columnsHolder = [];
 		var fields = [];
 
-		Lazy(res).slice(0, 10).each(function (e) {
+		Lazy(res.data).slice(0, 10).each(function (e) {
 			for (var f in e) {
 				if (e.hasOwnProperty(f) && columnsHolder.indexOf(f) == -1) {
 					columnsHolder.push(f);
@@ -150,7 +155,12 @@ viewModel.chart.boolValueOf = function (which) {
 };
 viewModel.chart.fetchDataSource = function () {
 	viewModel.ajaxPost("/datasource/getdatasources", {}, function (res) {
-		viewModel.chart.dataSources(res);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		viewModel.chart.dataSources(res.data);
     });
 };
 viewModel.chart.dataSources = ko.observableArray([]);
@@ -223,7 +233,12 @@ viewModel.chart.save = function () {
 	};
 
 	viewModel.ajaxPost("/chart/savechartconfig", param, function (res) {
-		viewModel.chart.id(res);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		viewModel.chart.id(res.data);
     });
 };
 viewModel.chart.registerEvents = function () {
@@ -265,9 +280,14 @@ viewModel.chart.grid = {
             read: '/chart/getchartconfigs'
         },
         schema: {
-            data: function (data) {
-            	return data;
-            }
+	        parse: function (res) {
+	        	if (!res.success) {
+	        		alert(res.success);
+	        		return [];
+	        	}
+
+	        	return res.data;
+	        }
         }
     },
 };
@@ -289,14 +309,19 @@ viewModel.chart.editChart = function (_id) {
 		_id: _id
 	};
 	viewModel.ajaxPost("/chart/getchartconfig", param, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		viewModel.mode('editor');
 		$('.chart-config-tabs a[href="#general"]').tab('show');
 		viewModel.chart.id(_id);
-		ko.mapping.fromJS(res, viewModel.chart.config);
+		ko.mapping.fromJS(res.data, viewModel.chart.config);
 
 		viewModel.chart.selectDataSourceCallback = function () {
 			ko.mapping.fromJS(viewModel.chart.template.config, viewModel.chart.config);
-			ko.mapping.fromJS(res, viewModel.chart.config);
+			ko.mapping.fromJS(res.data, viewModel.chart.config);
 			viewModel.chart.selectDataSourceCallback = function () {};
 		};
 
@@ -310,6 +335,11 @@ viewModel.chart.removeChart = function (_id, title) {
 
 	if (y == true) {
 		viewModel.ajaxPost("/chart/removechartconfig", { _id: _id }, function (res) {
+			if (!res.success) {
+				alert(res.message);
+				return;
+			}
+			
 			viewModel.chart.refresh();
 	    });
     }
@@ -323,8 +353,13 @@ viewModel.chart.previewChart = function (_id) {
 	};
 
 	viewModel.ajaxPost("/chart/getchartconfig", param, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		viewModel.chart.id(_id);
-		ko.mapping.fromJS(res, viewModel.chart.config);
+		ko.mapping.fromJS(res.data, viewModel.chart.config);
 		viewModel.chart.preview();
     });
 };

@@ -43,7 +43,12 @@ viewModel.designer.emptyContainer = function () {
 };
 viewModel.designer.fillContainer = function () {
 	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
-		ko.mapping.fromJS(res, viewModel.designer.config);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		ko.mapping.fromJS(res.data, viewModel.designer.config);
 		viewModel.designer.drawContent();
 		viewModel.designer.production();
 	});
@@ -86,11 +91,16 @@ viewModel.designer.prepare = function () {
 		var $popover = $(".popover-datasource");
 
 		viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+			if (!res.success) {
+				alert(res.message);
+				return;
+			}
+
 			setTimeout(function () {
 				$popover.find(".popover-content").html("<ul></ul>");
 				var $container = $popover.find(".popover-content ul");
 
-				res.forEach(function (e) {
+				res.data.forEach(function (e) {
 					var checked = "";
 
 					Lazy(viewModel.designer.config.datasources()).sort().toArray().forEach(function (f) {
@@ -115,6 +125,7 @@ viewModel.designer.prepare = function () {
 	});
 };
 viewModel.designer.showAddWidgetModal = function (id) {
+	ko.mapping.fromJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
 	viewModel.designer.widgetConfig.panelID(id);
 	viewModel.designer.closePopover();
 	$(".modal-add-widget").modal("show");
@@ -123,8 +134,13 @@ viewModel.designer.showAddWidgetModal = function (id) {
 
 	viewModel.designer.optionDataSources([]);
 	viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		setTimeout(function () {
-			Lazy(res).where(function (e) {
+			Lazy(res.data).where(function (e) {
 				return viewModel.designer.config.datasources().indexOf(e._id) > -1;
 			}).toArray().forEach(function (e) {
 				viewModel.designer.optionDataSources.push({
@@ -137,7 +153,7 @@ viewModel.designer.showAddWidgetModal = function (id) {
 
 	ko.mapping.toJS(viewModel.designer.template.widgetConfig, viewModel.designer.widgetConfig);
 
-	$modal.find('[name=type]').data("kendoDropDownList").trigger("change");
+	$modal.find('[name=widget]').data("kendoDropDownList").trigger("change");
 	$modal.find("[name=title]").focus();
 };
 viewModel.designer.createPanel = function () {
@@ -151,7 +167,12 @@ viewModel.designer.createPanel = function () {
 	param._id = viewModel.header.PageID;
 
 	viewModel.ajaxPost("/designer/addpanel", param, function (res) {
-		var panelID = res;
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		var panelID = res.data;
 		var $panel = viewModel.designer.putPanel(panelID, config.title, config.width, "prepend");
 		$panel.height($panel.find(".panel").height());
 		$panel.find(".panel-body").html('');
@@ -171,6 +192,11 @@ viewModel.designer.createWidget = function () {
 	config._id = viewModel.header.PageID;
 
 	viewModel.ajaxPost("/designer/addwidget", config, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		$(".modal-add-widget").modal("hide");
 		viewModel.designer.emptyContainer();
 		viewModel.designer.fillContainer();
@@ -180,7 +206,12 @@ viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 	var type = this.value();
 	viewModel.designer.optionWidgetID([]);
 	viewModel.ajaxPost("/designer/getwidgets", { type: type }, function (res) {
-		res.forEach(function (e) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		res.data.forEach(function (e) {
 			if (type == "chart") {
 				viewModel.designer.optionWidgetID.push({
 					value: e._id,
@@ -188,8 +219,8 @@ viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 				});
 			} else if (type == "grid") {
 				viewModel.designer.optionWidgetID.push({
-					value: e.value,
-					title: e.name + " (" + e.value + ")"
+					value: e.id,
+					title: e.name + " (" + e.id + ")"
 				});
 			}
 		});
@@ -203,11 +234,14 @@ viewModel.designer.changeSelectedDatasource = function (o) {
 	});
 
 	var param = { 
-		_id: viewModel.designer.config._id(), 
+		_id: viewModel.header.PageID, 
 		datasources: selectedDatasources.join(",") 
 	};
 	viewModel.ajaxPost("designer/setdatasource", param, function (res) {
-
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
 	});
 };
 viewModel.designer.putPanel = function (id, title, widthRatio, mode) {
@@ -270,21 +304,34 @@ viewModel.designer.drawContent = function () {
 
 		e.content.forEach(function (f) {
 			viewModel.ajaxPost("/designer/getwidget", f, function (res) {
-				if (f.type == "chart") {
-					viewModel.designer.drawChart(f, res, $content);
-				} else {
-					viewModel.designer.drawGrid(f, res, $content);
+				if (!res.success) {
+					alert(res.message);
+					return;
 				}
+
+				if (f.type == "chart") {
+					viewModel.designer.drawChart(f, res.data, $content);
+				} else {
+					viewModel.designer.drawGrid(f, res.data, $content);
+				}
+
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
+					if (!res2.success) {
+						alert(res2.message);
+						return;
+					}
+
 					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
+
 					if (f.type == "chart") {
 						$contentWidget.data("kendoChart").setDataSource(new kendo.data.DataSource({
-							data: res2
+							data: res2.data
 						}));
 					} else {
-						res[0].dataSource.data = res2;
-						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res[0].dataSource));
+						res.data[0].dataSource.data = res2.data;
+						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res.data[0].dataSource));
 					}
+
 					$panel.height($panel.find(".panel").height());
 					// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
 					viewModel.designer.packery.layout();
@@ -346,6 +393,11 @@ viewModel.designer.removePanel = function (o) {
 		var param = { _id: viewModel.header.PageID, panelID: _id };
 
 		viewModel.ajaxPost("designer/removepanel", param, function (res) {
+			if (!res.success) {
+				alert(res.message);
+				return;
+			}
+
 			viewModel.designer.packery.remove($panel[0]);
 			$panel.remove();
 			viewModel.designer.packery.layout();
