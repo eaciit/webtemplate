@@ -81,7 +81,12 @@ viewModel.grid.visibleExcel = function(){
 viewModel.grid.showDataGrid = function(){
 	viewModel.mode("viewgrid");
 	viewModel.ajaxPost("/grid/getgriddata", {}, function (res) {
-		viewModel.grid.dataGrid(res);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		viewModel.grid.dataGrid(res.data);
 		$("#grid-data").kendoGrid({
 			dataSource : {
 				data:viewModel.grid.dataGrid()[0].data
@@ -107,6 +112,11 @@ viewModel.grid.deleteGrid = function(obj){
 	var result = confirm("Want to delete?");
 	if (result) {
 		viewModel.ajaxPost("/grid/deletegrid", {recordid: $(obj).attr('recordid')}, function (res) {
+			if (!res.success) {
+				alert(res.message);
+				return;
+			}
+
 			viewModel.grid.showDataGrid();
 		});
 	}
@@ -114,9 +124,14 @@ viewModel.grid.deleteGrid = function(obj){
 viewModel.grid.selectGrid = function(obj){
 	viewModel.grid.ActiveTab();
 	viewModel.ajaxPost("/grid/getdetailgrid", {recordid: $(obj).attr('recordid')}, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		viewModel.mode("grid");
 		viewModel.grid.status("Update");
-		ko.mapping.fromJS(res[0], viewModel.grid.config);
+		ko.mapping.fromJS(res.data[0], viewModel.grid.config);
 		viewModel.grid.config.columns(ko.toJS(viewModel.grid.config.columns));
 		setTimeout(function () {
 			$("select.data-source-selector").data("kendoDropDownList").trigger("select");
@@ -156,16 +171,14 @@ viewModel.grid.createGrid = function () {
 	$(".grid-preview").kendoGrid(confRun);
 };
 viewModel.grid.save = function(){
-	$.ajax({
-        url: "/grid/savejsongrid",
-        type: 'post',
-        // dataType: 'json',
-        contentType: "application/json; charset=utf-8",
-        data : ko.mapping.toJSON(viewModel.grid.config),
-        success : function(res) {
-			// console.log(res);
-			viewModel.grid.showDataGrid();
-        },
+	var param = ko.mapping.toJSON(viewModel.grid.config);
+	viewModel.ajaxPost("/grid/savejsongrid", param, function(res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+		
+		viewModel.grid.showDataGrid();
 	});
 }
 viewModel.grid.preview = function (){
@@ -195,7 +208,12 @@ viewModel.grid.clearColumn = function(){
 }
 viewModel.grid.fetchDataSource = function () {
 	viewModel.ajaxPost("/datasource/getdatasources", {}, function (res) {
-		viewModel.grid.dataSources(res);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		viewModel.grid.dataSources(res.data);
     });
 };
 viewModel.grid.addAggregate = function(){
@@ -230,12 +248,17 @@ viewModel.grid.selectDataSource = function(e){
 	console.log(row);
 
 	viewModel.ajaxPost("/datasource/getdatasource", row, function (res) {
-		viewModel.grid.config.dataSource.data(res);
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		viewModel.grid.config.dataSource.data(res.data);
 
 		var columnsHolder = [];
 		var fields = [];
 
-		Lazy(res).slice(0, 10).each(function (e) {
+		Lazy(res.data).slice(0, 10).each(function (e) {
 			for (var f in e) {
 				if (e.hasOwnProperty(f) && columnsHolder.indexOf(f) == -1) {
 					columnsHolder.push(f);

@@ -91,11 +91,16 @@ viewModel.designer.prepare = function () {
 		var $popover = $(".popover-datasource");
 
 		viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+			if (!res.success) {
+				alert(res.message);
+				return;
+			}
+
 			setTimeout(function () {
 				$popover.find(".popover-content").html("<ul></ul>");
 				var $container = $popover.find(".popover-content ul");
 
-				res.forEach(function (e) {
+				res.data.forEach(function (e) {
 					var checked = "";
 
 					Lazy(viewModel.designer.config.datasources()).sort().toArray().forEach(function (f) {
@@ -129,8 +134,13 @@ viewModel.designer.showAddWidgetModal = function (id) {
 
 	viewModel.designer.optionDataSources([]);
 	viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
 		setTimeout(function () {
-			Lazy(res).where(function (e) {
+			Lazy(res.data).where(function (e) {
 				return viewModel.designer.config.datasources().indexOf(e._id) > -1;
 			}).toArray().forEach(function (e) {
 				viewModel.designer.optionDataSources.push({
@@ -303,14 +313,19 @@ viewModel.designer.drawContent = function () {
 				}
 
 				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
+					if (!res2.success) {
+						alert(res2.message);
+						return;
+					}
+
 					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
 
 					if (f.type == "chart") {
 						$contentWidget.data("kendoChart").setDataSource(new kendo.data.DataSource({
-							data: res2
+							data: res2.data
 						}));
 					} else {
-						res.data[0].dataSource.data = res2;
+						res.data[0].dataSource.data = res2.data;
 						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res.data[0].dataSource));
 					}
 

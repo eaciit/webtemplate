@@ -13,22 +13,48 @@ type DataSourceController struct {
 	AppViewsPath string
 }
 
+func (t *DataSourceController) getDataSourceMetaData(_id string) (map[string]interface{}, error) {
+	connection, err := helper.LoadConfig(t.AppViewsPath + "/data/datasource.json")
+	if !helper.HandleError(err) {
+		return nil, err
+	}
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Where(dbox.Eq("_id", _id)).Cursor(nil)
+	if !helper.HandleError(err) {
+		return nil, err
+	}
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	if !helper.HandleError(err) {
+		return nil, err
+	}
+
+	return dataSource.Data[0].(map[string]interface{}), nil
+}
+
 func (t *DataSourceController) GetDataSources(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
 	connection, err := helper.LoadConfig(t.AppViewsPath + "data/datasource.json")
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 	defer connection.Close()
+
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
-	helper.HandleError(err)
-	if cursor == nil {
-		fmt.Printf("Cursor not initialized")
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
 	}
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
-	helper.HandleError(err)
 
-	return dataSource.Data
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	return helper.Result(true, dataSource.Data, "")
 }
 
 func (t *DataSourceController) SaveDataSource(r *knot.WebContext) interface{} {
@@ -37,7 +63,9 @@ func (t *DataSourceController) SaveDataSource(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
 	_id := payload["_id"]
 	if _id == "" {
@@ -49,7 +77,10 @@ func (t *DataSourceController) SaveDataSource(r *knot.WebContext) interface{} {
 		filename := fmt.Sprintf("datasource-%s.json", _id)
 		filepath := t.AppViewsPath + "data/datasource/" + filename
 
-		helper.FetchThenSaveFile(r.Request, "file", filepath)
+		_, _, err = helper.FetchThenSaveFile(r.Request, "file", filepath)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 		payload["path"] = filename
 	}
 
@@ -60,20 +91,30 @@ func (t *DataSourceController) SaveDataSource(r *knot.WebContext) interface{} {
 
 		// insert
 		connection, err := helper.LoadConfig(t.AppViewsPath + "/data/datasource.json")
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 		defer connection.Close()
+
 		err = connection.NewQuery().Insert().Exec(toolkit.M{"data": payload})
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 	} else {
 		// update
 		connection, err := helper.LoadConfig(t.AppViewsPath + "/data/datasource.json")
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 		defer connection.Close()
+
 		err = connection.NewQuery().Update().Where(dbox.Eq("_id", _id)).Exec(toolkit.M{"data": payload})
-		helper.HandleError(err)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 	}
 
-	return true
+	return helper.Result(true, nil, "")
 }
 
 func (t *DataSourceController) GetDataSourceMetaData(r *knot.WebContext) interface{} {
@@ -81,17 +122,16 @@ func (t *DataSourceController) GetDataSourceMetaData(r *knot.WebContext) interfa
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	connection, err := helper.LoadConfig(t.AppViewsPath + "/data/datasource.json")
-	helper.HandleError(err)
-	defer connection.Close()
-	cursor, err := connection.NewQuery().Where(dbox.Eq("_id", payload["_id"])).Cursor(nil)
-	helper.HandleError(err)
-	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	data, err := t.getDataSourceMetaData(payload["_id"])
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
-	return dataSource.Data[0]
+	return helper.Result(true, data, "")
 }
 
 func (t *DataSourceController) GetDataSource(r *knot.WebContext) interface{} {
@@ -99,20 +139,30 @@ func (t *DataSourceController) GetDataSource(r *knot.WebContext) interface{} {
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
 
 	_id := payload["_id"]
 	dsType := payload["type"]
 	path := payload["path"]
 
 	if _, ok := payload["type"]; !ok {
-		var data = t.GetDataSourceMetaData(r).(map[string]interface{})
+		data, err := t.getDataSourceMetaData(_id)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
 		dsType = data["type"].(string)
 		path = data["path"].(string)
 	}
 
-	ds, _ := helper.FetchDataSource(_id, dsType, path)
-	return ds
+	ds, err := helper.FetchDataSource(_id, dsType, path)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	return helper.Result(true, ds, "")
 }
 
 func (t *DataSourceController) RemoveDataSource(r *knot.WebContext) interface{} {
@@ -120,19 +170,27 @@ func (t *DataSourceController) RemoveDataSource(r *knot.WebContext) interface{} 
 
 	payload := map[string]string{}
 	err := r.GetForms(&payload)
-	helper.HandleError(err)
-
-	connection, err := helper.LoadConfig(t.AppViewsPath + "data/datasource.json")
-	helper.HandleError(err)
-	defer connection.Close()
-	err = connection.NewQuery().Delete().Where(dbox.Eq("_id", payload["_id"])).Exec(nil)
-	helper.HandleError(err)
-	success := err == nil
-
-	if payload["type"] == "file" {
-		err = os.Remove(t.AppViewsPath + "data/" + payload["path"])
-		helper.HandleError(err)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
 	}
 
-	return success
+	connection, err := helper.LoadConfig(t.AppViewsPath + "data/datasource.json")
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	defer connection.Close()
+
+	err = connection.NewQuery().Delete().Where(dbox.Eq("_id", payload["_id"])).Exec(nil)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	if payload["type"] == "file" {
+		err = os.Remove(t.AppViewsPath + "data/datasource/" + payload["path"])
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+	}
+
+	return helper.Result(true, nil, "")
 }
