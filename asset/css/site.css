@@ -869,6 +869,9 @@ ul.topnav li a {
 .modal-chart-preview .modal-dialog {
 	width: 800px;
 }
+.modal-header .modal-title {
+	text-align: center;
+}
 .content-panel {
 	padding: 0px;
 	margin-top: 15px;
@@ -877,7 +880,7 @@ ul.topnav li a {
     position: relative;
 }
 .content-panel .grid-container .grid-item {
-	position: absolute;
+	/*position: absolute;*/
 	padding: 10px;
 }
 .content-panel .grid-container .grid-item .panel {

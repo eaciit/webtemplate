@@ -207,7 +207,37 @@ func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
 	return helper.Result(true, nil, "")
 }
 
-func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
+func (t *DesignerController) GetPanel(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	data, err := t.getConfig(payload["_id"])
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	for _, eachRaw := range data["content"].([]interface{}) {
+		each := eachRaw.(map[string]interface{})
+		if each["panelID"] == payload["panelID"] {
+			data := map[string]interface{}{
+				"_id":    each["panelID"],
+				"title":  each["title"],
+				"width":  int(each["width"].(float64)),
+				"offset": int(each["offset"].(float64)),
+			}
+			return helper.Result(true, data, "")
+		}
+	}
+
+	return helper.Result(true, map[string]interface{}{}, "")
+}
+
+func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
 	payload := map[string]interface{}{}
@@ -219,20 +249,40 @@ func (t *DesignerController) AddPanel(r *knot.WebContext) interface{} {
 	_id := payload["_id"].(string)
 	title := payload["title"].(string)
 	var width int = int(payload["width"].(float64))
-	panelID := helper.RandomIDWithPrefix("p")
+	var offset int = int(payload["offset"].(float64))
+
+	panelID := payload["panelID"].(string)
 
 	config, err := t.getConfig(_id)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
 	contentOld := config["content"].([]interface{})
-	contentNew := map[string]interface{}{
-		"panelID": panelID,
-		"title":   title,
-		"width":   width,
-		"content": []interface{}{},
+
+	if panelID == "" {
+		// insert
+		contentNew := map[string]interface{}{
+			"panelID": panelID,
+			"title":   title,
+			"width":   width,
+			"offset":  offset,
+			"content": []interface{}{},
+		}
+		config["content"] = append([]interface{}{contentNew}, contentOld...)
+	} else {
+		panelID = helper.RandomIDWithPrefix("p")
+
+		for i, eachRaw := range contentOld {
+			each := eachRaw.(map[string]interface{})
+			if each["panelID"] == payload["panelID"] {
+				contentOld[i].(map[string]interface{})["title"] = title
+				contentOld[i].(map[string]interface{})["width"] = width
+				contentOld[i].(map[string]interface{})["offset"] = offset
+			}
+		}
+
+		config["content"] = contentOld
 	}
-	config["content"] = append([]interface{}{contentNew}, contentOld...)
 
 	err = t.setConfig(_id, config)
 	if !helper.HandleError(err) {
