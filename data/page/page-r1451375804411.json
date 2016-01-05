@@ -11,11 +11,13 @@
         "width": 6
     }, {
         "content": [{
+        	"panelWidgetID": "Asdfasdfasdfasdf1",
             "dataSource": "ds1451296226501",
             "title": "asdfasdfaf",
             "type": "grid",
             "widgetID": "grid26"
         }, {
+        	"panelWidgetID": "Asdfasdfasdfasdf2",
             "dataSource": "ds1451296226501",
             "title": "asdfasdfasdf",
             "type": "chart",
@@ -26,6 +28,7 @@
         "width": 12
     }, {
         "content": [{
+        	"panelWidgetID": "Asdfasdfasdfasdf3",
             "dataSource": "ds1451296180357",
             "title": "Weekly Report Chart",
             "type": "chart",
@@ -36,6 +39,7 @@
         "width": 4
     }, {
         "content": [{
+        	"panelWidgetID": "Asdfasdfasdfasdf4",
             "dataSource": "ds1451296226501",
             "title": "Trend Chart",
             "type": "chart",
@@ -47,6 +51,7 @@
         "width": 6
     }, {
         "content": [{
+        	"panelWidgetID": "Asdfasdfasdfasdf5",
             "dataSource": "ds1451296226501",
             "title": "Grid Example",
             "type": "grid",
