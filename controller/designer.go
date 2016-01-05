@@ -260,7 +260,7 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 	contentOld := config["content"].([]interface{})
 
 	if panelID == "" {
-		// insert
+		panelID = helper.RandomIDWithPrefix("p")
 		contentNew := map[string]interface{}{
 			"panelID": panelID,
 			"title":   title,
@@ -270,8 +270,6 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 		}
 		config["content"] = append([]interface{}{contentNew}, contentOld...)
 	} else {
-		panelID = helper.RandomIDWithPrefix("p")
-
 		for i, eachRaw := range contentOld {
 			each := eachRaw.(map[string]interface{})
 			if each["panelID"] == payload["panelID"] {

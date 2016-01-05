@@ -166,7 +166,7 @@ viewModel.designer.createPanel = function () {
 
 	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
 
-	if (config.width + config.offset < 12) {
+	if (config.width + config.offset != 12) {
 		alert("width + offset should be equal 12");
 		return;
 	}
