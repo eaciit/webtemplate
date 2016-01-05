@@ -278,3 +278,43 @@ func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {
 
 	return helper.Result(true, nil, "")
 }
+
+func (t *DesignerController) SetHideShow(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	_id := payload["_id"]
+
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	panelsid := strings.Split(payload["panelid"], ",")
+
+	contentOld := config["content"].([]interface{})
+	contentNew := []interface{}{}
+
+	for _, each := range contentOld {
+		for _, eachRaw := range panelsid {
+			if eachRaw == each.(map[string]interface{})["panelID"] {
+				each.(map[string]interface{})["hide"] = true
+			} else {
+				each.(map[string]interface{})["hide"] = false
+			}
+		}
+		contentNew = append(contentNew, each)
+	}
+
+	config["content"] = contentNew
+
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	return helper.Result(true, nil, "")
+}
