@@ -203,13 +203,23 @@ func (t *DesignerController) GetWidgetMetaData(r *knot.WebContext) interface{} {
 func (t *DesignerController) SaveWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	payload := map[string]string{}
+	payload := map[string]interface{}{}
 	err := r.GetForms(&payload)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
-	_id := payload["_id"]
-	panelWidgetID := payload["panelWidgetID"]
+	_id := payload["_id"].(string)
+	panelWidgetID := payload["panelWidgetID"].(string)
+
+	width := int(100)
+	if _, ok := payload["width"]; ok {
+		width = int(payload["width"].(float64))
+	}
+
+	height := int(400)
+	if _, ok := payload["height"]; ok {
+		height = int(payload["height"].(float64))
+	}
 
 	config, err := t.getConfig(_id)
 	if !helper.HandleError(err) {
@@ -218,10 +228,12 @@ func (t *DesignerController) SaveWidget(r *knot.WebContext) interface{} {
 	content := config["content"].([]interface{})
 	contentNew := map[string]interface{}{
 		"panelWidgetID": panelWidgetID,
-		"dataSource":    payload["dataSource"],
-		"title":         payload["title"],
-		"type":          payload["type"],
-		"widgetID":      payload["widgetID"],
+		"dataSource":    payload["dataSource"].(string),
+		"title":         payload["title"].(string),
+		"type":          payload["type"].(string),
+		"widgetID":      payload["widgetID"].(string),
+		"width":         width,
+		"height":        height,
 	}
 
 	if panelWidgetID == "" {

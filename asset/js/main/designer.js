@@ -17,6 +17,8 @@ viewModel.designer.template = {
 		title: "",
 		type: "chart",
 		widgetID: "",
+		width: 100,
+		height: 400,
 		dataSource: ""
 	}
 };
