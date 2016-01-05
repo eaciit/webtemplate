@@ -12,6 +12,7 @@ viewModel.designer.template = {
 		offset: 0,
 	},
 	widgetConfig: {
+		panelWidgetID: "",
 		panelID: "",
 		title: "",
 		type: "chart",

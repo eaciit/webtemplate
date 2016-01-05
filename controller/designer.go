@@ -209,6 +209,7 @@ func (t *DesignerController) SaveWidget(r *knot.WebContext) interface{} {
 		return helper.Result(false, nil, err.Error())
 	}
 	_id := payload["_id"]
+	panelWidgetID := payload["panelWidgetID"]
 
 	config, err := t.getConfig(_id)
 	if !helper.HandleError(err) {
@@ -216,25 +217,50 @@ func (t *DesignerController) SaveWidget(r *knot.WebContext) interface{} {
 	}
 	content := config["content"].([]interface{})
 	contentNew := map[string]interface{}{
-		"panelWidgetID": helper.RandomIDWithPrefix("pw"),
+		"panelWidgetID": panelWidgetID,
 		"dataSource":    payload["dataSource"],
 		"title":         payload["title"],
 		"type":          payload["type"],
 		"widgetID":      payload["widgetID"],
 	}
 
-	for i, eachRaw := range content {
-		each := eachRaw.(map[string]interface{})
-		if each["panelID"] == payload["panelID"] {
-			each["content"] = append([]interface{}{contentNew}, each["content"].([]interface{})...)
+	if panelWidgetID == "" {
+		panelWidgetID = helper.RandomIDWithPrefix("pw")
+		contentNew["panelWidgetID"] = panelWidgetID
+
+		for i, eachRaw := range content {
+			each := eachRaw.(map[string]interface{})
+			if each["panelID"] == payload["panelID"] {
+				each["content"] = append([]interface{}{contentNew}, each["content"].([]interface{})...)
+			}
+
+			config["content"].([]interface{})[i] = each
 		}
 
-		config["content"].([]interface{})[i] = each
-	}
+		err = t.setConfig(_id, config)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+	} else {
+	outer:
+		for i, eachRaw := range content {
+			each := eachRaw.(map[string]interface{})
+			if each["panelID"] == payload["panelID"] {
+				for j, subRaw := range each["content"].([]interface{}) {
+					sub := subRaw.(map[string]interface{})
+					if sub["panelWidgetID"] == panelWidgetID {
+						content[i].(map[string]interface{})["content"].([]interface{})[j] = contentNew
+						break outer
+					}
+				}
+			}
+		}
 
-	err = t.setConfig(_id, config)
-	if !helper.HandleError(err) {
-		return helper.Result(false, nil, err.Error())
+		config["content"] = content
+		err = t.setConfig(_id, config)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 	}
 
 	return helper.Result(true, nil, "")
