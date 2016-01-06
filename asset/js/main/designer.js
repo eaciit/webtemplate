@@ -3,13 +3,13 @@ viewModel.designer.template = {
 		_id: "",
 		datasources: [],
 		content: [],
-		hide:false,
 	},
 	panelConfig: {
 		_id: "",
 		title: "",
 		width: 12,
 		offset: 0,
+		hide:false,
 	},
 	widgetConfig: {
 		panelWidgetID: "",
@@ -225,6 +225,7 @@ viewModel.designer.createPanel = function () {
 	var param = $.extend(true, {}, config);
 	param.panelID = config._id;
 	param._id = viewModel.header.PageID;
+	param.hide = config.hide;
 
 	viewModel.ajaxPost("/designer/savepanel", param, function (res) {
 		if (!res.success) {
@@ -248,6 +249,7 @@ viewModel.designer.createPanel = function () {
 		var $panel = viewModel.designer.putPanel(panelID, config.title, config.width, config.offset, "prepend");
 		$panel.height($panel.find(".panel").height());
 		$panel.find(".panel-body").html('');
+		viewModel.designer.fillContainer();
 		// viewModel.designer.packery.layout();
 	});
 
@@ -557,6 +559,7 @@ viewModel.designer.removePanel = function (o) {
 
 			// viewModel.designer.packery.remove($panel[0]);
 			$panel.remove();
+			viewModel.designer.fillContainer();
 			// viewModel.designer.packery.layout();
 		});
 	}
