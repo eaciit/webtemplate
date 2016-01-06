@@ -82,7 +82,7 @@ viewModel.designer.gridHideShow = function() {
 
 		viewModel.designer.config.content().forEach(function (e) {
 			var checked = "";
-			if (e.hide() == true)
+			if (e.hide() == false)
 				checked = "checked";
 
 			var $each = $('<li> <input onclick="viewModel.designer.changeSelectedHideShow(this)" type="checkbox" name="' + e.panelID() + '" ' + checked + ' /> <span>' + e.title() + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e.panelID() + ')</span> </li>');
@@ -93,8 +93,9 @@ viewModel.designer.gridHideShow = function() {
 viewModel.designer.changeSelectedHideShow = function(e){
 	var selecteHideshow = [];
 
-	$(e).closest("ul").find("input[type='checkbox']:checked").each (function (i, e) {
-		selecteHideshow.push(e.name);
+	$(e).closest("ul").find("input[type='checkbox']").not(':checked').each (function (i, e) {
+		if(e.name !== '')
+			selecteHideshow.push(e.name);
 	});
 
 	var param = { 
