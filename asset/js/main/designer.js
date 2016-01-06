@@ -523,11 +523,20 @@ viewModel.designer.closePopover = function () {
 	$(".popover-overlay").remove();
 };
 viewModel.designer.drawGrid = function(f, res, $content) {
-	console.log("chart", f);
 	var $wrapper = $("<div />");
 	$wrapper.attr("data-widget-id", f.widgetID);
 	$wrapper.addClass('widget widget-chart');
-	$wrapper.css("width", '100%');
+	if (f.hasOwnProperty('width')) {
+		$wrapper.css("width", f.width + '%');
+	} else {
+		$wrapper.css("width", '100%');
+	}
+
+	if (f.hasOwnProperty('height')) {
+		$wrapper.css("height", f.height + 'px');
+	} else {
+	}
+
 	$wrapper.appendTo($content);
 
 	var $grid = $("<div />").addClass('widget-content');
