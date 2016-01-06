@@ -125,14 +125,14 @@ func (t *DesignerController) GetWidgets(r *knot.WebContext) interface{} {
 func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	payload := map[string]string{}
+	payload := map[string]interface{}{}
 	err := r.GetForms(&payload)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
 
-	if payload["type"] == "chart" {
-		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart/chart-" + payload["widgetID"] + ".json")
+	if payload["type"].(string) == "chart" {
+		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart/chart-" + payload["widgetID"].(string) + ".json")
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
@@ -144,8 +144,8 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 		}
 
 		return helper.Result(true, data, "")
-	} else if payload["type"] == "grid" {
-		connection, err := helper.LoadConfig(t.AppViewsPath + "data/grid/" + payload["widgetID"] + ".json")
+	} else if payload["type"].(string) == "grid" {
+		connection, err := helper.LoadConfig(t.AppViewsPath + "data/grid/" + payload["widgetID"].(string) + ".json")
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
@@ -168,7 +168,7 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 	return helper.Result(true, map[string]interface{}{}, "")
 }
 
-func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
+func (t *DesignerController) GetWidgetMetaData(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
 	payload := map[string]string{}
@@ -182,26 +182,97 @@ func (t *DesignerController) AddWidget(r *knot.WebContext) interface{} {
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
-	content := config["content"].([]interface{})
-	contentNew := map[string]interface{}{
-		"dataSource": payload["dataSource"],
-		"title":      payload["title"],
-		"type":       payload["type"],
-		"widgetID":   payload["widgetID"],
-	}
 
-	for i, eachRaw := range content {
+	for _, eachRaw := range config["content"].([]interface{}) {
 		each := eachRaw.(map[string]interface{})
-		if each["panelID"] == payload["panelID"] {
-			each["content"] = append([]interface{}{contentNew}, each["content"].([]interface{})...)
-		}
 
-		config["content"].([]interface{})[i] = each
+		if each["panelID"] == payload["panelID"] {
+			for _, subRaw := range each["content"].([]interface{}) {
+				sub := subRaw.(map[string]interface{})
+
+				if sub["widgetID"] == payload["widgetID"] {
+					return helper.Result(true, sub, "")
+				}
+			}
+		}
 	}
 
-	err = t.setConfig(_id, config)
+	return helper.Result(false, nil, "")
+}
+
+func (t *DesignerController) SaveWidget(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]interface{}{}
+	err := r.GetForms(&payload)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
+	}
+	_id := payload["_id"].(string)
+	panelWidgetID := payload["panelWidgetID"].(string)
+
+	width := int(100)
+	if _, ok := payload["width"]; ok {
+		width = int(payload["width"].(float64))
+	}
+
+	height := int(400)
+	if _, ok := payload["height"]; ok {
+		height = int(payload["height"].(float64))
+	}
+
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	content := config["content"].([]interface{})
+	contentNew := map[string]interface{}{
+		"panelWidgetID": panelWidgetID,
+		"dataSource":    payload["dataSource"].(string),
+		"title":         payload["title"].(string),
+		"type":          payload["type"].(string),
+		"widgetID":      payload["widgetID"].(string),
+		"width":         width,
+		"height":        height,
+	}
+
+	if panelWidgetID == "" {
+		panelWidgetID = helper.RandomIDWithPrefix("pw")
+		contentNew["panelWidgetID"] = panelWidgetID
+
+		for i, eachRaw := range content {
+			each := eachRaw.(map[string]interface{})
+			if each["panelID"] == payload["panelID"] {
+				each["content"] = append([]interface{}{contentNew}, each["content"].([]interface{})...)
+			}
+
+			config["content"].([]interface{})[i] = each
+		}
+
+		err = t.setConfig(_id, config)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+	} else {
+	outer:
+		for i, eachRaw := range content {
+			each := eachRaw.(map[string]interface{})
+			if each["panelID"] == payload["panelID"] {
+				for j, subRaw := range each["content"].([]interface{}) {
+					sub := subRaw.(map[string]interface{})
+					if sub["panelWidgetID"] == panelWidgetID {
+						content[i].(map[string]interface{})["content"].([]interface{})[j] = contentNew
+						break outer
+					}
+				}
+			}
+		}
+
+		config["content"] = content
+		err = t.setConfig(_id, config)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
 	}
 
 	return helper.Result(true, nil, "")
@@ -224,11 +295,16 @@ func (t *DesignerController) GetPanel(r *knot.WebContext) interface{} {
 	for _, eachRaw := range data["content"].([]interface{}) {
 		each := eachRaw.(map[string]interface{})
 		if each["panelID"] == payload["panelID"] {
+			offset := 0
+			if _, ok := each["offset"]; ok {
+				offset = int(each["offset"].(float64))
+			}
+
 			data := map[string]interface{}{
 				"_id":    each["panelID"],
 				"title":  each["title"],
 				"width":  int(each["width"].(float64)),
-				"offset": int(each["offset"].(float64)),
+				"offset": offset,
 			}
 			return helper.Result(true, data, "")
 		}

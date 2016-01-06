@@ -942,3 +942,23 @@ ul.topnav li a {
     background-color: rgba(0,0,0,0.5);
     z-index: 1000;
 }
+.grid-item .widget {
+    width: 100%;
+    position: relative;
+    border: 1px solid transparent;
+    float: left;
+}
+.grid-item .widget .btn-edit-widget {
+    position: absolute;
+    right: 15px;
+    z-index: 1;
+    top: 15px;
+    cursor: pointer;
+    visibility: hidden;
+}
+.dev-mode .grid-item .widget:hover {
+    border-color: #E5E5E5;
+}
+.dev-mode .grid-item .widget:hover .btn-edit-widget {
+	visibility: visible;
+}
