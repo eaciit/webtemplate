@@ -5,6 +5,7 @@ import (
 	"github.com/eaciit/knot/knot.v1"
 	"github.com/eaciit/webtemplate/helper"
 	"io/ioutil"
+	"strconv"
 	"strings"
 )
 
@@ -324,6 +325,7 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 
 	_id := payload["_id"].(string)
 	title := payload["title"].(string)
+	hide, _ := strconv.ParseBool(payload["hide"].(string))
 	var width int = int(payload["width"].(float64))
 	var offset int = int(payload["offset"].(float64))
 
@@ -342,6 +344,7 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 			"title":   title,
 			"width":   width,
 			"offset":  offset,
+			"hide":    hide,
 			"content": []interface{}{},
 		}
 		config["content"] = append([]interface{}{contentNew}, contentOld...)
