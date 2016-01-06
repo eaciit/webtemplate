@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"github.com/eaciit/dbox"
 	"github.com/eaciit/knot/knot.v1"
 	"github.com/eaciit/webtemplate/helper"
 	"io/ioutil"
@@ -50,11 +51,30 @@ func (t *DesignerController) GetConfig(r *knot.WebContext) interface{} {
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
+	_id := payload["_id"]
 
-	data, err := t.getConfig(payload["_id"])
+	data, err := t.getConfig(_id)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
+
+	connection, err := helper.LoadConfig(t.AppViewsPath + "/data/routes.json")
+	if !helper.HandleError(err) {
+		helper.Result(false, nil, err.Error())
+	}
+	defer connection.Close()
+
+	cursor, err := connection.NewQuery().Where(dbox.Eq("_id", _id)).Cursor(nil)
+	if !helper.HandleError(err) {
+		helper.Result(false, nil, err.Error())
+	}
+	defer cursor.Close()
+
+	dataSource, err := cursor.Fetch(nil, 0, false)
+	if !helper.HandleError(err) {
+		helper.Result(false, nil, err.Error())
+	}
+	data["href"] = dataSource.Data[0].(map[string]interface{})["href"]
 
 	return helper.Result(true, data, "")
 }
@@ -421,22 +441,18 @@ func (t *DesignerController) SetHideShow(r *knot.WebContext) interface{} {
 		return helper.Result(false, nil, err.Error())
 	}
 	panelsid := strings.Split(payload["panelid"], ",")
+	content := config["content"].([]interface{})
 
-	contentOld := config["content"].([]interface{})
-	contentNew := []interface{}{}
+	for i, each := range content {
+		content[i].(map[string]interface{})["hide"] = false
 
-	for _, each := range contentOld {
-		for _, eachRaw := range panelsid {
-			if eachRaw == each.(map[string]interface{})["panelID"] {
-				each.(map[string]interface{})["hide"] = true
-			} else {
-				each.(map[string]interface{})["hide"] = false
+		for _, panelid := range panelsid {
+			if panelid == each.(map[string]interface{})["panelID"] {
+				content[i].(map[string]interface{})["hide"] = true
 			}
 		}
-		contentNew = append(contentNew, each)
 	}
-
-	config["content"] = contentNew
+	config["content"] = content
 
 	err = t.setConfig(_id, config)
 	if !helper.HandleError(err) {

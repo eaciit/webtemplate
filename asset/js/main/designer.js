@@ -23,6 +23,7 @@ viewModel.designer.template = {
 	}
 };
 viewModel.designer.packery = {};
+viewModel.designer.href = ko.observable('/');
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
 viewModel.designer.widgetConfig = ko.mapping.fromJS(viewModel.designer.template.widgetConfig);
@@ -53,6 +54,9 @@ viewModel.designer.fillContainer = function () {
 			alert(res.message);
 			return;
 		}
+
+		viewModel.designer.href(res.data.href);
+		delete res.data.href;
 
 		ko.mapping.fromJS(res.data, viewModel.designer.config);
 		viewModel.designer.drawContent();
@@ -587,7 +591,7 @@ viewModel.designer.production = function () {
 
 	$(".fa-gear").parent().remove();
 	$(".fa-close").parent().remove();
-	$(".content-header .btn-popover").remove();
+	$(".content-header .btn-nav-container").empty();
 	$(".panel-title").each(function (i, e) {
 		$(e).html($(e).text().split(" - ")[0]);
 	});

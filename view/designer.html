@@ -69,7 +69,7 @@
 		<div class="row">
 			<div class="col-md-12 title-content">
 				<span class="col-md-3 page-title"></span>
-				<div class="col-md-9">
+				<div class="col-md-9 btn-nav-container">
 					<div class="btn-group btn-sm">
 						<button class="btn btn-sm btn-success btn-popover btn-set-datasource">
 							<span class="fa fa-database"></span> Set Data Source
@@ -84,6 +84,11 @@
 						<button class="btn btn-sm btn-info btn-popover btn-hideshow-panel">
 							<span class="glyphicon glyphicon-eye-open"></span> Hide Show Panel
 						</button>
+					</div>
+					<div class="btn-group btn-sm">
+						<a class="btn btn-sm btn-warning btn-preview" data-bind="attr: { 'href': viewModel.designer.href }" target="_blank">
+							<span class="glyphicon glyphicon-eye-open"></span> Preview
+						</a>
 					</div>
 				</div>
 			</div>
