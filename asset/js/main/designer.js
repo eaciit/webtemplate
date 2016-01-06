@@ -460,6 +460,7 @@ viewModel.designer.drawContent = function () {
 				} else {
 					$wrapper = viewModel.designer.drawGrid(f, res.data, $content);
 				}
+				$("<div class='clearfix'></div>").appendTo($content);
 
 				$wrapper.prepend("<button class='btn btn-sm btn-primary btn-edit-widget' data-widget-id='" + f.widgetID + "' onclick='viewModel.designer.editWidget(\"" + e.panelID + "\", \"" + f.widgetID + "\")'><span class='glyphicon glyphicon-edit'></span> Edit</button>");
 
@@ -514,7 +515,7 @@ viewModel.designer.drawChart = function (f, res, $content) {
 	$chart.kendoChart(config);
 
 	$content.find(".clearfix").remove();
-	$("<div class='clearfix'></div>").appendTo($content);
+	// $("<div class='clearfix'></div>").appendTo($content);
 
 	return $wrapper;
 };
@@ -554,7 +555,7 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 	confRun.columns = newColumns;
 	console.log(confRun);
 	$grid.kendoGrid(confRun);
-
+	$content.find(".clearfix").remove();
 	return $wrapper;
 }
 viewModel.designer.removePanel = function (o) {
