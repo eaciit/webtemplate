@@ -222,12 +222,6 @@ viewModel.designer.createPanel = function () {
 	}
 
 	var config = ko.mapping.toJS(viewModel.designer.panelConfig);
-
-	if (config.width + config.offset != 12) {
-		alert("width + offset should be equal 12");
-		return;
-	}
-
 	var param = $.extend(true, {}, config);
 	param.panelID = config._id;
 	param._id = viewModel.header.PageID;
@@ -487,17 +481,33 @@ viewModel.designer.drawContent = function () {
 	});
 };
 viewModel.designer.drawChart = function (f, res, $content) {
+	var config = viewModel.chart.parseConfig(res, true);
+	config.title = f.title;
+
 	var $wrapper = $("<div />");
 	$wrapper.attr("data-widget-id", f.widgetID);
 	$wrapper.addClass('widget widget-chart');
-	$wrapper.css("width", '100%');
 	$wrapper.appendTo($content);
+
+	if (f.hasOwnProperty('width')) {
+		$wrapper.css("width", f.width + '%');
+	} else {
+		$wrapper.css("width", '100%');
+	}
+
+	if (f.hasOwnProperty('height')) {
+		$wrapper.css("height", f.height + 'px');
+		config.chartArea.height = parseInt(f.height - 5, 10);
+	} else {
+		config.chartArea.height = viewModel.designer.template.widgetConfig.height - 5;
+	}
 
 	var $chart = $("<div />").addClass('widget-content');
 	$chart.appendTo($wrapper);
-
-	var config = viewModel.chart.parseConfig(res, true);
 	$chart.kendoChart(config);
+
+	$content.find(".clearfix").remove();
+	$("<div class='clearfix'></div>").appendTo($content);
 
 	return $wrapper;
 };
@@ -506,6 +516,7 @@ viewModel.designer.closePopover = function () {
 	$(".popover-overlay").remove();
 };
 viewModel.designer.drawGrid = function(f, res, $content) {
+	console.log("chart", f);
 	var $wrapper = $("<div />");
 	$wrapper.attr("data-widget-id", f.widgetID);
 	$wrapper.addClass('widget widget-chart');

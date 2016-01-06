@@ -946,6 +946,7 @@ ul.topnav li a {
     width: 100%;
     position: relative;
     border: 1px solid transparent;
+    float: left;
 }
 .grid-item .widget .btn-edit-widget {
     position: absolute;

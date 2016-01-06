@@ -125,14 +125,14 @@ func (t *DesignerController) GetWidgets(r *knot.WebContext) interface{} {
 func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 
-	payload := map[string]string{}
+	payload := map[string]interface{}{}
 	err := r.GetForms(&payload)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
 
-	if payload["type"] == "chart" {
-		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart/chart-" + payload["widgetID"] + ".json")
+	if payload["type"].(string) == "chart" {
+		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/chart/chart-" + payload["widgetID"].(string) + ".json")
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
@@ -144,8 +144,8 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 		}
 
 		return helper.Result(true, data, "")
-	} else if payload["type"] == "grid" {
-		connection, err := helper.LoadConfig(t.AppViewsPath + "data/grid/" + payload["widgetID"] + ".json")
+	} else if payload["type"].(string) == "grid" {
+		connection, err := helper.LoadConfig(t.AppViewsPath + "data/grid/" + payload["widgetID"].(string) + ".json")
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
