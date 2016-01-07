@@ -82,7 +82,7 @@ viewModel.designer.gridHideShow = function() {
 
 		viewModel.designer.config.content().forEach(function (e) {
 			var checked = "";
-			if (e.hide() == true)
+			if (e.hide() == false)
 				checked = "checked";
 
 			var $each = $('<li> <input onclick="viewModel.designer.changeSelectedHideShow(this)" type="checkbox" name="' + e.panelID() + '" ' + checked + ' /> <span>' + e.title() + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e.panelID() + ')</span> </li>');
@@ -93,8 +93,9 @@ viewModel.designer.gridHideShow = function() {
 viewModel.designer.changeSelectedHideShow = function(e){
 	var selecteHideshow = [];
 
-	$(e).closest("ul").find("input[type='checkbox']:checked").each (function (i, e) {
-		selecteHideshow.push(e.name);
+	$(e).closest("ul").find("input[type='checkbox']").not(':checked').each (function (i, e) {
+		if(e.name !== '')
+			selecteHideshow.push(e.name);
 	});
 
 	var param = { 
@@ -459,6 +460,7 @@ viewModel.designer.drawContent = function () {
 				} else {
 					$wrapper = viewModel.designer.drawGrid(f, res.data, $content);
 				}
+				$("<div class='clearfix'></div>").appendTo($content);
 
 				$wrapper.prepend("<button class='btn btn-sm btn-primary btn-edit-widget' data-widget-id='" + f.widgetID + "' onclick='viewModel.designer.editWidget(\"" + e.panelID + "\", \"" + f.widgetID + "\")'><span class='glyphicon glyphicon-edit'></span> Edit</button>");
 
@@ -513,7 +515,7 @@ viewModel.designer.drawChart = function (f, res, $content) {
 	$chart.kendoChart(config);
 
 	$content.find(".clearfix").remove();
-	$("<div class='clearfix'></div>").appendTo($content);
+	// $("<div class='clearfix'></div>").appendTo($content);
 
 	return $wrapper;
 };
@@ -522,11 +524,20 @@ viewModel.designer.closePopover = function () {
 	$(".popover-overlay").remove();
 };
 viewModel.designer.drawGrid = function(f, res, $content) {
-	console.log("chart", f);
 	var $wrapper = $("<div />");
 	$wrapper.attr("data-widget-id", f.widgetID);
 	$wrapper.addClass('widget widget-chart');
-	$wrapper.css("width", '100%');
+	if (f.hasOwnProperty('width')) {
+		$wrapper.css("width", f.width + '%');
+	} else {
+		$wrapper.css("width", '100%');
+	}
+
+	if (f.hasOwnProperty('height')) {
+		$wrapper.css("height", f.height + 'px');
+	} else {
+	}
+
 	$wrapper.appendTo($content);
 
 	var $grid = $("<div />").addClass('widget-content');
@@ -544,7 +555,7 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 	confRun.columns = newColumns;
 	console.log(confRun);
 	$grid.kendoGrid(confRun);
-
+	$content.find(".clearfix").remove();
 	return $wrapper;
 }
 viewModel.designer.removePanel = function (o) {
