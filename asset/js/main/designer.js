@@ -357,7 +357,8 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 		template: $($("#template-popover").html()).clone().addClass("popover-configure-panel")[0].outerHTML,
 		content: [
 			'<button style="width: 100%; margin-bottom: 10px;" class="btn btn-sm btn-primary btn-edit-panel" onclick="viewModel.designer.editPanel(\'' + id + '\')">Edit Panel</button>',
-			'<button style="width: 100%;" class="btn btn-sm btn-primary" onclick="viewModel.designer.showAddWidgetModal(\'' + id + '\')">Add Widget</button>'
+			'<button style="width: 100%; margin-bottom: 10px;" class="btn btn-sm btn-primary" onclick="viewModel.designer.showAddWidgetModal(\'' + id + '\')">Add Widget</button>',
+			'<div style="width: 100%; text-align:center;"><button style="margin-right:5px;" class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\',\'Previous\')">Previous</button><button class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\',\'Next\')">Next</button></div>'
 		].join('')
 	});
 	// viewModel.designer.packery.bindDraggabillyEvents($panel);
@@ -373,6 +374,9 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 	// viewModel.designer.packery.layout();
 
 	return $panel;
+};
+viewModel.designer.changePosition = function(id, status){
+	// viewModel.designer.config
 };
 viewModel.designer.editPanel = function (_id) {
 	var param = { _id: viewModel.header.PageID, panelID: _id };
