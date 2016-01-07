@@ -155,6 +155,12 @@ func (t *TemplateController) RegisterRoutes() {
 		r.Config.ViewName = "view/grid.html"
 		return toolkit.M{"title": "Grid Widget Admin", "href": "/grid"}
 	})
+	t.Server.Route("/selector", func(r *knot.WebContext) interface{} {
+		r.Config.LayoutTemplate = t.LayoutFile
+		r.Config.IncludeFiles = t.IncludeFiles
+		r.Config.ViewName = "view/selector.html"
+		return toolkit.M{"title": "Selector Widget Admin", "href": "/selector"}
+	})
 	t.Server.Route("/datasource", func(r *knot.WebContext) interface{} {
 		r.Config.LayoutTemplate = t.LayoutFile
 		r.Config.IncludeFiles = t.IncludeFiles

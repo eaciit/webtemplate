@@ -19,6 +19,7 @@ type (
 		chartController      *controller.ChartController
 		dataSourceController *controller.DataSourceController
 		gridController       *controller.GridController
+		selectorController   *controller.SelectorController
 		pageController       *controller.PageController
 		designerController   *controller.DesignerController
 	}
@@ -41,6 +42,7 @@ func InitWebTemplate() *WebTemplate {
 	yo.chartController = &controller.ChartController{yo.appViewsPath}
 	yo.dataSourceController = &controller.DataSourceController{yo.appViewsPath}
 	yo.gridController = &controller.GridController{yo.appViewsPath}
+	yo.selectorController = &controller.SelectorController{yo.appViewsPath}
 	yo.pageController = &controller.PageController{yo.appViewsPath}
 	yo.designerController = &controller.DesignerController{yo.appViewsPath}
 
@@ -51,6 +53,7 @@ func InitWebTemplate() *WebTemplate {
 	yo.Server.Register(yo.templateController, "")
 	yo.Server.Register(yo.chartController, "")
 	yo.Server.Register(yo.dataSourceController, "")
+	yo.Server.Register(yo.selectorController, "")
 	yo.Server.Register(yo.gridController, "")
 	yo.Server.Register(yo.pageController, "")
 	yo.Server.Register(yo.designerController, "")
