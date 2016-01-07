@@ -194,3 +194,40 @@ func (t *DataSourceController) RemoveDataSource(r *knot.WebContext) interface{} 
 
 	return helper.Result(true, nil, "")
 }
+
+func (t *DataSourceController) GetDataSourceFields(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	_id := payload["_id"]
+
+	meta, err := t.getDataSourceMetaData(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	dsType := meta["type"].(string)
+	path := meta["path"].(string)
+
+	data, err := helper.FetchDataSource(_id, dsType, path)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	fields := []string{}
+	holder := map[string]bool{}
+	for _, each := range data[:len(data)] {
+		for key, _ := range each {
+			if _, ok := holder[key]; !ok {
+				fields = append(fields, key)
+				holder[key] = true
+			}
+		}
+	}
+
+	return helper.Result(true, fields, "")
+}

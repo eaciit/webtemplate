@@ -1,0 +1,124 @@
+<!-- widget -->
+<script src="/static/asset/js/main/selector.js"></script>
+
+<div class="container-fluid content-main chart-widget" data-bind="visible: mode() == '', with: selector">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Selector Widget</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-success" data-bind="click: refresh">
+						<span class="glyphicon glyphicon-refresh"></span> Refresh
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: addSelector">
+						<span class="glyphicon glyphicon-plus"></span> Create New Selector
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-body" data-overlay-page-wrap>
+		<div class="row">
+			<div class="selector-grid grid" data-bind="kendoGrid: viewModel.selector.grid" style="height: 400px; width: 100%;"></div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid content-main chart-widget" data-bind="visible: (mode() == 'editor'), with: selector">
+	<div class="content-header">
+		<div class="row">
+			<div class="col-md-12 title-content">
+				<span class="col-md-3">Selector Editor</span>
+				<div class="col-md-9">
+					<button class="btn btn-sm btn-warning" data-bind="click: back">
+						<span class="glyphicon glyphicon-chevron-left"></span> Back
+					</button>
+					<button class="btn btn-sm btn-success" data-bind="click: save">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+					<button class="btn btn-sm btn-primary" data-bind="click: preview, visible: viewModel.selector.isSaved">
+						<span class="glyphicon glyphicon-eye-open"></span> Preview
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form class="form-horizontal selector-form" novalidate>
+		<div class="content-body" data-overlay-page-wrap data-bind="with: config">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">General</h1>
+				</div>
+				<div class="panel-body">
+					<div class="form-group" data-bind="visible: _id() != ''">
+						<label class="col-sm-2 control-label">ID</label>
+						<div class="col-sm-4">
+							<input disabled readonly type="text" class="form-control input-sm" data-bind="value: _id" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Title</label>
+						<div class="col-sm-4">
+							<input required data-required-msg="Title cannot be empty" name="title" type="text" class="form-control input-sm" placeholder="Type title here ..." data-bind="value: title" />
+							<span class="k-invalid-msg" data-for="title"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">Data Source - Fields</h1>
+				</div>
+				<div class="panel-body">
+					<button class="btn btn-sm btn-primary" data-bind="click: viewModel.selector.addField()">
+						<span class="glyphicon glyphicon-plus"></span> Add Field
+					</button>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Data source</th>
+								<th>Field</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody data-bind="foreach: fields">
+							<tr data-bind="attr: { 'data-field-id': _id() }">
+								<td style="width: 350px;">
+									<input disabled readonly data-bind="visible: false, value: _id" />
+									<select required data-required-msg="Data source is required"  style="width: 80%;" data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: dataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select data source', change: viewModel.selector.changeFieldDataSource(_id()) }, attr: { name: 'data-source-' + $index() }"></select>
+								<span class="k-invalid-msg" data-bind="attr: { 'data-for': 'data-source-' + $index() }"></span>
+								</td>
+								<td style="width: 350px;">
+									<select class="field" required data-required-msg="Field is required" style="width: 80%;" data-bind="kendoDropDownList: { value: field, optionLabel: 'Select data source' }, attr: { name: 'field-' + $index() }"></select>
+								<span class="k-invalid-msg" data-bind="attr: { 'data-for': 'field-' + $index() }"></span>
+								</td>
+								<td>
+									<button class="btn btn-xs btn-danger" data-bind="click: viewModel.selector.removeField($index()), style: { visibility: ($index() == 0) ? 'hidden' : 'visible' } ">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">Master Data</h1>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Data Source</label>
+						<div class="col-sm-4">
+							<select class="form-control input-sm" style="width: 80%;" placeholder="Type title here ..." data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: masterDataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select master data source' }"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

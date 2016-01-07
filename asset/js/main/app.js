@@ -325,6 +325,7 @@ viewModel.grid = {};
 viewModel.dataSource = {};
 viewModel.page = {};
 viewModel.designer = {};
+viewModel.selector = {};
 
 viewModel.camelToCapitalize = function (s) {
     return s.replace(/_/g, ' ').replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
