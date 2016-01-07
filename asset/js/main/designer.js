@@ -377,6 +377,7 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 };
 viewModel.designer.changePosition = function(id, status){
 	// viewModel.designer.config
+	
 };
 viewModel.designer.editPanel = function (_id) {
 	var param = { _id: viewModel.header.PageID, panelID: _id };

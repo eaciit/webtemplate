@@ -365,7 +365,8 @@ $(function () {
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Page', detail:'', onclick: 'location.href = "/page"'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Data Source', detail:'', onclick: 'location.href = "/datasource"'},
                             {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Chart Widget', detail:'', onclick: 'location.href = "/chart"'},
-                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Grid Widget', detail:'', onclick: 'location.href = "/grid"'}
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Grid Widget', detail:'', onclick: 'location.href = "/grid"'},
+                            {icon:'fa fa fa-gear fa-2x text-success', href:'#', content:'Selector Widget', detail:'', onclick: 'location.href = "/selector"'}
                         ]
                     },
                     href: '#'
