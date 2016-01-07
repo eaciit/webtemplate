@@ -52,10 +52,10 @@
 					<h1 class="panel-title">General</h1>
 				</div>
 				<div class="panel-body">
-					<div class="form-group" data-bind="visible: _id() != ''">
+					<div class="form-group" data-bind="visible: ID() != ''">
 						<label class="col-sm-2 control-label">ID</label>
 						<div class="col-sm-4">
-							<input disabled readonly type="text" class="form-control input-sm" data-bind="value: _id" />
+							<input disabled readonly type="text" class="form-control input-sm" data-bind="value: ID" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -88,7 +88,7 @@
 							<tr data-bind="attr: { 'data-field-id': _id() }">
 								<td style="width: 350px;">
 									<input disabled readonly data-bind="visible: false, value: _id" />
-									<select required data-required-msg="Data source is required"  style="width: 80%;" data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: dataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select data source', change: viewModel.selector.changeFieldDataSource(_id()) }, attr: { name: 'data-source-' + $index() }"></select>
+									<select class="datasource-selectorfield" required data-required-msg="Data source is required"  style="width: 80%;" data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: dataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select data source', change: viewModel.selector.changeFieldDataSource(_id()) }, attr: { name: 'data-source-' + $index() }"></select>
 								<span class="k-invalid-msg" data-bind="attr: { 'data-for': 'data-source-' + $index() }"></span>
 								</td>
 								<td style="width: 350px;">
@@ -114,7 +114,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Data Source</label>
 						<div class="col-sm-4">
-							<select class="form-control input-sm" style="width: 80%;" placeholder="Type title here ..." data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: masterDataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select master data source' }"></select>
+							<select class="form-control input-sm datasource-selectormaster" style="width: 80%;" placeholder="Type title here ..." data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: masterDataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select master data source' }"></select>
 						</div>
 					</div>
 				</div>
