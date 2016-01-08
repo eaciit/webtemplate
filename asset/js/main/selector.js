@@ -64,7 +64,7 @@ viewModel.selector.addSelector = function () {
 	viewModel.selector.addField()();
 	// viewModel.selector.prepareDataSources();
 };
-viewModel.selector.changeFieldDataSource = function (_id) {
+viewModel.selector.changeFieldDataSource = function (_id, index) {
 	return function () {
 		var dsID = this.value();
 
@@ -75,7 +75,9 @@ viewModel.selector.changeFieldDataSource = function (_id) {
 			}
 
 			var ds = new kendo.data.DataSource({ data: res.data });
-			$("[data-field-id='" + _id + "'] select.field").data("kendoDropDownList").setDataSource(ds);
+			// $("[data-field-id='" + _id + "'] select.field").data("kendoDropDownList").setDataSource(ds);
+			$("select.field").eq(index).data("kendoDropDownList").setDataSource(ds);
+			$("select.field").eq(index).data("kendoDropDownList").value(viewModel.selector.config.fields()[index].field());
 		});
 	};
 };
@@ -103,10 +105,8 @@ viewModel.selector.editSelector = function (_id) {
 
 	setTimeout(function () {
 		for (var key in viewModel.selector.config.fields()){
-			// viewModel.selector.changeFieldDataSource(viewModel.selector.config.fields()[key]._id());
 			$("select.datasource-selectorfield").eq(key).data("kendoDropDownList").trigger("change");
 		}
-		// $("select.datasource-selectorfield").data("kendoDropDownList").trigger("change");
 	}, 1000);
 };
 viewModel.selector.removeSelector = function(_id, title){
