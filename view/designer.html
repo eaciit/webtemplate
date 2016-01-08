@@ -209,11 +209,12 @@
 							</div>
 							<div class="clearfix"></div>
 						</div>
-						<div class="form-group">
+						<div class="form-group" data-bind="visible:viewModel.designer.widgetConfig.type() !== 'selector'">
 							<label class="col-sm-4 control-label">Data Source :</label>
 							<div class="col-sm-6">
-								<select name="datasource" required data-required-msg="Data source is required" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
-				                <span class="k-invalid-msg" data-for="datasource"></span>
+								<!-- <select name="datasource" required data-required-msg="Data source is required" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+				                <span class="k-invalid-msg" data-for="datasource"></span> -->
+				                <select name="datasource" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
 							</div>
 							<div class="clearfix"></div>
 						</div>

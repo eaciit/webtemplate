@@ -434,7 +434,7 @@ viewModel.chart.parseConfig = function (config, isProduction) {
         delete config.chartArea.width;
     }
 
-    console.log("config", config);
+    // console.log("config", config);
 
     return config;
 };

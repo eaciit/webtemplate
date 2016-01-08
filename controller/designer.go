@@ -138,6 +138,19 @@ func (t *DesignerController) GetWidgets(r *knot.WebContext) interface{} {
 		}
 
 		return helper.Result(true, data[0]["data"], "")
+	} else if payload["type"] == "selector" {
+		bytes, err := ioutil.ReadFile(t.AppViewsPath + "data/selector.json")
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
+		data := []map[string]interface{}{}
+		err = json.Unmarshal(bytes, &data)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
+		return helper.Result(true, data, "")
 	}
 
 	return helper.Result(true, []map[string]interface{}{}, "")
@@ -173,6 +186,25 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 		defer connection.Close()
 
 		cursor, err := connection.NewQuery().Select("*").Cursor(nil)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+		defer cursor.Close()
+
+		dataSource, err := cursor.Fetch(nil, 0, false)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
+		return helper.Result(true, dataSource.Data, "")
+	} else if payload["type"] == "selector" {
+		connection, err := helper.LoadConfig(t.AppViewsPath + "data/selector.json")
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+		defer connection.Close()
+
+		cursor, err := connection.NewQuery().Where(dbox.Eq("_id", payload["widgetID"].(string))).Cursor(nil)
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
