@@ -31,6 +31,7 @@ viewModel.designer.optionPanelWidth = ko.observableArray([0, 1, 2, 3, 4, 5, 6, 7
 viewModel.designer.optionWidgetType = ko.observableArray([
 	{ title: "Chart", value: "chart"},
 	{ title: "Grid", value: "grid"},
+	{ title: "Selector", value: "selector"},
 ]);
 viewModel.designer.optionWidgetID = ko.observableArray([]);
 viewModel.designer.optionDataSources = ko.observableArray([]);
@@ -262,12 +263,16 @@ viewModel.designer.createPanel = function () {
 	viewModel.designer.closePopover();
 };
 viewModel.designer.createWidget = function () {
+	console.log("asd");
 	var $validator = $(".modal-add-widget").find("form").kendoValidator().data("kendoValidator");
 	if (!$validator.validate()) {
 		return;
 	}
 
 	var config = ko.mapping.toJS(viewModel.designer.widgetConfig);
+	if (viewModel.designer.widgetConfig.type() === "selector"){
+		config.dataSource = "";
+	}
 	config._id = viewModel.header.PageID;
 
 	viewModel.ajaxPost("/designer/savewidget", config, function (res) {
@@ -301,6 +306,11 @@ viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 				viewModel.designer.optionWidgetID.push({
 					value: e.id,
 					title: e.name + " (" + e.id + ")"
+				});
+			} else if (type == "selector") {
+				viewModel.designer.optionWidgetID.push({
+					value: e.ID,
+					title: e.title + " (" + e.ID + ")"
 				});
 			}
 		});
@@ -452,6 +462,7 @@ viewModel.designer.drawContent = function () {
 		$content.empty();
 
 		e.content.forEach(function (f) {
+			console.log(f);
 			viewModel.ajaxPost("/designer/getwidget", f, function (res) {
 				if (!res.success) {
 					alert(res.message);
@@ -462,37 +473,88 @@ viewModel.designer.drawContent = function () {
 
 				if (f.type == "chart") {
 					$wrapper = viewModel.designer.drawChart(f, res.data, $content);
-				} else {
+				} else if (f.type == "grid") {
 					$wrapper = viewModel.designer.drawGrid(f, res.data, $content);
+				} else {
+					$wrapper = viewModel.designer.drawSelector(f, res.data, $content);
 				}
 				$("<div class='clearfix'></div>").appendTo($content);
 
 				$wrapper.prepend("<button class='btn btn-sm btn-primary btn-edit-widget' data-widget-id='" + f.widgetID + "' onclick='viewModel.designer.editWidget(\"" + e.panelID + "\", \"" + f.widgetID + "\")'><span class='glyphicon glyphicon-edit'></span> Edit</button>");
 
-				viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
-					if (!res2.success) {
-						alert(res2.message);
-						return;
-					}
+				if (f.type !== "selector"){
+					viewModel.ajaxPost("/datasource/getdatasource", { _id: f.dataSource }, function (res2) {
+						if (!res2.success) {
+							alert(res2.message);
+							return;
+						}
 
-					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
+						var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
 
-					if (f.type == "chart") {
-						$contentWidget.data("kendoChart").setDataSource(new kendo.data.DataSource({
-							data: res2.data
-						}));
-					} else {
-						res.data[0].dataSource.data = res2.data;
-						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res.data[0].dataSource));
-					}
-					$panel.height($panel.find(".panel").height());
-					// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
-					// viewModel.designer.packery.layout();
-				});
+						if (f.type == "chart") {
+							$contentWidget.data("kendoChart").setDataSource(new kendo.data.DataSource({
+								data: res2.data
+							}));
+						} else if (f.type == "grid") {
+							res.data[0].dataSource.data = res2.data;
+							$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res.data[0].dataSource));
+						}
+						$panel.height($panel.find(".panel").height());
+						// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
+						// viewModel.designer.packery.layout();
+					});
+				}
 			});
 		});
 	});
 };
+viewModel.designer.drawSelector = function(f, res, $content){
+	var $wrapper = $("<div />");
+	$wrapper.attr("data-widget-id", f.widgetID);
+	$wrapper.addClass('widget widget-selector');
+	if (f.hasOwnProperty('width')) {
+		$wrapper.css("width", f.width + '%');
+	} else {
+		$wrapper.css("width", '100%');
+	}
+
+	$wrapper.appendTo($content);
+
+	var $selector = $("<div />").addClass('widget-content');
+	$selector.appendTo($wrapper);
+
+	var $elemSelector = $("<input type='text' id='selector"+ f.widgetID +"' name='selectorWidget' />");
+	$elemSelector.appendTo($wrapper);
+
+	if (res[0].masterDataSource !== ""){
+		viewModel.ajaxPost("/datasource/getdatasource", { _id: res[0].masterDataSource }, function (res2) {
+			var dataMasters = [];
+			for (var key in res2.data){
+				$.each(res2.data[key], function( key2, value ) {
+					dataMasters.push({"id":key2+key, "name": value.toString(), "field": key2});
+				});
+			}
+			console.log(dataMasters);
+			$("#selector"+f.widgetID).tokenInput(dataMasters, { 
+				zindex: 9999,
+				noResultsText: "Add New Selector",
+				allowFreeTagging: true,
+				// propertyToSearch: 'value',
+				tokenValue: 'id',
+				theme: "facebook",
+				onAdd: function (item) {
+					console.log(item);
+				},
+				resultsFormatter: function(item){
+					return "<li>"+item.field +" - " + item.name +"</li>"
+				},
+			});
+		});
+	}
+
+	$content.find(".clearfix").remove();
+	return $wrapper;
+}
 viewModel.designer.drawChart = function (f, res, $content) {
 	var config = viewModel.chart.parseConfig(res, true);
 	config.title = f.title;
@@ -531,7 +593,7 @@ viewModel.designer.closePopover = function () {
 viewModel.designer.drawGrid = function(f, res, $content) {
 	var $wrapper = $("<div />");
 	$wrapper.attr("data-widget-id", f.widgetID);
-	$wrapper.addClass('widget widget-chart');
+	$wrapper.addClass('widget widget-grid');
 	if (f.hasOwnProperty('width')) {
 		$wrapper.css("width", f.width + '%');
 	} else {
@@ -558,7 +620,6 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 		newColumns.push(column);
 	}
 	confRun.columns = newColumns;
-	console.log(confRun);
 	$grid.kendoGrid(confRun);
 	$content.find(".clearfix").remove();
 	return $wrapper;

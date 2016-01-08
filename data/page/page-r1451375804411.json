@@ -1,1 +1,135 @@
-{"content":[{"content":[{"dataSource":"ds1451296226501","height":400,"panelWidgetID":"pw1452055567555","title":"widget 2","type":"chart","widgetID":"c1451297572942","width":50},{"dataSource":"ds1451296226501","height":400,"panelWidgetID":"pw1452055558045","title":"widget chart 1","type":"chart","widgetID":"c1451297499719","width":50}],"hide":false,"offset":0,"panelID":"p1452055544044","title":"panel top","width":12},{"content":[{"dataSource":"ds1451296226501","height":300,"panelWidgetID":"pw1452043160617","title":"qw","type":"chart","widgetID":"c1451297499719","width":50},{"dataSource":"ds1451296226501","height":300,"panelWidgetID":"pw1452043160515","title":"asdfasdfadf","type":"chart","widgetID":"c1451297499719","width":50}],"hide":true,"offset":0,"panelID":"p1451966058430","title":"pasdflwerwer","width":12},{"content":[{"dataSource":"ds1451296226501","panelWidgetID":"pw1451993825861","title":"test gan","type":"chart","widgetID":"c1451297499719"}],"hide":true,"panelID":"p1451966044039","title":"testasfsadf","width":6},{"content":[{"dataSource":"ds1451296226501","height":400,"panelWidgetID":"Asdfasdfasdfasdf1","title":"asdfasdfaf","type":"grid","widgetID":"grid26","width":50},{"dataSource":"ds1451296226501","panelWidgetID":"Asdfasdfasdfasdf2","title":"asdfasdfasdf","type":"chart","widgetID":"c1451297572942"}],"hide":false,"panelID":"r1451375804411","title":"panel test","width":12},{"content":[{"dataSource":"ds1451296180357","panelWidgetID":"Asdfasdfasdfasdf3","title":"Weekly Report Chart","type":"chart","widgetID":"c1451297572942"}],"hide":false,"panelID":"p01230121","title":"Panel 1","width":4},{"content":[{"dataSource":"ds1451296226501","panelWidgetID":"Asdfasdfasdfasdf4","title":"Trend Chart","type":"chart","widgetID":"c1451297499719"}],"hide":false,"offset":2,"panelID":"p01230122","title":"Panel 2","width":6},{"content":[{"dataSource":"ds1451296226501","panelWidgetID":"Asdfasdfasdfasdf5","title":"Grid Example","type":"grid","widgetID":"grid23"}],"hide":false,"panelID":"p01230124","title":"Panel 4","width":7}],"datasources":["ds1451296226501"]}
+
+{
+    "content": [{
+        "content": [{
+            "dataSource": "",
+            "height": 400,
+            "panelWidgetID": "pw1452238277730",
+            "title": "selector",
+            "type": "selector",
+            "widgetID": "c1452158211056",
+            "width": 100
+        }],
+        "hide": false,
+        "offset": 0,
+        "panelID": "p1452233650693",
+        "title": "selector",
+        "width": 5
+    }, {
+        "content": [{
+            "dataSource": "ds1451296226501",
+            "height": 400,
+            "panelWidgetID": "pw1452055567555",
+            "title": "widget 2",
+            "type": "chart",
+            "widgetID": "c1451297572942",
+            "width": 50
+        }, {
+            "dataSource": "ds1451296226501",
+            "height": 400,
+            "panelWidgetID": "pw1452055558045",
+            "title": "widget chart 1",
+            "type": "chart",
+            "widgetID": "c1451297499719",
+            "width": 50
+        }],
+        "hide": false,
+        "offset": 0,
+        "panelID": "p1452055544044",
+        "title": "panel top",
+        "width": 12
+    }, {
+        "content": [{
+            "dataSource": "ds1451296226501",
+            "height": 300,
+            "panelWidgetID": "pw1452043160617",
+            "title": "qw",
+            "type": "chart",
+            "widgetID": "c1451297499719",
+            "width": 50
+        }, {
+            "dataSource": "ds1451296226501",
+            "height": 300,
+            "panelWidgetID": "pw1452043160515",
+            "title": "asdfasdfadf",
+            "type": "chart",
+            "widgetID": "c1451297499719",
+            "width": 50
+        }],
+        "hide": true,
+        "offset": 0,
+        "panelID": "p1451966058430",
+        "title": "pasdflwerwer",
+        "width": 12
+    }, {
+        "content": [{
+            "dataSource": "ds1451296226501",
+            "panelWidgetID": "pw1451993825861",
+            "title": "test gan",
+            "type": "chart",
+            "widgetID": "c1451297499719"
+        }],
+        "hide": true,
+        "panelID": "p1451966044039",
+        "title": "testasfsadf",
+        "width": 6
+    }, {
+        "content": [{
+            "dataSource": "ds1451296226501",
+            "height": 400,
+            "panelWidgetID": "Asdfasdfasdfasdf1",
+            "title": "asdfasdfaf",
+            "type": "grid",
+            "widgetID": "grid26",
+            "width": 50
+        }, {
+            "dataSource": "ds1451296226501",
+            "panelWidgetID": "Asdfasdfasdfasdf2",
+            "title": "asdfasdfasdf",
+            "type": "chart",
+            "widgetID": "c1451297572942"
+        }],
+        "hide": false,
+        "panelID": "r1451375804411",
+        "title": "panel test",
+        "width": 12
+    }, {
+        "content": [{
+            "dataSource": "ds1451296180357",
+            "panelWidgetID": "Asdfasdfasdfasdf3",
+            "title": "Weekly Report Chart",
+            "type": "chart",
+            "widgetID": "c1451297572942"
+        }],
+        "hide": false,
+        "panelID": "p01230121",
+        "title": "Panel 1",
+        "width": 4
+    }, {
+        "content": [{
+            "dataSource": "ds1451296226501",
+            "panelWidgetID": "Asdfasdfasdfasdf4",
+            "title": "Trend Chart",
+            "type": "chart",
+            "widgetID": "c1451297499719"
+        }],
+        "hide": false,
+        "offset": 2,
+        "panelID": "p01230122",
+        "title": "Panel 2",
+        "width": 6
+    }, {
+        "content": [{
+            "dataSource": "ds1451296226501",
+            "panelWidgetID": "Asdfasdfasdfasdf5",
+            "title": "Grid Example",
+            "type": "grid",
+            "widgetID": "grid23"
+        }],
+        "hide": false,
+        "panelID": "p01230124",
+        "title": "Panel 4",
+        "width": 7
+    }],
+    "datasources": ["ds1451296226501"]
+}
