@@ -76,7 +76,7 @@
 					<button class="btn btn-sm btn-primary" data-bind="click: viewModel.selector.addField()">
 						<span class="glyphicon glyphicon-plus"></span> Add Field
 					</button>
-					<table class="table table-hover">
+					<table class="table table-hover" id="tblfield">
 						<thead>
 							<tr>
 								<th>Data source</th>
@@ -88,7 +88,7 @@
 							<tr data-bind="attr: { 'data-field-id': _id() }">
 								<td style="width: 350px;">
 									<input disabled readonly data-bind="visible: false, value: _id" />
-									<select class="datasource-selectorfield" required data-required-msg="Data source is required"  style="width: 80%;" data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: dataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select data source', change: viewModel.selector.changeFieldDataSource(_id()) }, attr: { name: 'data-source-' + $index() }"></select>
+									<select class="datasource-selectorfield" required data-required-msg="Data source is required"  style="width: 80%;" data-bind="kendoDropDownList: { data: viewModel.selector.dataSources, value: dataSource, dataValueField: 'value', dataTextField: 'title', optionLabel: 'Select data source', change: viewModel.selector.changeFieldDataSource(_id(), $index()) }, attr: { name: 'data-source-' + $index() }"></select>
 								<span class="k-invalid-msg" data-bind="attr: { 'data-for': 'data-source-' + $index() }"></span>
 								</td>
 								<td style="width: 350px;">

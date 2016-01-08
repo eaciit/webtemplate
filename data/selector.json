@@ -2,7 +2,7 @@
   {
     "ID": "c1452158211056",
     "fields": "[{\"_id\":\"1452158191408\",\"dataSource\":\"ds1451296180357\",\"field\":\"activity\"},{\"_id\":\"1452158202517\",\"dataSource\":\"ds1451296180157\",\"field\":\"plan\"}]",
-    "masterDataSource": "ds1451296180357",
+    "masterDataSource": "ds1451296180157",
     "title": "example"
   }
 ]
