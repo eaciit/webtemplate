@@ -443,6 +443,32 @@ viewModel.designer.editWidget = function (panelID, widgetID) {
 	$(".modal-add-widget").modal("show");
 	$(".modal-add-widget").find("[name=title]").focus();
 };
+viewModel.designer.filterSelector = function(){
+	ko.mapping.toJS(viewModel.designer.config).content.forEach(function (e) {
+		e.content.forEach(function (f) {
+			if(f.type != "selector"){
+				// $('.grid-item[data-panel-id='+e.panelID+']').find('.widget[data-widget-id='+f.panelWidgetID+']>.widget-content').empty();
+				var dataItem = new Array();
+				$("input[name=selectorWidget]").each(function( index ) {
+					var dataSelector = $(this).tokenInput('get');
+					dataItem.push.apply(dataItem, dataSelector)
+				});
+				var dataPost = {_id: f.dataSource, item: dataItem};
+				console.log(dataPost);
+				viewModel.ajaxPost("/datasource/getdatasourceselector", dataPost, function (res2) {
+					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
+					if (f.type == "chart") {
+						$contentWidget.data("kendoChart").setDataSource(new kendo.data.DataSource({
+							data: res2.data
+						}));
+					} else if (f.type == "grid") {
+						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res2.data));
+					}
+				});
+			}
+		});
+	});
+}
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
@@ -462,7 +488,6 @@ viewModel.designer.drawContent = function () {
 		$content.empty();
 
 		e.content.forEach(function (f) {
-			console.log(f);
 			viewModel.ajaxPost("/designer/getwidget", f, function (res) {
 				if (!res.success) {
 					alert(res.message);
@@ -503,6 +528,8 @@ viewModel.designer.drawContent = function () {
 						// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
 						// viewModel.designer.packery.layout();
 					});
+				} else {	
+					$($wrapper).find('.btn-edit-widget').css('top','0px');
 				}
 			});
 		});
@@ -524,7 +551,7 @@ viewModel.designer.drawSelector = function(f, res, $content){
 	$selector.appendTo($wrapper);
 
 	var $elemSelector = $("<input type='text' id='selector"+ f.widgetID +"' name='selectorWidget' />");
-	$elemSelector.appendTo($wrapper);
+	$elemSelector.appendTo($selector);
 
 	if (res[0].masterDataSource !== ""){
 		viewModel.ajaxPost("/datasource/getdatasource", { _id: res[0].masterDataSource }, function (res2) {
@@ -534,21 +561,25 @@ viewModel.designer.drawSelector = function(f, res, $content){
 					dataMasters.push({"id":key2+key, "name": value.toString(), "field": key2});
 				});
 			}
-			console.log(dataMasters);
 			$("#selector"+f.widgetID).tokenInput(dataMasters, { 
-				zindex: 9999,
+				zindex: 700,
 				noResultsText: "Add New Selector",
 				allowFreeTagging: true,
 				// propertyToSearch: 'value',
 				tokenValue: 'id',
 				theme: "facebook",
 				onAdd: function (item) {
+					// console.log(item);
+					viewModel.designer.filterSelector();
+				},
+				onResult: function(item){
 					console.log(item);
 				},
 				resultsFormatter: function(item){
 					return "<li>"+item.field +" - " + item.name +"</li>"
 				},
 			});
+			$($selector).find('ul.token-input-list-facebook').css('width', '82%');
 		});
 	}
 
