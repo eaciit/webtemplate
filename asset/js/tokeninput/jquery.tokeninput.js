@@ -569,6 +569,7 @@
       }
 
       function resize_input() {
+          // var newValBox = input_box.val().replace('!','');
           if(input_val === (input_val = input_box.val())) {return;}
 
           // Get width left on the current line

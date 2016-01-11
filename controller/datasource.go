@@ -133,7 +133,36 @@ func (t *DataSourceController) GetDataSourceMetaData(r *knot.WebContext) interfa
 
 	return helper.Result(true, data, "")
 }
+func (t *DataSourceController) GetDataSourceSelector(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
 
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	_id := payload["_id"]
+	dsType := payload["type"]
+	path := payload["path"]
+
+	if _, ok := payload["type"]; !ok {
+		data, err := t.getDataSourceMetaData(_id)
+		if !helper.HandleError(err) {
+			return helper.Result(false, nil, err.Error())
+		}
+
+		dsType = data["type"].(string)
+		path = data["path"].(string)
+	}
+
+	ds, err := helper.FetchDataSource(_id, dsType, path)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	return helper.Result(true, ds, "")
+}
 func (t *DataSourceController) GetDataSource(r *knot.WebContext) interface{} {
 	r.Config.OutputType = knot.OutputJson
 

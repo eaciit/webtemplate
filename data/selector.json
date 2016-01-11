@@ -1,8 +1,8 @@
 [
   {
-    "ID": "c1452158211056",
-    "fields": "[{\"_id\":\"1452158191408\",\"dataSource\":\"ds1451296180357\",\"field\":\"activity\"},{\"_id\":\"1452158202517\",\"dataSource\":\"ds1451296180157\",\"field\":\"plan\"},{\"_id\":\"1452234546058\",\"dataSource\":\"ds1451296180357\",\"field\":\"activity\"}]",
-    "masterDataSource": "ds1451296180157",
+    "ID": "c1452483184176",
+    "fields": "[{\"_id\":\"1452483159600\",\"dataSource\":\"ds1451296180357\",\"field\":\"activity\"}]",
+    "masterDataSource": "ds1451296180357",
     "title": "example"
   }
 ]
