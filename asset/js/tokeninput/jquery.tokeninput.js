@@ -569,8 +569,10 @@
       }
 
       function resize_input() {
-          // var newValBox = input_box.val().replace('!','');
-          if(input_val === (input_val = input_box.val())) {return;}
+          var newValBox = input_box.val().replace('!','').replace('*','');
+          console.log(input_val);
+          // if(input_val === (input_val = input_box.val())) {return;}
+          if(input_val === (input_val = newValBox)) {return;}
 
           // Get width left on the current line
           var width_left = token_list.width() - input_box.offset().left - token_list.offset().left;

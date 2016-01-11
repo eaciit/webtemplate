@@ -565,6 +565,7 @@ viewModel.designer.drawSelector = function(f, res, $content){
 				zindex: 700,
 				noResultsText: "Add New Selector",
 				allowFreeTagging: true,
+				placeholder: 'Input Type Here!!',
 				// propertyToSearch: 'value',
 				tokenValue: 'id',
 				theme: "facebook",
@@ -572,9 +573,9 @@ viewModel.designer.drawSelector = function(f, res, $content){
 					// console.log(item);
 					viewModel.designer.filterSelector();
 				},
-				onResult: function(item){
-					console.log(item);
-				},
+				// onResult: function(item){
+				// 	console.log(item);
+				// },
 				resultsFormatter: function(item){
 					return "<li>"+item.field +" - " + item.name +"</li>"
 				},
