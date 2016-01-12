@@ -12,6 +12,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -156,4 +157,33 @@ func Result(success bool, data interface{}, message string) map[string]interface
 		"success": success,
 		"message": message,
 	}
+}
+
+func FetchQuerySelector(data []map[string]interface{}, payload map[string]interface{}) ([]map[string]interface{}, error) {
+	// for key, value := range payload {
+	// 	fmt.Println("Key:", key, "Value:", value)
+	// }
+	// fmt.Println(payload["item"].([]interface{}))
+	dataNew := []map[string]interface{}{}
+	if len(payload["item"].([]interface{})) > 0 {
+		for _, subRaw := range payload["item"].([]interface{}) {
+			for _, subData := range data {
+				sub := subRaw.(map[string]interface{})
+				tempData := ""
+				switch vv := subData[sub["field"].(string)].(type) {
+				case string:
+					tempData = vv
+				case int:
+					tempData = strconv.Itoa(vv)
+				}
+				if tempData == sub["name"].(string) {
+					// fmt.Println(tempData)
+					dataNew = append(dataNew, subData)
+				}
+			}
+		}
+	} else {
+		dataNew = data
+	}
+	return dataNew, nil
 }
