@@ -453,7 +453,7 @@ viewModel.designer.filterSelector = function(){
 					var dataSelector = $(this).tokenInput('get');
 					dataItem.push.apply(dataItem, dataSelector)
 				});
-				var dataPost = {_id: f.dataSource, item: dataItem};
+				var dataPost = ko.mapping.toJSON({_id: f.dataSource, item: dataItem});
 				console.log(dataPost);
 				viewModel.ajaxPost("/datasource/getdatasourceselector", dataPost, function (res2) {
 					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
@@ -552,14 +552,16 @@ viewModel.designer.drawSelector = function(f, res, $content){
 
 	var $elemSelector = $("<input type='text' id='selector"+ f.widgetID +"' name='selectorWidget' />");
 	$elemSelector.appendTo($selector);
-
 	if (res[0].masterDataSource !== ""){
 		viewModel.ajaxPost("/datasource/getdatasource", { _id: res[0].masterDataSource }, function (res2) {
 			var dataMasters = [];
 			for (var key in res2.data){
-				$.each(res2.data[key], function( key2, value ) {
-					dataMasters.push({"id":key2+key, "name": value.toString(), "field": key2});
-				});
+				console.log(res2.data[key]['activity']);
+				var fieldDs = JSON.parse(res[0].fields);
+				for (var key2 in fieldDs){
+					dataMasters.push({"id":fieldDs[key2].field+key, "name": res2.data[key][fieldDs[key2].field], "field": fieldDs[key2].field});
+					dataMasters.push({"id":'!'+fieldDs[key2].field+key, "name": '!'+res2.data[key][fieldDs[key2].field], "field": fieldDs[key2].field});
+				}
 			}
 			$("#selector"+f.widgetID).tokenInput(dataMasters, { 
 				zindex: 700,
@@ -570,7 +572,9 @@ viewModel.designer.drawSelector = function(f, res, $content){
 				tokenValue: 'id',
 				theme: "facebook",
 				onAdd: function (item) {
-					// console.log(item);
+					viewModel.designer.filterSelector();
+				},
+				onDelete: function(item){
 					viewModel.designer.filterSelector();
 				},
 				// onResult: function(item){
