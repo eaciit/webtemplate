@@ -347,7 +347,7 @@ viewModel.designer.editWidget = function (panelID, widgetID) {
 	$(".modal-add-widget").modal("show");
 	$(".modal-add-widget").find("[name=title]").focus();
 };
-viewModel.designer.filterSelector = function(){
+viewModel.designer.filterSelector = function(c){
 	ko.mapping.toJS(viewModel.designer.config).content.forEach(function (e) {
 		e.content.forEach(function (f) {
 			if(f.type != "selector"){
@@ -355,10 +355,19 @@ viewModel.designer.filterSelector = function(){
 				var dataItem = new Array();
 				$("input[name=selectorWidget]").each(function( index ) {
 					var dataSelector = $(this).tokenInput('get');
-					dataItem.push.apply(dataItem, dataSelector)
+					for (var key in dataSelector){
+						if(dataSelector[key]["field"] == undefined){
+							for (var key2 in c){
+								dataSelector[key]["field"] = c[key2].field;
+								dataItem.push(dataSelector[key]);
+							}
+						} else {
+							dataItem.push(dataSelector[key]);
+						}
+					}
+					
 				});
 				var dataPost = ko.mapping.toJSON({_id: f.dataSource, item: dataItem});
-				console.log(dataPost);
 				viewModel.ajaxPost("/datasource/getdatasourceselector", dataPost, function (res2) {
 					var $contentWidget = $("[data-widget-id='" + f.widgetID + "'] .widget-content");
 					if (f.type == "chart") {
@@ -471,12 +480,10 @@ viewModel.designer.drawSelector = function(f, res, $content){
 
 	var $elemSelector = $("<input type='text' id='selector"+ f.widgetID +"' name='selectorWidget' />");
 	$elemSelector.appendTo($selector);
+	var dataMasters = [], fieldDs = JSON.parse(res[0].fields);
 	if (res[0].masterDataSource !== ""){
 		viewModel.ajaxPost("/datasource/getdatasource", { _id: res[0].masterDataSource }, function (res2) {
-			var dataMasters = [];
 			for (var key in res2.data){
-				console.log(res2.data[key]['activity']);
-				var fieldDs = JSON.parse(res[0].fields);
 				for (var key2 in fieldDs){
 					dataMasters.push({"id":fieldDs[key2].field+key, "name": res2.data[key][fieldDs[key2].field], "field": fieldDs[key2].field});
 					dataMasters.push({"id":'!'+fieldDs[key2].field+key, "name": '!'+res2.data[key][fieldDs[key2].field], "field": fieldDs[key2].field});
@@ -487,24 +494,39 @@ viewModel.designer.drawSelector = function(f, res, $content){
 				noResultsText: "Add New Selector",
 				allowFreeTagging: true,
 				placeholder: 'Input Type Here!!',
-				// propertyToSearch: 'value',
 				tokenValue: 'id',
 				theme: "facebook",
 				onAdd: function (item) {
-					viewModel.designer.filterSelector();
+					viewModel.designer.filterSelector(fieldDs);
 				},
 				onDelete: function(item){
-					viewModel.designer.filterSelector();
+					viewModel.designer.filterSelector(fieldDs);
 				},
-				// onResult: function(item){
-				// 	console.log(item);
-				// },
 				resultsFormatter: function(item){
 					return "<li>"+item.field +" - " + item.name +"</li>"
 				},
 			});
 			$($selector).find('ul.token-input-list-facebook').css('width', '82%');
 		});
+	} else {
+		$("#selector"+f.widgetID).tokenInput(dataMasters, { 
+			zindex: 700,
+			noResultsText: "Add New Selector",
+			allowFreeTagging: true,
+			placeholder: 'Input Type Here!!',
+			tokenValue: 'id',
+			theme: "facebook",
+			onAdd: function (item) {
+				viewModel.designer.filterSelector(fieldDs);
+			},
+			onDelete: function(item){
+				viewModel.designer.filterSelector(fieldDs);
+			},
+			resultsFormatter: function(item){
+				return "<li>"+item.field +" - " + item.name +"</li>"
+			},
+		});
+		$($selector).find('ul.token-input-list-facebook').css('width', '82%');
 	}
 
 	$content.find(".clearfix").remove();
