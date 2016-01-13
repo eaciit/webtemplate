@@ -164,7 +164,12 @@ func FetchQuerySelector(data []map[string]interface{}, payload map[string]interf
 	dataNew := []map[string]interface{}{}
 	if len(payload["item"].([]interface{})) > 0 {
 		for _, subRaw := range payload["item"].([]interface{}) {
-			for _, subData := range data {
+			dataLoop := data
+			if len(dataNew) > 0 {
+				dataLoop = dataNew
+			}
+			dataNew = []map[string]interface{}{}
+			for _, subData := range dataLoop {
 				sub := subRaw.(map[string]interface{})
 				tempData := ""
 				searchVal := strings.ToLower(sub["name"].(string))
