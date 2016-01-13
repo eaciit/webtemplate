@@ -493,3 +493,39 @@ func (t *DesignerController) SetHideShow(r *knot.WebContext) interface{} {
 
 	return helper.Result(true, nil, "")
 }
+
+func (t *DesignerController) ReoderPanel(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]interface{}{}
+	err := r.GetForms(&payload)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	_id := payload["_id"].(string)
+	order := strings.Split(payload["order"].(string), ",")
+
+	config, err := t.getConfig(_id)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	content := map[string]interface{}{}
+	newContent := []interface{}{}
+
+	for _, each := range config["content"].([]interface{}) {
+		panel := each.(map[string]interface{})
+		content[panel["panelID"].(string)] = panel
+	}
+
+	for _, panelID := range order {
+		newContent = append(newContent, content[panelID])
+	}
+
+	config["content"] = newContent
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	return helper.Result(true, nil, "")
+}
