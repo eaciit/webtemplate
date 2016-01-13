@@ -529,3 +529,25 @@ func (t *DesignerController) ReoderPanel(r *knot.WebContext) interface{} {
 
 	return helper.Result(true, nil, "")
 }
+
+func (t *DesignerController) SaveOtherConfig(r *knot.WebContext) interface{} {
+	r.Config.OutputType = knot.OutputJson
+
+	payload := map[string]string{}
+	err := r.GetForms(&payload)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+	_id := payload["_id"]
+	configString := payload["config"]
+
+	config := map[string]interface{}{}
+	json.Unmarshal([]byte(configString), &config)
+
+	err = t.setConfig(_id, config)
+	if !helper.HandleError(err) {
+		return helper.Result(false, nil, err.Error())
+	}
+
+	return helper.Result(true, nil, "")
+}

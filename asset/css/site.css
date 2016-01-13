@@ -48,9 +48,6 @@ body {
     position: absolute;
     right: 5px;
 }
-.form-panel .row > div {
-	margin-top:10px;
-}
 
 .line-hr {
 	border: 1px solid #C4C4C4;
@@ -857,6 +854,9 @@ ul.topnav li a {
 .k-grid .k-grid-content tbody tr td a:hover {
 	text-decoration: none;
 }
+.k-grid.no-grid-toolbar .k-header.k-grid-toolbar {
+	display: none;
+}
 .panel .bg-notif {
 	padding: 15px;
 }
@@ -961,4 +961,96 @@ ul.topnav li a {
 }
 .dev-mode .grid-item .widget:hover .btn-edit-widget {
 	visibility: visible;
+}
+
+/** default css for layout */
+
+header#page-header {
+    background: #ffffff;
+    height: 48px;
+}
+.navbar {
+    background: #3E69B6;
+}
+.navbar .navbar-nav li.open a{
+    background: #3E69B6;
+}
+.navbar .navbar-nav li.selected a { 
+    color: #ffffff; 
+    background: #354A6F;
+}
+.navbar .navbar-nav li a:hover, .navbar .navbar-nav li.active a:hover { 
+    color: #ffffff; 
+    background: #354A6F;
+}
+.navbar .open, .navbar .open > a, .navbar .open > a:focus, .navbar .open > a:hover { 
+    color: #ffffff; 
+    background: #354A6F;
+}
+.navbar .dropdown .dropdown-menu { 
+    background: #3E69B6; 
+    border-top-color: #354A6F;
+}
+.navbar .dropdown .dropdown-menu li { 
+    background: #3E69B6;
+}
+.navbar .dropdown .dropdown-menu li a { 
+    color: #ffffff 
+}
+.navbar .dropdown .dropdown-menu li a:hover { 
+    background: #354A6F;
+}
+#menu-left {
+    background: #FAFAFA;
+    border-right-color:#E5E5E5;
+}
+#menu-left .toogle-left span {
+    background: #ADADAD;
+}
+#menu-left .toogle-left span:hover{
+    background: #737373;
+}
+ul.topnav li a:hover {
+    background-color: #D6E0F7;
+    color: #6489EB!important;
+    border-left-color: #6489EB;
+}   
+ul.topnav li a:hover:after {
+    border-bottom-color:#6489EB;
+}
+ul.topnav li a.selected {
+    background-color: #D6E0F7;
+    color: #6489EB!important;
+    border-left-color: #6489EB;
+}
+ul.topnav li a.selected:after {
+    border-bottom-color:#6489EB;
+}
+ul.topnav ul li a:hover {
+    color: #6489EB!important;
+}
+.notif .content-notif {
+    background: #FAFAFA;
+}
+.notif {
+    background: #233D6C;
+    border-color:#233D6C;
+}
+.notif .content-notif .media-body {
+    background: #D6E0F7;
+}
+.notif .content-notif i {
+    color:#26C7F0;
+}
+.panel-custom {
+    border-color: #3E69B6;
+}
+.panel-custom>.panel-heading {
+    color: #ffffff;
+    background-color: #3E69B6;
+    border-color: #3E69B6;
+}
+
+.panel-no-header .panel-custom {
+    border-color: #DDDDDD;
 }

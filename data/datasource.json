@@ -1,13 +1,13 @@
 [
   {
     "_id": "ds1451296180357",
-    "path": "https://gist.githubusercontent.com/novalagung/61bfc8357ad7254e5ec5/raw/dd443a0940da3ecafe2d276d207ec1dc807a4aa6/data-source-sample.json",
+    "path": "https://gist.githubusercontent.com/novalagung/61bfc8357ad7254e5ec5/raw/485b6c70dbd053dd630b4466d0d938b1ef1fb2dd/data-source-sample.json",
     "title": "Data Source Test URL",
     "type": "url"
   },
   {
     "_id": "ds1451296180157",
-    "path": "https://gist.githubusercontent.com/novalagung/61bfc8357ad7254e5ec5/raw/dd443a0940da3ecafe2d276d207ec1dc807a4aa6/data-source-sample.json",
+    "path": "https://gist.githubusercontent.com/novalagung/61bfc8357ad7254e5ec5/raw/485b6c70dbd053dd630b4466d0d938b1ef1fb2dd/data-source-sample.json",
     "title": "Data Source Test URL 2",
     "type": "url"
   },
