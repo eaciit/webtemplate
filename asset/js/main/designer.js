@@ -3,13 +3,14 @@ viewModel.designer.template = {
 		_id: "",
 		datasources: [],
 		content: [],
+		headerVisibility: true,
 	},
 	panelConfig: {
 		_id: "",
 		title: "",
 		width: 12,
 		offset: 0,
-		hide:false,
+		hide: false,
 	},
 	widgetConfig: {
 		panelWidgetID: "",
@@ -22,7 +23,9 @@ viewModel.designer.template = {
 		dataSource: ""
 	}
 };
+viewModel.designer.backup = ko.observable({});
 viewModel.designer.packery = {};
+viewModel.designer.allDatasources = ko.observableArray([]);
 viewModel.designer.href = ko.observable('/');
 viewModel.designer.config = ko.mapping.fromJS(viewModel.designer.template.config);
 viewModel.designer.panelConfig = ko.mapping.fromJS(viewModel.designer.template.panelConfig);
@@ -43,13 +46,9 @@ viewModel.designer.optionPanelID = ko.computed(function () {
 		};
 	}).toArray();
 });
-viewModel.designer.emptyContainer = function () {
-	$(".grid-container").empty();
-	// $(".grid-container .grid-item").each(function (i, e) {
-	//     viewModel.designer.packery.remove(e);
-	// });
-};
 viewModel.designer.fillContainer = function () {
+	$(".grid-container").empty();
+
 	viewModel.ajaxPost('/designer/getconfig', { _id: viewModel.header.PageID }, function (res) {
 		if (!res.success) {
 			alert(res.message);
@@ -62,55 +61,8 @@ viewModel.designer.fillContainer = function () {
 		ko.mapping.fromJS(res.data, viewModel.designer.config);
 		viewModel.designer.drawContent();
 		viewModel.designer.production();
-		viewModel.designer.gridHideShow();
 	});
 };
-viewModel.designer.gridHideShow = function() {
-	var $popoverTemplate = $($("#template-popover").html());
-	$('.btn-hideshow-panel').popover({
-		title: "Choose Hide Show",
-		width: 200,
-		placement: "bottom",
-		html: true,
-		template: $popoverTemplate.clone().addClass("popover-hideshow")[0].outerHTML,
-		content: '<span class="loader">Loading data ...</span>'
-	});
-	$(".btn-hideshow-panel").on("shown.bs.popover", function (e) {
-		var $popover = $(".popover-hideshow");
-
-		$popover.find(".popover-content").html("<ul></ul>");
-		var $container = $popover.find(".popover-content ul");
-
-		viewModel.designer.config.content().forEach(function (e) {
-			var checked = "";
-			if (e.hide() == false)
-				checked = "checked";
-
-			var $each = $('<li> <input onclick="viewModel.designer.changeSelectedHideShow(this)" type="checkbox" name="' + e.panelID() + '" ' + checked + ' /> <span>' + e.title() + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e.panelID() + ')</span> </li>');
-			$each.appendTo($container);
-		});
-	});
-}
-viewModel.designer.changeSelectedHideShow = function(e){
-	var selecteHideshow = [];
-
-	$(e).closest("ul").find("input[type='checkbox']").not(':checked').each (function (i, e) {
-		if(e.name !== '')
-			selecteHideshow.push(e.name);
-	});
-
-	var param = { 
-		_id: viewModel.header.PageID, 
-		panelid: selecteHideshow.join(",") 
-	};
-	viewModel.ajaxPost("designer/sethideshow", param, function (res) {
-		if (!res.success) {
-			alert(res.message);
-			return;
-		}
-		viewModel.designer.fillContainer();
-	});
-}
 viewModel.designer.prepare = function () {
 	viewModel.designer.packery = new Packery($(".grid-container")[0], {
 		itemSelector: '.grid-item',
@@ -118,68 +70,14 @@ viewModel.designer.prepare = function () {
 	});
 
 	viewModel.designer.fillContainer();
-	var $popoverTemplate = $($("#template-popover").html());
 
-	// $('.btn-add-panel').popover({
-	// 	title: "Add new panel",
-	// 	width: 200,
-	// 	placement: "bottom",
-	// 	html: true,
-	// 	template: $popoverTemplate.clone().addClass("popover-panel")[0].outerHTML,
-	// 	content: $($("#template-content-popover-panel").html())[0].outerHTML
-	// });
-	// $(".btn-add-panel").on("shown.bs.popover", function (e) {
-	// 	var $popover = $(".popover-panel");
+	viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
 
-	// 	ko.applyBindings(viewModel, $popover.find("form")[0]);
-	// 	ko.mapping.toJS(viewModel.designer.template.panelConfig, viewModel.designer.panelConfig);
-
-	// 	$popover.find("[name=title]").focus();
-	// });
-
-	$('.btn-set-datasource').popover({
-		title: "Choose datasources",
-		width: 200,
-		placement: "bottom",
-		html: true,
-		template: $popoverTemplate.clone().addClass("popover-datasource")[0].outerHTML,
-		content: '<span class="loader">Loading data ...</span>'
-	});
-	$(".btn-set-datasource").on("shown.bs.popover", function (e) {
-		var $popover = $(".popover-datasource");
-
-		viewModel.ajaxPost('/datasource/getdatasources', { }, function (res) {
-			if (!res.success) {
-				alert(res.message);
-				return;
-			}
-
-			setTimeout(function () {
-				$popover.find(".popover-content").html("<ul></ul>");
-				var $container = $popover.find(".popover-content ul");
-
-				res.data.forEach(function (e) {
-					var checked = "";
-
-					Lazy(viewModel.designer.config.datasources()).sort().toArray().forEach(function (f) {
-						if (e._id == f) {
-							checked = "checked";
-						}
-					});
-
-					var $each = $('<li> <input onclick="viewModel.designer.changeSelectedDatasource(this)" type="checkbox" name="' + e._id + '" ' + checked + ' /> <span>' + e.title + '</span> <br /> <input type="checkbox" style="visibility: hidden;" /> <span>(' + e._id + ')</span> </li>');
-					$each.appendTo($container);
-				});
-			}, 200);
-		});
-	});
-
-	$("body").on("show.bs.popover", ".btn-popover", function (e) {
-		$("body .popover-overlay").remove();
-		$("<div class='popover-overlay'></div>").appendTo($("body"));
-	});
-	$("body").on("click", ".popover-overlay", function () {
-		viewModel.designer.closePopover();
+		viewModel.designer.allDatasources(res.data);
 	});
 };
 viewModel.designer.getDataSources = function (callback) {
@@ -282,7 +180,6 @@ viewModel.designer.createWidget = function () {
 		}
 
 		$(".modal-add-widget").modal("hide");
-		viewModel.designer.emptyContainer();
 		viewModel.designer.fillContainer();
 	});
 };
@@ -317,24 +214,6 @@ viewModel.designer.changePopupWidgetSelectedTypeValue = function (o) {
 
 		viewModel.designer.changePopupWidgetSelectedTypeValue();
 		viewModel.designer.changePopupWidgetSelectedTypeValue = function () {};
-	});
-};
-viewModel.designer.changeSelectedDatasource = function (o) {
-	var selectedDatasources = [];
-
-	$(o).closest("ul").find("input[type='checkbox']:checked").each (function (i, e) {
-		selectedDatasources.push(e.name);
-	});
-
-	var param = { 
-		_id: viewModel.header.PageID, 
-		datasources: selectedDatasources.join(",") 
-	};
-	viewModel.ajaxPost("designer/setdatasource", param, function (res) {
-		if (!res.success) {
-			alert(res.message);
-			return;
-		}
 	});
 };
 viewModel.designer.putPanel = function (id, title, width, offset, mode) {
@@ -506,6 +385,12 @@ viewModel.designer.filterSelector = function(c){
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
+	if (viewModel.designer.config.headerVisibility()) {
+		$("body").removeClass("panel-no-header");
+	} else {
+		$("body").addClass("panel-no-header");
+	}
+
 	ko.mapping.toJS(viewModel.designer.config).content.forEach(function (e) {
 		var $panel = viewModel.designer.putPanel(e.panelID, e.title, e.width, e.offset);
 		e.target = $panel[0];
@@ -517,6 +402,10 @@ viewModel.designer.drawContent = function () {
 		}
 		if (e.hide == true) {
 			$panel.css("display", "none");
+		}
+
+		if (!viewModel.designer.config.headerVisibility()) {
+			$panel.find(".panel-heading").remove();
 		}
 
 		$content.empty();
@@ -555,8 +444,13 @@ viewModel.designer.drawContent = function () {
 								data: res2.data
 							}));
 						} else if (f.type == "grid") {
-							res.data[0].dataSource.data = res2.data;
-							$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res.data[0].dataSource));
+							$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource({
+								data: res2.data
+							}));
+
+							if ($contentWidget.find(".k-header.k-grid-toolbar").html() == "") { 
+								$contentWidget.addClass("no-grid-toolbar");
+							}
 						}
 						$panel.height($panel.find(".panel").height());
 						// $(viewModel.designer.packery.element).css('height',$(viewModel.designer.packery.element).height() + 20 + 'px');
@@ -683,10 +577,10 @@ viewModel.designer.drawGrid = function(f, res, $content) {
 		$wrapper.css("width", '100%');
 	}
 
-	if (f.hasOwnProperty('height')) {
-		$wrapper.css("height", f.height + 'px');
-	} else {
-	}
+	// if (f.hasOwnProperty('height')) {
+	// 	$wrapper.css("height", f.height + 'px');
+	// } else {
+	// }
 
 	$wrapper.appendTo($content);
 
@@ -757,6 +651,59 @@ viewModel.designer.production = function () {
 	});
 	$(".page-title").html(viewModel.header.title);
 	$(".btn-edit-widget").remove();
+};
+viewModel.designer.showConfigurePage = function () {
+	viewModel.designer.backup($.extend(true, {}, ko.mapping.toJS(viewModel.designer.config)));
+	viewModel.mode('configure');
+};
+viewModel.designer.backToFront = function () {
+	ko.mapping.fromJS(viewModel.designer.backup(), viewModel.designer.config);
+	viewModel.mode('');
+};
+viewModel.designer.saveConfiguration = function () {
+	var param = { 
+		_id: viewModel.header.PageID,
+		config: JSON.stringify(ko.mapping.toJS(viewModel.designer.config))
+	}
+
+	viewModel.ajaxPost("/designer/saveotherconfig", param, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+
+		alert("Changes saved");
+		viewModel.mode('');
+		viewModel.designer.fillContainer();
+	});
+};
+viewModel.designer.isPanelShowed = function (data) {
+	return ko.pureComputed({
+		read: function () {
+        	return !this.hide();
+	    },
+	    write: function (value) {
+	        this.hide(!value)
+	    },
+	    owner: data
+	});
+};
+viewModel.designer.isDataSourceChecked = function (_id) {
+	var o = Lazy(viewModel.designer.allDatasources()).find({ _id: _id });
+
+	return ko.pureComputed({
+		read: function () {
+        	return (viewModel.designer.config.datasources().indexOf(_id) > -1);
+	    },
+	    write: function (value) {
+	    	if (value) {
+	    		viewModel.designer.config.datasources.push(_id);
+	    	} else {
+	    		viewModel.designer.config.datasources.remove(_id);
+	    	}
+	    },
+	    owner: viewModel.designer.config.datasources
+	});
 };
 
 $(function () {

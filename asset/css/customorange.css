@@ -102,24 +102,3 @@ ul.topnav ul li a:hover {
     background-color: #EB861A;
     border-color: #EB861A;
 }
-
-/*Grid Custom*/
-.k-grid-header, .k-grid-footer, .k-grid-header thead>tr>th, .k-grid-footer .k-footer-template>td, .k-grouping-header, .k-grid .k-grouping-header, .k-grid-toolbar, .k-grid-toolbar .k-button{
-    background: #EB861A;
-    border-color: #ffffff;
-}
-.k-pager-wrap[data-role="pager"], .k-group, .k-list-container[data-role="popup"]{
-    background: #EB861A;
-}
-.k-pager-wrap[data-role="pager"] .k-link{
-    border-color: #ffffff;
-}
-.k-pager-wrap[data-role="pager"] .k-state-selected,.k-state-selected,.k-pager-wrap[data-role="pager"] .k-link:hover, .k-list>.k-state-selected, .k-list .k-state-hover, .k-state-hover:hover, .k-grid-toolbar .k-button:hover, .k-dropdown-wrap.k-state-default{
-    color: #ffffff;
-    background-color: #333;
-    border-color: #ffffff;
-}
-.k-pager-wrap[data-role="pager"] .k-dropdown-wrap{
-    background-color: #EB861A;
-    border-color: #ffffff;
-}
