@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -166,16 +167,34 @@ func FetchQuerySelector(data []map[string]interface{}, payload map[string]interf
 			for _, subData := range data {
 				sub := subRaw.(map[string]interface{})
 				tempData := ""
-				searchVal := sub["name"].(string)
+				searchVal := strings.ToLower(sub["name"].(string))
 				switch vv := subData[sub["field"].(string)].(type) {
 				case string:
-					tempData = vv
+					tempData = strings.ToLower(vv)
 				case int:
-					tempData = strconv.Itoa(vv)
+					tempData = strings.ToLower(strconv.Itoa(vv))
 				}
+				pattern := strings.Index(searchVal, "*")
 				if searchVal[:1] == "!" {
 					if tempData != searchVal[1:len(searchVal)] {
 						dataNew = append(dataNew, subData)
+					}
+				} else if pattern >= 0 {
+					if pattern == 0 {
+						searchPat := searchVal[1:len(searchVal)]
+						if strings.Index(searchPat, "*") == (len(searchPat) - 1) {
+							if strings.Index(tempData, searchPat[0:(len(searchPat)-1)]) >= 0 {
+								dataNew = append(dataNew, subData)
+							}
+						} else {
+							if tempData[(len(tempData)-len(searchPat)):len(tempData)] == searchPat {
+								dataNew = append(dataNew, subData)
+							}
+						}
+					} else if pattern == (len(searchVal) - 1) {
+						if tempData[0:len(searchVal[0:(len(searchVal)-1)])] == searchVal[0:(len(searchVal)-1)] {
+							dataNew = append(dataNew, subData)
+						}
 					}
 				} else {
 					if tempData == searchVal {
