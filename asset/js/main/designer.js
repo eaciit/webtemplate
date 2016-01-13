@@ -368,7 +368,7 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 		content: [
 			'<button style="width: 100%; margin-bottom: 10px;" class="btn btn-sm btn-primary btn-edit-panel" onclick="viewModel.designer.editPanel(\'' + id + '\')">Edit Panel</button>',
 			'<button style="width: 100%; margin-bottom: 10px;" class="btn btn-sm btn-primary" onclick="viewModel.designer.showAddWidgetModal(\'' + id + '\')">Add Widget</button>',
-			'<div style="width: 100%; text-align:center;"><button style="margin-right:5px;" class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\',\'Previous\')">Previous</button><button class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\',\'Next\')">Next</button></div>'
+			'<div style="width: 100%; text-align:center;"><button style="margin-right: 10px; width: 117px;" class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\', \'prev\')">Move Prev</button><button style="width: 117px;" class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\', \'next\')">Move Next</button></div>'
 		].join('')
 	});
 	// viewModel.designer.packery.bindDraggabillyEvents($panel);
@@ -385,9 +385,34 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 
 	return $panel;
 };
-viewModel.designer.changePosition = function(id, status){
-	// viewModel.designer.config
+viewModel.designer.changePosition = function(id, status) {
+	var $currentPanel = $('[data-panel-id="' + id + '"]');
+	var $container = $currentPanel.parent();
+
+	if (status == "prev") {
+		var $prev = $currentPanel.prev();
+		if ($prev.size() > 0) {
+			$currentPanel.remove().insertBefore($prev);
+		}
+	} else {
+		var $next = $currentPanel.next();
+		if ($next.size() > 0) {
+			$currentPanel.remove().insertAfter($next);
+		}
+	}
 	
+	var panelOrder = $("[data-panel-id]").map(function (i, e) { 
+		return $(e).data("panel-id"); 
+	}).toArray().join(",");
+
+	var param = { _id: viewModel.header.PageID, order: panelOrder };
+
+	viewModel.ajaxPost("/designer/reoderpanel", param, function (res) {
+		if (!res.success) {
+			alert(res.message);
+			return;
+		}
+	});
 };
 viewModel.designer.editPanel = function (_id) {
 	var param = { _id: viewModel.header.PageID, panelID: _id };
