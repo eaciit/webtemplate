@@ -885,15 +885,41 @@ ul.topnav li a {
 }
 .content-panel .grid-container .grid-item .panel {
 	margin-bottom: 0px;
+	border-color: #DDDDDD;
 }
-.content-panel .grid-container .grid-item .panel .panel-heading span {
-	margin-top: -20px;
+.content-panel .grid-container .grid-item .panel .panel-heading,
+.panel.panel-default .panel-heading {
+	background-color: #FAFAFA;
+	color: #333;
+	border-color: #DDDDDD;
+}
+.content-panel .grid-container .grid-item .panel .panel-config {
 	font-size: 15px;
+	color: #3E69B6;
+	z-index: 10;
+    position: absolute;
+    right: 19px;
+    padding-right: 3px;
+    top: 19px;
+}
+.content-panel .grid-container .grid-item .panel .panel-config span {
+	margin-top: -20px;
 	cursor: pointer;
+	margin-left: 8px;
 }
 .content-panel .grid-container .grid-item .panel .panel-body {
 	position: relative;
 }
+
+/*.panel-custom {
+    border-color: #CC3D3D;
+}
+.panel-custom>.panel-heading {
+    color: #ffffff;
+    background-color: #CC3D3D;
+    border-color: #CC3D3D;
+}*/
+
 
 .content-panel .grid-container > div[data-ss-colspan="1"] { width: 10%; }
 .content-panel .grid-container > div[data-ss-colspan="2"] { width: 20%; }
@@ -917,9 +943,6 @@ ul.topnav li a {
 }
 .popover-content .pull-right {
 	margin: 9px 0px 14px;
-}
-.panel-heading span.clickable {
-	margin-left:8px;
 }
 .panel-heading .panel-title {
 	margin-right: 65px;
@@ -1042,15 +1065,12 @@ ul.topnav ul li a:hover {
 .notif .content-notif i {
     color:#26C7F0;
 }
-.panel-custom {
-    border-color: #3E69B6;
+.widget-content ul.token-input-list-facebook {
+	border: 1px solid #DDDDDD;
 }
-.panel-custom>.panel-heading {
-    color: #ffffff;
-    background-color: #3E69B6;
-    border-color: #3E69B6;
+.popover {
+	z-index: 1001;
 }
-
-.panel-no-header .panel-custom {
-    border-color: #DDDDDD;
+.popover .popover-title {
+    color: #333;
 }

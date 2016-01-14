@@ -3,7 +3,7 @@ viewModel.designer.template = {
 		_id: "",
 		datasources: [],
 		content: [],
-		headerVisibility: true,
+		themeColor: '#3E69B6'
 	},
 	panelConfig: {
 		_id: "",
@@ -78,6 +78,12 @@ viewModel.designer.prepare = function () {
 		}
 
 		viewModel.designer.allDatasources(res.data);
+	});
+
+	$('html').on('click', function(e) { 
+		if (typeof $(e.target).data('original-title') == 'undefined') { 
+			$('[data-original-title]').popover('hide'); 
+		} 
 	});
 };
 viewModel.designer.getDataSources = function (callback) {
@@ -250,6 +256,9 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 			'<div style="width: 100%; text-align:center;"><button style="margin-right: 10px; width: 117px;" class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\', \'prev\')">Move Prev</button><button style="width: 117px;" class="btn btn-primary btn-sm" onclick="viewModel.designer.changePosition(\'' + id + '\', \'next\')">Move Next</button></div>'
 		].join('')
 	});
+
+	var themeColor = viewModel.designer.config.themeColor;
+	themeColor.notifySubscribers(themeColor());
 	// viewModel.designer.packery.bindDraggabillyEvents($panel);
 	// viewModel.designer.packery.bindUIDraggableEvents($panel.draggable());
 	// $(".grid-container").shapeshift({
@@ -387,12 +396,6 @@ viewModel.designer.filterSelector = function(c){
 viewModel.designer.drawContent = function () {
 	$(".grid-container").empty();
 
-	if (viewModel.designer.config.headerVisibility()) {
-		$("body").removeClass("panel-no-header");
-	} else {
-		$("body").addClass("panel-no-header");
-	}
-
 	ko.mapping.toJS(viewModel.designer.config).content.forEach(function (e) {
 		var $panel = viewModel.designer.putPanel(e.panelID, e.title, e.width, e.offset);
 		e.target = $panel[0];
@@ -404,10 +407,6 @@ viewModel.designer.drawContent = function () {
 		}
 		if (e.hide == true) {
 			$panel.css("display", "none");
-		}
-
-		if (!viewModel.designer.config.headerVisibility()) {
-			$panel.find(".panel-heading").remove();
 		}
 
 		$content.empty();
@@ -707,6 +706,16 @@ viewModel.designer.isDataSourceChecked = function (_id) {
 	    owner: viewModel.designer.config.datasources
 	});
 };
+viewModel.designer.selectThemeColor = function (e) {
+	viewModel.designer.config.themeColor(e.value);
+};
+viewModel.designer.config.themeColor.subscribe(function (value) {
+	console.log("asdf");
+	$(".navbar").css("background-color", value);
+	$(".nav-user > li > a").css("color", value);
+	$(".content-panel .grid-container .grid-item .panel .panel-config").css("color", value);
+	$(".notif").css("background-color", value);
+});
 
 $(function () {
 	viewModel.designer.prepare();

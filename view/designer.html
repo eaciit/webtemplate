@@ -12,14 +12,16 @@
 		<div class="panel panel-custom">
 			<div class="panel-heading">
 				<h3 class="panel-title">Panel 1</h3>
-				<span class="pull-right clickable" onclick="viewModel.designer.removePanel(this)">
-					<i class="fa fa-close"></i>
+			</div>
+			<div class="panel-config">
+				<span class="clickable" onclick="viewModel.designer.hideShow(this)">
+					<i class="fa fa-chevron-up hideshow"></i>
 				</span>
-				<span class="pull-right clickable">
+				<span class="clickable">
 					<i class="fa fa-gear btn-popover"></i>
 				</span>
-				<span class="pull-right clickable" onclick="viewModel.designer.hideShow(this)">
-					<i class="fa fa-chevron-up hideshow"></i>
+				<span class="clickable" onclick="viewModel.designer.removePanel(this)">
+					<i class="fa fa-close"></i>
 				</span>
 			</div>
 			<div class="panel-body">Panel content</div>
@@ -239,47 +241,54 @@
 	</div>
 
 	<div class="content-body content-panel" data-overlay-page-wrap data-bind="with: config">
-		<!-- hide/show panel -->
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h1 class="panel-title">Panel</h1>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">General</h1>
+				</div>
+				<div class="panel-body form-panel">
+					<label class="col-md-6">Choose theme color</label>
+					<div class="col-md-6">
+						<div data-bind="kendoColorPicker: { buttons: false, value: themeColor, select: viewModel.designer.selectThemeColor }"></div>
+					</div>
+				</div>
 			</div>
-			<div class="panel-body form-panel">
-	            <div class="col-md-12">
-	                <input type="checkbox" data-bind="checked: headerVisibility" />
-	                Show panel header
-	            </div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">Data Source</h1>
+				</div>
+				<div class="panel-body form-panel">
+					<p>Select data sources</p>
 
-				<hr />
-
-				<p>Change visibility of panel</p>
-				
-				<div class="col-md-12">
-					<ul data-bind="foreach: content" style="list-style: none; padding: 0px;" class="config-showed-data-sources">
-						<li>
-							<input type="checkbox" data-bind="checked: viewModel.designer.isPanelShowed($data)" />
-							<label data-bind="text: $data.title() + '(' + $data.panelID() + ')'"></label>
-						</li>
-					</ul>
+					<div class="col-md-12">
+						<ul data-bind="foreach: viewModel.designer.allDatasources" style="list-style: none; padding: 0px;" class="config-selected-data-sources">
+							<li>
+								<input type="checkbox" data-bind="checked: viewModel.designer.isDataSourceChecked($data._id)" />
+								<label data-bind="text: $data.title"></label>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- data source -->
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h1 class="panel-title">Data Source</h1>
-			</div>
-			<div class="panel-body form-panel">
-				<p>Select data sources</p>
-
-				<div class="col-md-12">
-					<ul data-bind="foreach: viewModel.designer.allDatasources" style="list-style: none; padding: 0px;" class="config-selected-data-sources">
-						<li>
-							<input type="checkbox" data-bind="checked: viewModel.designer.isDataSourceChecked($data._id)" />
-							<label data-bind="text: $data.title"></label>
-						</li>
-					</ul>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h1 class="panel-title">Panel Visibility</h1>
+				</div>
+				<div class="panel-body form-panel">
+					<p>Change visibility of panel</p>
+					
+					<div class="col-md-12">
+						<ul data-bind="foreach: content" style="list-style: none; padding: 0px;" class="config-showed-data-sources">
+							<li>
+								<input type="checkbox" data-bind="checked: viewModel.designer.isPanelShowed($data)" />
+								<label data-bind="text: $data.title() + '(' + $data.panelID() + ')'"></label>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
