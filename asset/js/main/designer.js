@@ -257,6 +257,8 @@ viewModel.designer.putPanel = function (id, title, width, offset, mode) {
 		].join('')
 	});
 
+	var themeColor = viewModel.designer.config.themeColor;
+	themeColor.notifySubscribers(themeColor());
 	// viewModel.designer.packery.bindDraggabillyEvents($panel);
 	// viewModel.designer.packery.bindUIDraggableEvents($panel.draggable());
 	// $(".grid-container").shapeshift({
