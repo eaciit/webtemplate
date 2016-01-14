@@ -93,12 +93,6 @@ ul.topnav ul li a:hover {
 		color:#E6841C;
 	}
 
-/*Panel color*/
-.panel-custom {
-    border-color: #EB861A;
-}
-.panel-custom>.panel-heading {
-    color: #ffffff;
-    background-color: #EB861A;
-    border-color: #EB861A;
+.content-panel .grid-container .grid-item .panel .panel-config {
+    color: #EB861A;
 }
