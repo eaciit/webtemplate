@@ -375,7 +375,9 @@ viewModel.designer.filterSelector = function(c){
 							data: res2.data
 						}));
 					} else if (f.type == "grid") {
-						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource(res2.data));
+						$contentWidget.data("kendoGrid").setDataSource(new kendo.data.DataSource({
+							data: res2.data
+						}));
 					}
 				});
 			}
