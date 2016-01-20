@@ -341,6 +341,7 @@ func (t *DesignerController) GetPanel(r *knot.WebContext) interface{} {
 	}
 
 	data, err := t.getConfig(payload["_id"])
+
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
@@ -358,6 +359,7 @@ func (t *DesignerController) GetPanel(r *knot.WebContext) interface{} {
 				"title":  each["title"],
 				"width":  int(each["width"].(float64)),
 				"offset": offset,
+				"hideContainerPanel": each["hideContainerPanel"],
 			}
 			return helper.Result(true, data, "")
 		}
@@ -380,6 +382,7 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 	hide, _ := strconv.ParseBool(payload["hide"].(string))
 	var width int = int(payload["width"].(float64))
 	var offset int = int(payload["offset"].(float64))
+	hideContainerPanel, _ := strconv.ParseBool(payload["hideContainerPanel"].(string))
 
 	panelID := payload["panelID"].(string)
 
@@ -397,6 +400,7 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 			"width":   width,
 			"offset":  offset,
 			"hide":    hide,
+			"hideContainerPanel":    hideContainerPanel,
 			"content": []interface{}{},
 		}
 		config["content"] = append([]interface{}{contentNew}, contentOld...)
@@ -407,6 +411,7 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 				contentOld[i].(map[string]interface{})["title"] = title
 				contentOld[i].(map[string]interface{})["width"] = width
 				contentOld[i].(map[string]interface{})["offset"] = offset
+				contentOld[i].(map[string]interface{})["hideContainerPanel"] = hideContainerPanel
 			}
 		}
 
@@ -419,6 +424,8 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 	}
 
 	return helper.Result(true, panelID, "")
+	//~ return helper.Result(true, config, config)
+	//~ return fmt.printf("%v",config)
 }
 
 func (t *DesignerController) RemovePanel(r *knot.WebContext) interface{} {

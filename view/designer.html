@@ -1,9 +1,9 @@
 <!-- widget -->
 <script>
 	viewModel.header.PageID = "{{.pageID}}";
-    viewModel.header.title = "{{.title}}";
-    viewModel.header.href = "{{.href}}";
-    viewModel.header.production = {{.production}};
+	viewModel.header.title = "{{.title}}";
+	viewModel.header.href = "{{.href}}";
+	viewModel.header.production = {{.production}};
 </script>
 <script src="/static/asset/js/main/designer.js"></script>
 
@@ -91,16 +91,16 @@
 	</div>
 
 	<div class="modal fade modal-add-panel" tabindex="-1" role="dialog">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                	<span aria-hidden="true">&times;</span>
-	            	</button>
-	                <h4 class="modal-title">Add new panel</h4>
-	            </div>
-	            <div class="modal-body">
-	                <form class="form-horizontal page-form" data-bind="with: viewModel.designer.panelConfig">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Add new panel</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal page-form" data-bind="with: viewModel.designer.panelConfig">
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Title</label>
 							<div class="col-sm-6">
@@ -128,35 +128,43 @@
 								<span class="k-invalid-msg" data-for="offset"></span>
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Hidden Panel Header</label>
+							<div class="col-sm-6">
+								<!--input style="width: 40%;" name="showHide" /-->
+								<!--input type="checkbox" id="preAuth" name="preAuth" data-on="primary" data-off="info" data-on-label="YES" data-off-label="NO" -->
+								<input name="hideContainerPanel"  data-bind="checkedValue: hideContainerPanel, checked: hideContainerPanel"  type="checkbox" checked data-show="toggle">
+							</div>
+						</div>
 					</form>
-	            </div>
-	            <div class="modal-footer">
-	                <button class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
 					<button class='btn btn-sm btn-success' data-bind="click: viewModel.designer.createPanel">
 						<span class='glyphicon glyphicon-save'></span> Save
 					</button>
-	            </div>
-				
-	        </div>
-	    </div>
+				</div>
+
+			</div>
+		</div>
 	</div>
 
 	<div class="modal fade modal-add-widget" tabindex="-1" role="dialog">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                	<span aria-hidden="true">&times;</span>
-	            	</button>
-	                <h4 class="modal-title">Add new widget</h4>
-	            </div>
-	            <div class="modal-body">
-	                <form class="form-horizontal page-form" data-bind="with: viewModel.designer.widgetConfig">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Add new widget</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal page-form" data-bind="with: viewModel.designer.widgetConfig">
 						<div class="form-group">
 							<label class="col-sm-4 control-label">Panel :</label>
 							<div class="col-sm-6">
 								<select name="panel" disabled required data-required-msg="Select panel" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionPanelID, value: panelID, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
-				                <span class="k-invalid-msg" data-for="panel"></span>
+								<span class="k-invalid-msg" data-for="panel"></span>
 							</div>
 							<div class="clearfix"></div>
 						</div>
@@ -173,7 +181,7 @@
 							<label class="col-sm-4 control-label">Width Ratio :</label>
 							<div class="col-sm-6">
 								<input name="width" style="width: 40%;" data-bind="kendoNumericTextBox: { value: width, min: 10, max: 100, format: '# \\%' }" />
-				                <span class="k-invalid-msg" data-for="width"></span>
+								<span class="k-invalid-msg" data-for="width"></span>
 							</div>
 							<div class="clearfix"></div>
 						</div>
@@ -181,7 +189,7 @@
 							<label class="col-sm-4 control-label">Height :</label>
 							<div class="col-sm-6">
 								<input name="height" style="width: 40%;" data-bind="kendoNumericTextBox: { value: height, min: 0, format: '# px' }" />
-				                <span class="k-invalid-msg" data-for="height"></span>
+								<span class="k-invalid-msg" data-for="height"></span>
 							</div>
 							<div class="clearfix"></div>
 						</div>
@@ -196,7 +204,7 @@
 							<label class="col-sm-4 control-label">Setting :</label>
 							<div class="col-sm-6">
 								<select name="setting" required data-required-msg="Setting is require" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionWidgetID, value: widgetID, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
-				                <span class="k-invalid-msg" data-for="setting"></span>
+								<span class="k-invalid-msg" data-for="setting"></span>
 							</div>
 							<div class="clearfix"></div>
 						</div>
@@ -204,22 +212,22 @@
 							<label class="col-sm-4 control-label">Data Source :</label>
 							<div class="col-sm-6">
 								<!-- <select name="datasource" required data-required-msg="Data source is required" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
-				                <span class="k-invalid-msg" data-for="datasource"></span> -->
-				                <select name="datasource" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
+								<span class="k-invalid-msg" data-for="datasource"></span> -->
+								<select name="datasource" style="width: 100%;" data-bind="kendoDropDownList: { data: viewModel.designer.optionDataSources, value: dataSource, optionLabel: 'Select one', dataValueField: 'value', dataTextField: 'title' }"></select>
 							</div>
 							<div class="clearfix"></div>
 						</div>
 					</form>
-	            </div>
-	            <div class="modal-footer">
-	                <button class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
 					<button class='btn btn-sm btn-success' data-bind="click: viewModel.designer.createWidget">
 						<span class='glyphicon glyphicon-save'></span> Save
 					</button>
-	            </div>
-				
-	        </div>
-	    </div>
+				</div>
+
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -253,7 +261,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h1 class="panel-title">Data Source</h1>
@@ -280,7 +288,7 @@
 				</div>
 				<div class="panel-body form-panel">
 					<p>Change visibility of panel</p>
-					
+
 					<div class="col-md-12">
 						<ul data-bind="foreach: content" style="list-style: none; padding: 0px;" class="config-showed-data-sources">
 							<li>
