@@ -1,0 +1,11 @@
+task :use_old_dbox do
+	Dir.chdir("/Users/novalagung/Documents/go/src/github.com/eaciit/dbox") do
+		`git checkout 50dd77265766c65772f6bf1f2c113350d311c378`
+	end
+end
+
+task :use_new_dbox do
+	Dir.chdir("/Users/novalagung/Documents/go/src/github.com/eaciit/dbox") do
+		`git checkout master`
+	end
+end
