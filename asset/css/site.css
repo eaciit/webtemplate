@@ -1074,3 +1074,21 @@ ul.topnav ul li a:hover {
 .popover .popover-title {
     color: #333;
 }
+
+.grid-item.hide-panel-header,
+.grid-item.hide-panel-header .panel,
+.grid-item.hide-panel-header .panel > div,
+.grid-item.hide-panel-header .panel .panel-heading {
+	background-color: transparent !important;
+	border: none;
+}
+.grid-item.hide-panel-header .panel {
+	border-radius: 0px;
+	box-shadow: 0 0 0 rgba(0,0,0,0)
+}
+.grid-item.hide-panel-header .panel .panel-config {
+	display: none;
+}
+.grid-item.hide-panel-header .panel:hover .panel-config {
+	display: block;
+}
