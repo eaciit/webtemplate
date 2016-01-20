@@ -631,17 +631,17 @@ viewModel.designer.removePanel = function (o) {
 };
 viewModel.designer.hideShow = function(e){
 	var x_panel = $(e).closest('div.grid-item'), button = x_panel.find('i.hideshow'),content = x_panel.find('div.panel-body');
-    content.slideToggle(200);
+	content.slideToggle(200);
 	button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
 	if(button.hasClass('fa-chevron-up')){
 		$(x_panel).css('height',$(x_panel).attr('heightContent') + 'px');
-    } else {
+	} else {
 		$(x_panel).attr('heightContent',$(x_panel).height() + 20);
 		$(x_panel).css('height','50px');
-    }
+	}
 	x_panel.toggle
-    x_panel.resize();
-    // viewModel.designer.packery.layout();
+	x_panel.resize();
+	// viewModel.designer.packery.layout();
 };
 viewModel.designer.production = function () {
 	if (!viewModel.header.production) {
@@ -687,12 +687,12 @@ viewModel.designer.saveConfiguration = function () {
 viewModel.designer.isPanelShowed = function (data) {
 	return ko.pureComputed({
 		read: function () {
-        	return !this.hide();
-	    },
-	    write: function (value) {
-	        this.hide(!value)
-	    },
-	    owner: data
+			return !this.hide();
+		},
+		write: function (value) {
+			this.hide(!value)
+		},
+		owner: data
 	});
 };
 viewModel.designer.isDataSourceChecked = function (_id) {
@@ -700,16 +700,16 @@ viewModel.designer.isDataSourceChecked = function (_id) {
 
 	return ko.pureComputed({
 		read: function () {
-        	return (viewModel.designer.config.datasources().indexOf(_id) > -1);
-	    },
-	    write: function (value) {
-	    	if (value) {
-	    		viewModel.designer.config.datasources.push(_id);
-	    	} else {
-	    		viewModel.designer.config.datasources.remove(_id);
-	    	}
-	    },
-	    owner: viewModel.designer.config.datasources
+			return (viewModel.designer.config.datasources().indexOf(_id) > -1);
+		},
+		write: function (value) {
+			if (value) {
+				viewModel.designer.config.datasources.push(_id);
+			} else {
+				viewModel.designer.config.datasources.remove(_id);
+			}
+		},
+		owner: viewModel.designer.config.datasources
 	});
 };
 viewModel.designer.selectThemeColor = function (e) {
