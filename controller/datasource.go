@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"github.com/eaciit/dbox"
 	"github.com/eaciit/knot/knot.v1"
@@ -13,7 +14,7 @@ type DataSourceController struct {
 	AppViewsPath string
 }
 
-func (t *DataSourceController) getDataSourceMetaData(_id string) (map[string]interface{}, error) {
+func (t *DataSourceController) getDataSourceMetaData(_id string) (toolkit.M, error) {
 	connection, err := helper.LoadConfig(t.AppViewsPath + "/data/datasource.json")
 	if !helper.HandleError(err) {
 		return nil, err
@@ -26,12 +27,16 @@ func (t *DataSourceController) getDataSourceMetaData(_id string) (map[string]int
 	}
 	defer cursor.Close()
 
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		return nil, err
 	}
+	if len(res) == 0 {
+		return nil, errors.New("No data found")
+	}
 
-	return dataSource.Data[0].(map[string]interface{}), nil
+	return res[0], nil
 }
 
 func (t *DataSourceController) GetDataSources(r *knot.WebContext) interface{} {
@@ -49,12 +54,16 @@ func (t *DataSourceController) GetDataSources(r *knot.WebContext) interface{} {
 	}
 	defer cursor.Close()
 
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
+	if len(res) == 0 {
+		return helper.Result(false, nil, "No data found")
+	}
 
-	return helper.Result(true, dataSource.Data, "")
+	return helper.Result(true, res, "")
 }
 
 func (t *DataSourceController) SaveDataSource(r *knot.WebContext) interface{} {

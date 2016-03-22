@@ -62,13 +62,14 @@ func (t *SelectorController) GetSelectorConfigs(r *knot.WebContext) interface{} 
 	}
 	defer cursor.Close()
 
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
 
-	if len(dataSource.Data) > 0 {
-		return helper.Result(true, dataSource.Data, "")
+	if len(res) > 0 {
+		return helper.Result(true, res, "")
 	}
 
 	return helper.Result(true, []interface{}{}, "")
