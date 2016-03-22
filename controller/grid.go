@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"github.com/eaciit/knot/knot.v1"
+	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
 	m "github.com/eaciit/webtemplate/models"
 	"io"
@@ -29,12 +30,16 @@ func (t *GridController) GetGridData(r *knot.WebContext) interface{} {
 	}
 	defer cursor.Close()
 
-	dataGrid, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
+	if len(res) == 0 {
+		return helper.Result(false, nil, "No data found")
+	}
 
-	return helper.Result(true, dataGrid.Data, "")
+	return helper.Result(true, res, "")
 }
 
 func (t *GridController) SaveJsonGrid(r *knot.WebContext) interface{} {
@@ -179,10 +184,14 @@ func (t *GridController) GetDetailGrid(r *knot.WebContext) interface{} {
 	}
 	defer cursor.Close()
 
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
+	if len(res) == 0 {
+		return helper.Result(false, nil, "No data found")
+	}
 
-	return helper.Result(true, dataSource.Data, "")
+	return helper.Result(true, res, "")
 }

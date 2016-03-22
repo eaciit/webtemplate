@@ -20,17 +20,19 @@ func (t *PageController) GetRoutes(r *knot.WebContext) interface{} {
 	connection, err := helper.LoadConfig(t.AppViewsPath + "data/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
+
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
+
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	helper.HandleError(err)
 
 	routes := []map[string]interface{}{}
 
-	for _, eachRaw := range dataSource.Data {
-		each := eachRaw.(map[string]interface{})
-		submenu := each["submenu"].([]interface{})
+	for _, each := range res {
+		submenu := each.Get("submenu").([]interface{})
 
 		routes = append(routes, map[string]interface{}{
 			"_id":       each["_id"],
@@ -98,23 +100,25 @@ func (t *PageController) SaveRoute(r *knot.WebContext) interface{} {
 			connection, err := helper.LoadConfig(t.AppViewsPath + "data/routes.json")
 			helper.HandleError(err)
 			defer connection.Close()
+
 			cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 			helper.HandleError(err)
 			defer cursor.Close()
-			dataSource, err := cursor.Fetch(nil, 0, false)
+
+			res := []toolkit.M{}
+			err = cursor.Fetch(&res, 0, false)
 			helper.HandleError(err)
-			rawRoutes := dataSource.Data
 
 		outer:
-			for h, top := range rawRoutes {
-				if top.(map[string]interface{})["_id"] == parentIDs[0] {
+			for h, top := range res {
+				if top.Get("_id") == parentIDs[0] {
 					if len(parentIDs) == 1 {
-						rawRoutes[h].(map[string]interface{})["submenu"] = append(rawRoutes[h].(map[string]interface{})["submenu"].([]interface{}), newData)
+						res[h]["submenu"] = append(top.Get("submenu").([]interface{}), newData)
 						break outer
 					} else {
-						for i, each := range rawRoutes[h].(map[string]interface{})["submenu"].([]interface{}) {
-							if each.(map[string]interface{})["_id"].(string) == parentIDs[1] {
-								rawRoutes[h].(map[string]interface{})["submenu"].([]interface{})[i].(map[string]interface{})["submenu"] = append(rawRoutes[h].(map[string]interface{})["submenu"].([]interface{})[i].(map[string]interface{})["submenu"].([]interface{}), newData)
+						for i, each := range top.Get("submenu").([]interface{}) {
+							if each.(toolkit.M)["_id"].(string) == parentIDs[1] {
+								top.Get("submenu").([]interface{})[i].(toolkit.M)["submenu"] = append(top.Get("submenu").([]interface{})[i].(toolkit.M)["submenu"].([]interface{}), newData)
 								break outer
 							}
 						}
@@ -122,7 +126,7 @@ func (t *PageController) SaveRoute(r *knot.WebContext) interface{} {
 				}
 			}
 
-			bytes, err := json.Marshal(rawRoutes)
+			bytes, err := json.Marshal(res)
 			helper.HandleError(err)
 			ioutil.WriteFile(t.AppViewsPath+"data/routes.json", bytes, 0644)
 		}
@@ -132,33 +136,35 @@ func (t *PageController) SaveRoute(r *knot.WebContext) interface{} {
 		connection, err := helper.LoadConfig(t.AppViewsPath + "data/routes.json")
 		helper.HandleError(err)
 		defer connection.Close()
+
 		cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 		helper.HandleError(err)
 		defer cursor.Close()
-		dataSource, err := cursor.Fetch(nil, 0, false)
+
+		res := []toolkit.M{}
+		err = cursor.Fetch(&res, 0, false)
 		helper.HandleError(err)
-		rawRoutes := dataSource.Data
 
 	outer2:
-		for h, top := range rawRoutes {
+		for h, top := range res {
 			if len(_ids) == 1 {
-				if top.(map[string]interface{})["_id"].(string) == _ids[0] {
-					rawRoutes[h].(map[string]interface{})["title"] = payload["title"]
-					rawRoutes[h].(map[string]interface{})["href"] = payload["href"]
+				if top.GetString("_id") == _ids[0] {
+					top["title"] = payload["title"]
+					top["href"] = payload["href"]
 					break outer2
 				}
 			} else if len(_ids) == 2 {
-				submenu := top.(map[string]interface{})["submenu"].([]interface{})
+				submenu := res[h]["submenu"].([]interface{})
 
 				for i, each := range submenu {
 					if each.(map[string]interface{})["_id"].(string) == _ids[1] {
-						rawRoutes[h].(map[string]interface{})["submenu"].([]interface{})[i].(map[string]interface{})["title"] = payload["title"]
-						rawRoutes[h].(map[string]interface{})["submenu"].([]interface{})[i].(map[string]interface{})["href"] = payload["href"]
+						res[h]["submenu"].([]interface{})[i].(map[string]interface{})["title"] = payload["title"]
+						res[h]["submenu"].([]interface{})[i].(map[string]interface{})["href"] = payload["href"]
 						break outer2
 					}
 				}
 			} else {
-				submenu := top.(map[string]interface{})["submenu"].([]interface{})
+				submenu := res[h]["submenu"].([]interface{})
 
 				for i, each := range submenu {
 					if each.(map[string]interface{})["_id"].(string) == _ids[1] {
@@ -166,8 +172,8 @@ func (t *PageController) SaveRoute(r *knot.WebContext) interface{} {
 
 						for j, each2 := range submenu2 {
 							if each2.(map[string]interface{})["_id"].(string) == _ids[2] {
-								rawRoutes[h].(map[string]interface{})["submenu"].([]interface{})[i].(map[string]interface{})["submenu"].([]interface{})[j].(map[string]interface{})["title"] = payload["title"]
-								rawRoutes[h].(map[string]interface{})["submenu"].([]interface{})[i].(map[string]interface{})["submenu"].([]interface{})[j].(map[string]interface{})["href"] = payload["href"]
+								res[h]["submenu"].([]interface{})[i].(map[string]interface{})["submenu"].([]interface{})[j].(map[string]interface{})["title"] = payload["title"]
+								res[h]["submenu"].([]interface{})[i].(map[string]interface{})["submenu"].([]interface{})[j].(map[string]interface{})["href"] = payload["href"]
 								break outer2
 							}
 						}
@@ -176,7 +182,7 @@ func (t *PageController) SaveRoute(r *knot.WebContext) interface{} {
 			}
 		}
 
-		bytes, err := json.Marshal(rawRoutes)
+		bytes, err := json.Marshal(res)
 		helper.HandleError(err)
 		ioutil.WriteFile(t.AppViewsPath+"data/routes.json", bytes, 0644)
 	}
@@ -195,16 +201,16 @@ func (t *PageController) GetRoute(r *knot.WebContext) interface{} {
 	connection, err := helper.LoadConfig(t.AppViewsPath + "data/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
+
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
+
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	helper.HandleError(err)
 
-	rawRoutes := dataSource.Data
-
-	for _, eachRaw := range rawRoutes {
-		each := eachRaw.(map[string]interface{})
+	for _, each := range res {
 		submenu := each["submenu"].([]interface{})
 
 		if len(_ids) == 1 {
@@ -264,24 +270,24 @@ func (t *PageController) DeleteRoute(r *knot.WebContext) interface{} {
 	connection, err := helper.LoadConfig(t.AppViewsPath + "data/routes.json")
 	helper.HandleError(err)
 	defer connection.Close()
+
 	cursor, err := connection.NewQuery().Select("*").Cursor(nil)
 	helper.HandleError(err)
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
-	helper.HandleError(err)
 
-	rawRoutes := dataSource.Data
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
+	helper.HandleError(err)
 
 	// someday, someone would fix these codes, I hope
 	// --------- suffering start here
 outer:
-	for i, eachRaw := range rawRoutes {
-		each := eachRaw.(map[string]interface{})
+	for i, each := range res {
 		submenu := each["submenu"].([]interface{})
 
 		if len(_ids) == 1 {
 			if _ids[0] == each["_id"].(string) {
-				rawRoutes = append(rawRoutes[:i], rawRoutes[i+1:]...)
+				res = append(res[:i], res[i+1:]...)
 				break outer
 			}
 		}
@@ -292,7 +298,7 @@ outer:
 
 			if len(_ids) == 2 {
 				if _ids[0] == each["_id"].(string) && _ids[1] == sub["_id"].(string) {
-					rawRoutes[i].(map[string]interface{})["submenu"] = append(submenu[:j], submenu[j+1:]...)
+					res[i]["submenu"] = append(submenu[:j], submenu[j+1:]...)
 					break outer
 				}
 			}
@@ -302,7 +308,7 @@ outer:
 
 				if len(_ids) == 3 {
 					if _ids[0] == each["_id"].(string) && _ids[1] == sub["_id"].(string) && _ids[2] == sub2["_id"].(string) {
-						rawRoutes[i].(map[string]interface{})["submenu"].([]interface{})[j].(map[string]interface{})["submenu"] = append(submenu2[:k], submenu2[k+1:]...)
+						res[i]["submenu"].([]interface{})[j].(map[string]interface{})["submenu"] = append(submenu2[:k], submenu2[k+1:]...)
 						break outer
 					}
 				}
@@ -311,7 +317,7 @@ outer:
 	}
 	// --------- suffering end here
 
-	bytes, err := json.Marshal(rawRoutes)
+	bytes, err := json.Marshal(res)
 	helper.HandleError(err)
 	ioutil.WriteFile(t.AppViewsPath+"data/routes.json", bytes, 0644)
 

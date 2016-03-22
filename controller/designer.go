@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/eaciit/dbox"
 	"github.com/eaciit/knot/knot.v1"
+	"github.com/eaciit/toolkit"
 	"github.com/eaciit/webtemplate/helper"
 	"io/ioutil"
 	"strconv"
@@ -70,11 +71,15 @@ func (t *DesignerController) GetConfig(r *knot.WebContext) interface{} {
 	}
 	defer cursor.Close()
 
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		helper.Result(false, nil, err.Error())
 	}
-	data["href"] = dataSource.Data[0].(map[string]interface{})["href"]
+	if len(res) == 0 {
+		return helper.Result(false, nil, "No data found")
+	}
+	data["href"] = res[0].GetString("href")
 
 	return helper.Result(true, data, "")
 }
@@ -191,12 +196,16 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 		}
 		defer cursor.Close()
 
-		dataSource, err := cursor.Fetch(nil, 0, false)
+		res := []toolkit.M{}
+		err = cursor.Fetch(&res, 0, false)
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
+		if len(res) == 0 {
+			return helper.Result(false, nil, "No data found")
+		}
 
-		return helper.Result(true, dataSource.Data, "")
+		return helper.Result(true, res, "")
 	} else if payload["type"] == "selector" {
 		connection, err := helper.LoadConfig(t.AppViewsPath + "data/selector.json")
 		if !helper.HandleError(err) {
@@ -210,12 +219,16 @@ func (t *DesignerController) GetWidget(r *knot.WebContext) interface{} {
 		}
 		defer cursor.Close()
 
-		dataSource, err := cursor.Fetch(nil, 0, false)
+		res := []toolkit.M{}
+		err = cursor.Fetch(&res, 0, false)
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
+		if len(res) == 0 {
+			return helper.Result(false, nil, "No data found")
+		}
 
-		return helper.Result(true, dataSource.Data, "")
+		return helper.Result(true, res, "")
 	}
 
 	return helper.Result(true, map[string]interface{}{}, "")
@@ -355,10 +368,10 @@ func (t *DesignerController) GetPanel(r *knot.WebContext) interface{} {
 			}
 
 			data := map[string]interface{}{
-				"_id":    each["panelID"],
-				"title":  each["title"],
-				"width":  int(each["width"].(float64)),
-				"offset": offset,
+				"_id":                each["panelID"],
+				"title":              each["title"],
+				"width":              int(each["width"].(float64)),
+				"offset":             offset,
 				"hideContainerPanel": each["hideContainerPanel"],
 			}
 			return helper.Result(true, data, "")
@@ -395,13 +408,13 @@ func (t *DesignerController) SavePanel(r *knot.WebContext) interface{} {
 	if panelID == "" {
 		panelID = helper.RandomIDWithPrefix("p")
 		contentNew := map[string]interface{}{
-			"panelID": panelID,
-			"title":   title,
-			"width":   width,
-			"offset":  offset,
-			"hide":    hide,
-			"hideContainerPanel":    hideContainerPanel,
-			"content": []interface{}{},
+			"panelID":            panelID,
+			"title":              title,
+			"width":              width,
+			"offset":             offset,
+			"hide":               hide,
+			"hideContainerPanel": hideContainerPanel,
+			"content":            []interface{}{},
 		}
 		config["content"] = append([]interface{}{contentNew}, contentOld...)
 	} else {

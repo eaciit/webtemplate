@@ -41,16 +41,17 @@ func (t *ChartController) GetChartConfigs(r *knot.WebContext) interface{} {
 	}
 	defer cursor.Close()
 
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	if !helper.HandleError(err) {
 		return helper.Result(false, nil, err.Error())
 	}
 
-	if len(dataSource.Data) > 0 {
-		return helper.Result(true, dataSource.Data, "")
+	if len(res) > 0 {
+		return helper.Result(true, res, "")
 	}
 
-	return helper.Result(true, []interface{}{}, "")
+	return helper.Result(true, res, "")
 }
 
 func (t *ChartController) SaveChartConfig(r *knot.WebContext) interface{} {
@@ -161,15 +162,18 @@ func (t *ChartController) GetChartConfig(r *knot.WebContext) interface{} {
 		}
 		defer cursor.Close()
 
-		dataSources, err := cursor.Fetch(nil, 0, false)
+		res := []toolkit.M{}
+		err = cursor.Fetch(&res, 0, false)
 		if !helper.HandleError(err) {
 			return helper.Result(false, nil, err.Error())
 		}
+		if len(res) == 0 {
+			return helper.Result(false, nil, "No data found")
+		}
 
-		dataSourceRelev := dataSources.Data[0].(map[string]interface{})
-		dsID := dataSourceRelev["_id"].(string)
-		dsType := dataSourceRelev["type"].(string)
-		dsPath := dataSourceRelev["path"].(string)
+		dsID := res[0].GetString("_id")
+		dsType := res[0].GetString("type")
+		dsPath := res[0].GetString("path")
 		dataSource, _ := helper.FetchDataSource(dsID, dsType, dsPath)
 		data["dataSource"] = map[string]interface{}{"data": dataSource}
 	}

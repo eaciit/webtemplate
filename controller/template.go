@@ -26,10 +26,11 @@ func (t *TemplateController) GetRoutes(r *knot.WebContext) interface{} {
 		fmt.Printf("Cursor not initialized")
 	}
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	helper.HandleError(err)
 
-	return dataSource.Data
+	return res
 }
 
 func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
@@ -44,10 +45,11 @@ func (t *TemplateController) GetMenuLeft(r *knot.WebContext) interface{} {
 		fmt.Printf("Cursor not initialized")
 	}
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	helper.HandleError(err)
 
-	return dataSource.Data
+	return res
 }
 
 func (t *TemplateController) GetHeader(r *knot.WebContext) interface{} {
@@ -62,10 +64,11 @@ func (t *TemplateController) GetHeader(r *knot.WebContext) interface{} {
 		fmt.Printf("Cursor not initialized")
 	}
 	defer cursor.Close()
-	dataSource, err := cursor.Fetch(nil, 0, false)
+	res := []toolkit.M{}
+	err = cursor.Fetch(&res, 0, false)
 	helper.HandleError(err)
 
-	return dataSource.Data
+	return res
 }
 
 func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
@@ -113,12 +116,17 @@ func (t *TemplateController) GetBreadcrumb(r *knot.WebContext) interface{} {
 }
 
 func (t *TemplateController) RegisterRoutes() {
-	routes := t.GetRoutes(helper.FakeWebContext()).([]interface{})
+	routesRaw := t.GetRoutes(helper.FakeWebContext()).([]toolkit.M)
+	routes := []interface{}{}
+	for _, e := range routesRaw {
+		routes = append(routes, e)
+	}
 
 	helper.Recursiver(routes, func(each interface{}) []interface{} {
-		return each.(map[string]interface{})["submenu"].([]interface{})
+		e, _ := toolkit.ToM(each)
+		return e["submenu"].([]interface{})
 	}, func(each interface{}) {
-		eachMap := each.(map[string]interface{})
+		eachMap, _ := toolkit.ToM(each)
 		title := eachMap["title"].(string)
 		href := eachMap["href"].(string)
 		pageID := eachMap["_id"].(string)
